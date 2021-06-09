@@ -61,6 +61,12 @@ class Config():
             "file": True,
             "type": environs.Env().int
         },
+        "service": {
+            "default": True,
+            "env": "SERVICE",
+            "file": True,
+            "type": environs.Env().bool
+        },
         "exclude_state": {
             "default": [],
             "env": "EXCLUDE_STATE",
