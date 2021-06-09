@@ -12,6 +12,7 @@ import prometheuspvesd.exception
 from prometheuspvesd import __version__
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.discovery import Discovery
+from prometheuspvesd.exception import APIError
 from prometheuspvesd.model import HostList
 from prometheuspvesd.utils import SingleLog
 
@@ -25,7 +26,17 @@ class PrometheusSD:
         self.args = self._cli_args()
         self.config = self._get_config()
 
-        self.discovery = Discovery()
+        signal.signal(signal.SIGINT, self._terminate)
+        signal.signal(signal.SIGTERM, self._terminate)
+        while True:
+            try:
+                self.discovery = Discovery()
+            except APIError as e:
+                self.logger.error("Proxmoxer API error: {0}".format(str(e).strip()))
+                sleep(5)
+                continue
+            break
+
         self._fetch()
 
     def _cli_args(self):
@@ -89,9 +100,6 @@ class PrometheusSD:
         return config
 
     def _fetch(self):
-        signal.signal(signal.SIGINT, self._terminate)
-        signal.signal(signal.SIGTERM, self._terminate)
-
         loop_delay = self.config.config["loop_delay"]
         output_file = self.config.config["output_file"]
 
@@ -99,7 +107,14 @@ class PrometheusSD:
         self.logger.debug("Propagate from PVE")
 
         while True:
-            self._write(self.discovery.propagate())
+            try:
+                inventory = self.discovery.propagate()
+            except APIError as e:
+                self.logger.error("Proxmoxer API error: {0}".format(str(e).strip()))
+            except Exception as e:  # noqa
+                self.logger.error("Unknown error: {0}".format(str(e).strip()))
+            else:
+                self._write(inventory)
 
             if not self.config.config["service"]:
                 break
