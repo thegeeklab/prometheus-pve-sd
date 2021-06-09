@@ -49,6 +49,12 @@ class PrometheusSD:
             help="delay between discovery runs"
         )
         parser.add_argument(
+            "--no-service",
+            dest="service",
+            action="store_false",
+            help="run discovery as a service"
+        )
+        parser.add_argument(
             "-v", dest="logging.level", action="append_const", const=-1, help="increase log level"
         )
         parser.add_argument(
@@ -90,12 +96,15 @@ class PrometheusSD:
         output_file = self.config.config["output_file"]
 
         self.logger.info("Writes targets to {}".format(output_file))
+        self.logger.debug("Propagate from PVE")
 
         while True:
-            self.logger.debug("Propagate from PVE")
             self._write(self.discovery.propagate())
 
-            self.logger.info("Waiting {} seconds for next loop".format(loop_delay))
+            if not self.config.config["service"]:
+                break
+
+            self.logger.info("Waiting {} seconds for next discovery loop".format(loop_delay))
             sleep(self.config.config["loop_delay"])
 
     def _write(self, host_list: HostList):
