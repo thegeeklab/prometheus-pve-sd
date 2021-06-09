@@ -28,14 +28,21 @@ class PrometheusSD:
 
         signal.signal(signal.SIGINT, self._terminate)
         signal.signal(signal.SIGTERM, self._terminate)
+
         while True:
             try:
                 self.discovery = Discovery()
             except APIError as e:
+                if not self.config.config["service"]:
+                    self.log.sysexit_with_message(
+                        "Proxmoxer API error: {0}".format(str(e).strip())
+                    )
+
                 self.logger.error("Proxmoxer API error: {0}".format(str(e).strip()))
-                sleep(5)
+                sleep(60)
                 continue
-            break
+            else:
+                break
 
         self._fetch()
 
@@ -57,6 +64,7 @@ class PrometheusSD:
             "--loop-delay",
             dest="loop_delay",
             action="store",
+            type=int,
             help="delay between discovery runs"
         )
         parser.add_argument(
