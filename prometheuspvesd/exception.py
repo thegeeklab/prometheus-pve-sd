@@ -11,6 +11,12 @@ class PrometheusSDError(Exception):
         self.original_exception = original_exception
 
 
+class APIError(PrometheusSDError):
+    """Errors related to API connections."""
+
+    pass
+
+
 class ConfigError(PrometheusSDError):
     """Errors related to config file handling."""
 

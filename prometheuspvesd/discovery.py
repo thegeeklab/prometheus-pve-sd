@@ -6,7 +6,10 @@ import re
 import socket
 from collections import defaultdict
 
+import requests
+
 from prometheuspvesd.config import SingleConfig
+from prometheuspvesd.exception import APIError
 from prometheuspvesd.model import Host
 from prometheuspvesd.model import HostList
 from prometheuspvesd.utils import SingleLog
@@ -24,7 +27,7 @@ class Discovery():
 
     def __init__(self):
         if not HAS_PROXMOXER:
-            self.logger.error(
+            self.log.sysexit_with_message(
                 "The Proxmox VE Prometheus SD requires proxmoxer: "
                 "https://pypi.org/project/proxmoxer/"
             )
@@ -36,13 +39,16 @@ class Discovery():
         self.host_list = HostList()
 
     def _auth(self):
-        return ProxmoxAPI(
-            self.config.config["pve"]["server"],
-            user=self.config.config["pve"]["user"],
-            password=self.config.config["pve"]["password"],
-            verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
-            timeout=self.config.config["pve"]["auth_timeout"]
-        )
+        try:
+            return ProxmoxAPI(
+                self.config.config["pve"]["server"],
+                user=self.config.config["pve"]["user"],
+                password=self.config.config["pve"]["password"],
+                verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
+                timeout=self.config.config["pve"]["auth_timeout"]
+            )
+        except requests.RequestException as e:
+            raise APIError(str(e))
 
     def _get_names(self, pve_list, pve_type):
         names = []
@@ -87,7 +93,7 @@ class Discovery():
                     networks = self.client.nodes(pve_node).get(
                         "qemu", vmid, "agent", "network-get-interfaces"
                     )["result"]
-            except Exception:  # noqa
+            except Exception:  # noqa  # nosec
                 pass
 
             if networks:
@@ -106,7 +112,7 @@ class Discovery():
                     if find and find.group(1):
                         address = find.group(1)
                         break
-            except Exception:  # noqa
+            except Exception:  # noqa  # nosec
                 pass
 
         return address
@@ -135,7 +141,7 @@ class Discovery():
                 qemu_list = self._exclude(self.client.nodes(node).qemu.get())
                 container_list = self._exclude(self.client.nodes(node).lxc.get())
             except Exception as e:  # noqa
-                self.logger.error("Proxmoxer API error: {0}".format(str(e)))
+                raise APIError(str(e))
 
             # Merge QEMU and Containers lists from this node
             instances = self._get_variables(qemu_list, "qemu").copy()
@@ -158,7 +164,7 @@ class Discovery():
                 except KeyError:
                     description = None
                 except Exception as e:  # noqa
-                    self.logger.error("Proxmoxer API error: {0}".format(str(e)))
+                    raise APIError(str(e))
 
                 try:
                     metadata = json.loads(description)
@@ -187,20 +193,5 @@ class Discovery():
 
                 self.host_list.add_host(prom_host)
                 self.logger.debug("Discovered {}".format(prom_host))
-
-        for pool in self._get_names(self.client.pools.get(), "pool"):
-            try:
-                pool_list = self._exclude(self.client.pool(pool).get()["members"])
-            except Exception as e:  # noqa
-                self.logger.error("Proxmoxer API error: {0}".format(str(e)))
-
-            members = [
-                member["name"]
-                for member in pool_list
-                if (member["type"] == "qemu" or member["type"] == "lxc")
-            ]
-
-            for member in members:
-                self.inventory.add_host(group=pool, host=member)
 
         return self.host_list
