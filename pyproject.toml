@@ -1,0 +1,95 @@
+[tool.poetry]
+authors = ["Robert Kaussow <mail@thegeeklab.de>"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "Intended Audience :: System Administrators",
+  "Natural Language :: English",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Utilities",
+]
+description = "Prometheus Service Discovery for Proxmox VE."
+documentation = "https://github.com/thegeeklab/prometheus-pve-sd/"
+homepage = "https://github.com/thegeeklab/prometheus-pve-sd/"
+include = [
+  "LICENSE",
+]
+keywords = ["prometheus", "sd", "pve", "metrics"]
+license = "MIT"
+name = "prometheus-pve-sd"
+packages = [
+  {include = "prometheuspvesd"},
+]
+readme = "README.md"
+repository = "https://github.com/thegeeklab/prometheus-pve-sd/"
+version = "0.0.0"
+
+[tool.poetry.dependencies]
+anyconfig = "0.11.0"
+appdirs = "1.4.4"
+colorama = "0.4.4"
+environs = "9.3.2"
+jsonschema = "3.2.0"
+nested-lookup = "0.2.22"
+proxmoxer = "1.1.1"
+python = "^3.6.0"
+python-json-logger = "2.0.1"
+requests = "2.25.1"
+"ruamel.yaml" = "0.17.6"
+
+[tool.poetry.dev-dependencies]
+bandit = "1.7.0"
+flake8 = "3.9.2"
+flake8-blind-except = "0.2.0"
+flake8-builtins = "1.5.3"
+flake8-docstrings = "1.6.0"
+flake8-eradicate = "1.0.0"
+flake8-isort = "4.0.0"
+flake8-logging-format = "0.6.0"
+flake8-pep3101 = "1.3.0"
+flake8-polyfill = "1.0.2"
+flake8-quotes = "3.2.0"
+pep8-naming = "0.11.1"
+pydocstyle = "6.1.1"
+pytest = "6.2.4"
+pytest-cov = "2.12.0"
+pytest-mock = "3.6.1"
+yapf = "0.31.0"
+
+[tool.poetry.scripts]
+prometheus-pve-sd = "prometheuspvesd.cli:main"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+style = "semver"
+vcs = "git"
+
+[tool.isort]
+default_section = "THIRDPARTY"
+force_single_line = true
+line_length = 99
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+skip_glob = ["**/.env*", "**/env/*", "**/.venv/*", "**/docs/*"]
+
+[tool.pytest.ini_options]
+addopts = "prometheuspvesd --cov=prometheuspvesd --cov-report=xml:coverage.xml --cov-report=term --cov-append --no-cov-on-fail"
+filterwarnings = [
+  "ignore::FutureWarning",
+  "ignore:.*collections.*:DeprecationWarning",
+  "ignore:.*pep8.*:FutureWarning",
+]
+
+[tool.coverage.run]
+omit = ["**/test/*"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
