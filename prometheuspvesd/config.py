@@ -51,7 +51,7 @@ class Config():
         },
         "output_file": {
             "default": default_output_file,
-            "env": "output_file",
+            "env": "OUTPUT_FILE",
             "file": True,
             "type": environs.Env().str
         },
