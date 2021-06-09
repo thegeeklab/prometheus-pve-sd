@@ -42,6 +42,13 @@ class PrometheusSD:
             "-o", "--output", dest="output_file", action="store", help="output file"
         )
         parser.add_argument(
+            "-d",
+            "--loop-delay",
+            dest="loop_delay",
+            action="store",
+            help="delay between discovery runs"
+        )
+        parser.add_argument(
             "-v", dest="logging.level", action="append_const", const=-1, help="increase log level"
         )
         parser.add_argument(
