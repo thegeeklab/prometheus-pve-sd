@@ -10,9 +10,9 @@ import requests
 
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.exception import APIError
+from prometheuspvesd.logger import SingleLog
 from prometheuspvesd.model import Host
 from prometheuspvesd.model import HostList
-from prometheuspvesd.utils import SingleLog
 from prometheuspvesd.utils import to_bool
 
 try:
