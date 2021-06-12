@@ -43,11 +43,11 @@ class Config():
             "file": True,
             "type": environs.Env().str
         },
-        "logging.json": {
-            "default": False,
-            "env": "LOG_JSON",
+        "logging.format": {
+            "default": "console",
+            "env": "LOG_FORMAT",
             "file": True,
-            "type": environs.Env().bool
+            "type": environs.Env().str
         },
         "output_file": {
             "default": default_output_file,
@@ -213,6 +213,7 @@ class Config():
             defaults.pop("config_file")
 
         defaults["logging"]["level"] = defaults["logging"]["level"].upper()
+        defaults["logging"]["format"] = defaults["logging"]["format"].strip().lower()
 
         Path(PurePath(self.config_file).parent).mkdir(parents=True, exist_ok=True)
         Path(PurePath(defaults["output_file"]).parent).mkdir(parents=True, exist_ok=True)

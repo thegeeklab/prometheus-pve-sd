@@ -13,8 +13,8 @@ from prometheuspvesd import __version__
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.discovery import Discovery
 from prometheuspvesd.exception import APIError
+from prometheuspvesd.logger import SingleLog
 from prometheuspvesd.model import HostList
-from prometheuspvesd.utils import SingleLog
 
 
 class PrometheusSD:
@@ -54,7 +54,11 @@ class PrometheusSD:
         """
         parser = argparse.ArgumentParser(description="Prometheus Service Discovery for Proxmox VE")
         parser.add_argument(
-            "-c", "--config", dest="config_file", help="location of configuration file"
+            "-c",
+            "--config",
+            dest="config_file",
+            action="store",
+            help="location of configuration file"
         )
         parser.add_argument(
             "-o", "--output", dest="output_file", action="store", help="output file"
@@ -68,10 +72,15 @@ class PrometheusSD:
             help="delay between discovery runs"
         )
         parser.add_argument(
-            "--no-service",
-            dest="service",
-            action="store_false",
-            help="run discovery as a service"
+            "--no-service", dest="service", action="store_false", help="run discovery only once"
+        )
+        parser.add_argument(
+            "-f",
+            "--log-format",
+            dest="logging.format",
+            metavar="LOG_FORMAT",
+            action="store",
+            help="used log format"
         )
         parser.add_argument(
             "-v", dest="logging.level", action="append_const", const=-1, help="increase log level"
@@ -92,7 +101,9 @@ class PrometheusSD:
             self.log.sysexit_with_message(e)
 
         try:
-            self.log.set_level(config.config["logging"]["level"])
+            self.log.update_logger(
+                config.config["logging"]["level"], config.config["logging"]["format"]
+            )
         except ValueError as e:
             self.log.sysexit_with_message("Can not set log level.\n{}".format(str(e)))
 
