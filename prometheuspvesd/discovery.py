@@ -124,10 +124,10 @@ class Discovery():
             if obj["template"] == 1:
                 continue
 
-            if obj["status"] in self.config.config["exclude_state"]:
+            if obj["status"] in map(str, self.config.config["exclude_state"]):
                 continue
 
-            if obj["vmid"] in self.config.config["exclude_vmid"]:
+            if obj["vmid"] in map(str, self.config.config["exclude_vmid"]):
                 continue
 
             filtered.append(item.copy())

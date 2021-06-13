@@ -75,7 +75,7 @@ class Config():
         },
         "exclude_vmid": {
             "default": [],
-            "env": "EXCLUDE_STATE",
+            "env": "EXCLUDE_VMID",
             "file": True,
             "type": environs.Env().list
         },
