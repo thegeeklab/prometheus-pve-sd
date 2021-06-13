@@ -320,60 +320,60 @@ local PipelineDocs = {
         NPM_CONFIG_LOGLEVEL: 'error',
       },
     },
-    // {
-    //   name: 'testbuild',
-    //   image: 'thegeeklab/hugo:0.83.1',
-    //   commands: [
-    //     'hugo -s docs/ -b http://localhost/',
-    //   ],
-    // },
-    // {
-    //   name: 'link-validation',
-    //   image: 'thegeeklab/link-validator',
-    //   commands: [
-    //     'link-validator -ro',
-    //   ],
-    //   environment: {
-    //     LINK_VALIDATOR_BASE_DIR: 'docs/public',
-    //   },
-    // },
-    // {
-    //   name: 'build',
-    //   image: 'thegeeklab/hugo:0.83.1',
-    //   commands: [
-    //     'hugo -s docs/',
-    //   ],
-    // },
-    // {
-    //   name: 'beautify',
-    //   image: 'node:lts-alpine',
-    //   commands: [
-    //     'npm install -g js-beautify',
-    //     "html-beautify -r -f 'docs/public/**/*.html'",
-    //   ],
-    //   environment: {
-    //     FORCE_COLOR: true,
-    //     NPM_CONFIG_LOGLEVEL: 'error',
-    //   },
-    // },
-    // {
-    //   name: 'publish',
-    //   image: 'plugins/s3-sync',
-    //   settings: {
-    //     access_key: { from_secret: 's3_access_key' },
-    //     bucket: 'geekdocs',
-    //     delete: true,
-    //     endpoint: 'https://sp.rknet.org',
-    //     path_style: true,
-    //     secret_key: { from_secret: 's3_secret_access_key' },
-    //     source: 'docs/public/',
-    //     strip_prefix: 'docs/public/',
-    //     target: '/${DRONE_REPO_NAME}',
-    //   },
-    //   when: {
-    //     ref: ['refs/heads/main', 'refs/tags/**'],
-    //   },
-    // },
+    {
+      name: 'testbuild',
+      image: 'thegeeklab/hugo:0.83.1',
+      commands: [
+        'hugo -s docs/ -b http://localhost/',
+      ],
+    },
+    {
+      name: 'link-validation',
+      image: 'thegeeklab/link-validator',
+      commands: [
+        'link-validator -ro',
+      ],
+      environment: {
+        LINK_VALIDATOR_BASE_DIR: 'docs/public',
+      },
+    },
+    {
+      name: 'build',
+      image: 'thegeeklab/hugo:0.83.1',
+      commands: [
+        'hugo -s docs/',
+      ],
+    },
+    {
+      name: 'beautify',
+      image: 'node:lts-alpine',
+      commands: [
+        'npm install -g js-beautify',
+        "html-beautify -r -f 'docs/public/**/*.html'",
+      ],
+      environment: {
+        FORCE_COLOR: true,
+        NPM_CONFIG_LOGLEVEL: 'error',
+      },
+    },
+    {
+      name: 'publish',
+      image: 'plugins/s3-sync',
+      settings: {
+        access_key: { from_secret: 's3_access_key' },
+        bucket: 'geekdocs',
+        delete: true,
+        endpoint: 'https://sp.rknet.org',
+        path_style: true,
+        secret_key: { from_secret: 's3_secret_access_key' },
+        source: 'docs/public/',
+        strip_prefix: 'docs/public/',
+        target: '/${DRONE_REPO_NAME}',
+      },
+      when: {
+        ref: ['refs/heads/main', 'refs/tags/**'],
+      },
+    },
   ],
   depends_on: [
     'build-package',

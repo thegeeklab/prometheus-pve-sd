@@ -1,6 +1,7 @@
 repository:
   name: prometheus-pve-sd
   description: Prometheus Service Discovery for Proxmox VE
+  homepage: https://prometheus-pve-sd.geekdocs.de
   topics: prometheus, proxmox, metrics, sd, python
 
   private: false
