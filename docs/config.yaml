@@ -1,0 +1,31 @@
+---
+baseURL: https://prometheus-pve-sd.geekdocs.de/
+title: prometheus-pve-sd
+theme: hugo-geekdoc
+pygmentsUseClasses: true
+pygmentsCodeFences: true
+
+# Geekdoc configuration
+disablePathToLower: true
+enableGitInfo: true
+
+# Needed for mermaid/katex shortcodes
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  tableOfContents:
+    startLevel: 1
+
+params:
+  geekdocMenuBundle: true
+  geekdocToC: 3
+
+  geekdocRepo: https://github.com/thegeeklab/prometheus-pve-sd
+  geekdocEditPath: edit/main/docs/content
+
+  geekdocDateFormat: "Jan 2, 2006"
+  geekdocSearch: true
+
+  geekdocLegalNotice: https://thegeeklab.de/legal-notice/#contact-information
+  geekdocPrivacyPolicy: https://thegeeklab.de/legal-notice/#privacy-policy

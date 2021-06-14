@@ -1,6 +1,6 @@
-# prometheus-pve-sd
-
-Prometheus Service Discovery for Proxmox VE
+---
+title: Documentation
+---
 
 [![Build Status](https://img.shields.io/drone/build/thegeeklab/prometheus-pve-sd?logo=drone&server=https%3A%2F%2Fdrone.thegeeklab.de)](https://drone.thegeeklab.de/thegeeklab/prometheus-pve-sd)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/thegeeklab/prometheus-pve-sd)
@@ -13,14 +13,3 @@ Prometheus Service Discovery for Proxmox VE
 [![License: MIT](https://img.shields.io/github/license/thegeeklab/prometheus-pve-sd)](https://github.com/thegeeklab/prometheus-pve-sd/blob/main/LICENSE)
 
 This project provides a simple custom service discovery for [Prometheus](https://prometheus.io/). It is using the Proxmox PVE API to fetch Hosts and it's meta information to generate a Prometheus compatible [file based](https://prometheus.io/docs/guides/file-sd/) service discovery. Releases are available as Python Packages on [GitHub](https://github.com/thegeeklab/prometheus-pve-sd/releases) or [PyPI](https://pypi.org/project/prometheus-pve-sd/) and as Docker Image on [Docker Hub](https://hub.docker.com/r/thegeeklab/prometheus-pve-sd).
-
-You can find the full documentation at [https://prometheus-pve-sd.geekdocs.de](https://prometheus-pve-sd.geekdocs.de).
-
-## Contributors
-
-Special thanks goes to all [contributors](https://github.com/thegeeklab/prometheus-pve-sd/graphs/contributors). If you would like to contribute,
-please see the [instructions](https://github.com/thegeeklab/prometheus-pve-sd/blob/main/CONTRIBUTING.md).
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/thegeeklab/prometheus-pve-sd/blob/main/LICENSE) file for details.
