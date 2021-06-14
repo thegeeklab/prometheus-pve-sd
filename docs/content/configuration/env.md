@@ -3,6 +3,7 @@ title: Environment Variables
 ---
 
 <!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 <!-- spellchecker-disable -->
 {{< highlight Shell "linenos=table" >}}
 PROMETHEUS_PVE_SD_CONFIG_FILE=
@@ -24,4 +25,5 @@ PROMETHEUS_PVE_SD_PVE_AUTH_TIMEOUT=5
 PROMETHEUS_PVE_SD_PVE_VERIFY_SSL=true
 {{< /highlight >}}
 <!-- spellchecker-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
