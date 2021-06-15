@@ -8,6 +8,8 @@ import signal
 import tempfile
 from time import sleep
 
+from prometheus_client import start_http_server
+
 import prometheuspvesd.exception
 from prometheuspvesd import __version__
 from prometheuspvesd.config import SingleConfig
@@ -119,11 +121,19 @@ class PrometheusSD:
         return config
 
     def _fetch(self):
-        loop_delay = self.config.config["loop_delay"]
-        output_file = self.config.config["output_file"]
-
-        self.logger.info("Writes targets to {}".format(output_file))
+        self.logger.info("Writes targets to {}".format(self.config.config["output_file"]))
         self.logger.debug("Propagate from PVE")
+
+        if self.config.config["service"] and self.config.config["metrics"]["enabled"]:
+            self.logger.info(
+                "Starting metrics http endpoint on port {}".format(
+                    self.config.config["metrics"]["port"]
+                )
+            )
+            start_http_server(
+                self.config.config["metrics"]["port"],
+                addr=self.config.config["metrics"]["address"]
+            )
 
         while True:
             try:
@@ -138,7 +148,11 @@ class PrometheusSD:
             if not self.config.config["service"]:
                 break
 
-            self.logger.info("Waiting {} seconds for next discovery loop".format(loop_delay))
+            self.logger.info(
+                "Waiting {} seconds for next discovery loop".format(
+                    self.config.config["loop_delay"]
+                )
+            )
             sleep(self.config.config["loop_delay"])
 
     def _write(self, host_list: HostList):

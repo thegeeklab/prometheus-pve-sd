@@ -7,6 +7,9 @@ import socket
 from collections import defaultdict
 
 import requests
+from prometheus_client import Counter
+from prometheus_client import Gauge
+from prometheus_client import Summary
 
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.exception import APIError
@@ -20,6 +23,15 @@ try:
     HAS_PROXMOXER = True
 except ImportError:
     HAS_PROXMOXER = False
+
+PROPAGATION_TIME = Summary(
+    "pve_sd_propagate_seconds", "Time spent propagating the inventory from PVE"
+)
+HOST_GAUGE = Gauge("pve_sd_hosts", "Number of hosts discovered by PVE SD")
+PVE_REQUEST_COUNT_TOTAL = Counter("pve_sd_requests_total", "Total count of requests to PVE API")
+PVE_REQUEST_COUNT_ERROR_TOTAL = Counter(
+    "pve_sd_requests_error_total", "Total count of failed requests to PVE API"
+)
 
 
 class Discovery():
@@ -48,6 +60,7 @@ class Discovery():
                 timeout=self.config.config["pve"]["auth_timeout"]
             )
         except requests.RequestException as e:
+            PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
             raise APIError(str(e))
 
     def _get_names(self, pve_list, pve_type):
@@ -89,6 +102,7 @@ class Discovery():
         if pve_type == "qemu":
             # If qemu agent is enabled, try to gather the IP address
             try:
+                PVE_REQUEST_COUNT_TOTAL.inc()
                 if self.client.nodes(pve_node).get(pve_type, vmid, "agent", "info") is not None:
                     networks = self.client.nodes(pve_node).get(
                         "qemu", vmid, "agent", "network-get-interfaces"
@@ -104,6 +118,7 @@ class Discovery():
 
         if not address:
             try:
+                PVE_REQUEST_COUNT_TOTAL.inc()
                 config = self.client.nodes(pve_node).get(pve_type, vmid, "config")
                 sources = [config["net0"], config["ipconfig0"]]
 
@@ -133,20 +148,26 @@ class Discovery():
             filtered.append(item.copy())
         return filtered
 
+    @PROPAGATION_TIME.time()
     def propagate(self):
         self.host_list.clear()
 
+        PVE_REQUEST_COUNT_TOTAL.inc()
         for node in self._get_names(self.client.nodes.get(), "node"):
             try:
+                PVE_REQUEST_COUNT_TOTAL.inc()
                 qemu_list = self._exclude(self.client.nodes(node).qemu.get())
+                PVE_REQUEST_COUNT_TOTAL.inc()
                 container_list = self._exclude(self.client.nodes(node).lxc.get())
             except Exception as e:  # noqa
+                PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                 raise APIError(str(e))
 
             # Merge QEMU and Containers lists from this node
             instances = self._get_variables(qemu_list, "qemu").copy()
             instances.update(self._get_variables(container_list, "container"))
 
+            HOST_GAUGE.set(len(instances))
             self.logger.info("Found {} targets".format(len(instances)))
             for host in instances:
                 host_meta = instances[host]
@@ -157,6 +178,7 @@ class Discovery():
                 except KeyError:
                     pve_type = "qemu"
 
+                PVE_REQUEST_COUNT_TOTAL.inc()
                 config = self.client.nodes(node).get(pve_type, vmid, "config")
 
                 try:
@@ -164,6 +186,7 @@ class Discovery():
                 except KeyError:
                     description = None
                 except Exception as e:  # noqa
+                    PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                     raise APIError(str(e))
 
                 try:

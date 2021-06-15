@@ -13,6 +13,11 @@ logging:
     # supported log formats: console|json|simple
     format: console
 
+metrics:
+    enabled: true
+    address: "127.0.0.1"
+    port: 8000
+
 output_file:
 loop_delay: 300
 # Run pve sd in a loop and discover hosts every n seconds (as defined in loop_delay).

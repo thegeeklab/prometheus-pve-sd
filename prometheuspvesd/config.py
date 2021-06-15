@@ -32,6 +32,21 @@ class Config():
     """
 
     SETTINGS = {
+        "metrics.enabled": {
+            "default": True,
+            "env": "METRICS_ENABLED",
+            "type": environs.Env().bool
+        },
+        "metrics.address": {
+            "default": "127.0.0.1",
+            "env": "METRICS_ADDRESS",
+            "type": environs.Env().str
+        },
+        "metrics.port": {
+            "default": 8000,
+            "env": "METRICS_PORT",
+            "type": environs.Env().int
+        },
         "config_file": {
             "default": "",
             "env": "CONFIG_FILE",
