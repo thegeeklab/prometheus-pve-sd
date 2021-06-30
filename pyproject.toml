@@ -44,7 +44,7 @@ proxmoxer = "1.1.1"
 python = "^3.6.0"
 python-json-logger = "2.0.1"
 requests = "2.25.1"
-"ruamel.yaml" = "0.17.9"
+"ruamel.yaml" = "0.17.10"
 
 [tool.poetry.dev-dependencies]
 bandit = "1.7.0"
