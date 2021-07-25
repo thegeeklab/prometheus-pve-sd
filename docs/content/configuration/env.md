@@ -13,14 +13,14 @@ PROMETHEUS_PVE_SD_LOG_LEVEL=warning
 # supported log formats: console|json|simple
 PROMETHEUS_PVE_SD_LOG_FORMAT=console
 
-METRICS_ENABLED=true
-METRICS_ADDRESS=127.0.01
-METRICS_PORT=8000
+PROMETHEUS_PVE_SD_METRICS_ENABLED=true
+PROMETHEUS_PVE_SD_METRICS_ADDRESS=127.0.01
+PROMETHEUS_PVE_SD_METRICS_PORT=8000
 
 PROMETHEUS_PVE_SD_OUTPUT_FILE=
 PROMETHEUS_PVE_SD_LOOP_DELAY=300
 
-# Run pve sd in a loop and discover hosts every n seconds (as defined in PROMETHEUS_PVE_SD_LOOP_DELAY).
+# Run PVE SD in a loop and discover hosts every n seconds (as defined in PROMETHEUS_PVE_SD_LOOP_DELAY).
 # Can be disabled to run disovery only once.
 PROMETHEUS_PVE_SD_SERVICE=true
 
