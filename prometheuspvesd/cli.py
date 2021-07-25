@@ -74,7 +74,11 @@ class PrometheusSD:
             help="delay between discovery runs"
         )
         parser.add_argument(
-            "--no-service", dest="service", action="store_false", help="run discovery only once"
+            "--no-service",
+            dest="service",
+            action="store_false",
+            default=None,
+            help="run discovery only once"
         )
         parser.add_argument(
             "-f",
