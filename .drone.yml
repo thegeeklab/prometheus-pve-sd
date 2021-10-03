@@ -49,19 +49,6 @@ steps:
     commands:
       - git fetch -tq
 
-  - name: python36-pytest
-    image: python:3.6
-    commands:
-      - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
-      - poetry install
-      - poetry version
-      - poetry run prometheus-pve-sd --help
-    environment:
-      PY_COLORS: 1
-    depends_on:
-      - fetch
-
   - name: python37-pytest
     image: python:3.7
     commands:
@@ -630,6 +617,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 3dcbbfed931a520922ecfeeacdfa0716b7423a85254b22173a74bc7b9897830b
+hmac: 9413b3225e96a5077dcf4af103c200a779f43018653d4e7ecce66763af112c26
 
 ...
