@@ -156,7 +156,7 @@ steps:
       - poetry build
 
   - name: checksum
-    image: alpine
+    image: thegeeklab/alpine-tools
     commands:
       - cd dist/ && sha256sum * > ../sha256sum.txt
 
@@ -223,6 +223,8 @@ steps:
   - name: build
     image: python:3.10
     commands:
+      - apt update
+      - apt install -y --no-install-recommends rustc cargo
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry build
@@ -301,6 +303,8 @@ steps:
   - name: build
     image: python:3.10
     commands:
+      - apt update
+      - apt install -y --no-install-recommends rustc cargo
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry build
@@ -377,14 +381,13 @@ platform:
 
 steps:
   - name: build
-    image: python:3.10-alpine
+    image: python:3.10
     commands:
-      - apk add -Uq --no-cache build-base openssl-dev libffi-dev musl-dev python3-dev git cargo
+      - apt update
+      - apt install -y --no-install-recommends rustc cargo
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry build
-    environment:
-      CARGO_NET_GIT_FETCH_WITH_CLI: true
 
   - name: dryrun
     image: thegeeklab/drone-docker:19
@@ -630,6 +633,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 9ed3991a84fdb078a647e5c0673bab3283417c894ed9b858ee939f32741e350b
+hmac: 4def00ae9966eae6adee0e2a9564ce0a3fe2d1c60c2f0c944dc673d1311b25f6
 
 ...
