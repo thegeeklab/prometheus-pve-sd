@@ -18,11 +18,17 @@ markup:
     startLevel: 1
 
 params:
+  description: >
+    prometheus-pve-sd is a simple custom service discovery for Prometheus. It is using the Proxmox PVE API
+    to fetch Hosts and it's meta information to generate a Prometheus compatible file based service discovery.
+  images:
+    - "socialmedia2.png"
+
   geekdocMenuBundle: true
   geekdocToC: 3
 
   geekdocRepo: https://github.com/thegeeklab/prometheus-pve-sd
-  geekdocEditPath: edit/main/docs/content
+  geekdocEditPath: edit/main/docs
 
   geekdocDateFormat: "Jan 2, 2006"
   geekdocSearch: true
