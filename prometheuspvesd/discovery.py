@@ -94,6 +94,13 @@ class Discovery():
             except ValueError:
                 return False
 
+        def validate_ipv6(address: object) -> object:
+            try:
+                if ipaddress.ip_address(address) not in ipaddress.ip_network("::1/128"):
+                    return address
+            except ValueError:
+                return False
+
         address = False
         networks = False
         if pve_type == "qemu":
@@ -113,6 +120,9 @@ class Discovery():
                         for ip_address in network["ip-addresses"]:
                             if ip_address["ip-address-type"] == "ipv4":
                                 address = validate_ipv4(ip_address["ip-address"])
+                            elif ip_address["ip-address-type"] == "ipv6" \
+                                    and self.config.config["prefer_ipv6"]:
+                                address = validate_ipv6(ip_address["ip-address"])
 
         if not address:
             try:

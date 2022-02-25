@@ -82,6 +82,12 @@ class Config():
             "file": True,
             "type": environs.Env().bool
         },
+        "prefer_ipv6": {
+            "default": False,
+            "env": "PREFER_IPV6",
+            "file": True,
+            "type": environs.Env().bool
+        },
         "exclude_state": {
             "default": [],
             "env": "EXCLUDE_STATE",
