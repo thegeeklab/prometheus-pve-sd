@@ -111,7 +111,7 @@ class Discovery():
                 if type(networks) is list:
                     for network in networks:
                         for ip_address in network["ip-addresses"]:
-                            if ip_address['ip-address-type'] == 'ipv4':
+                            if ip_address["ip-address-type"] == "ipv4":
                                 address = validate_ipv4(ip_address["ip-address"])
 
         if not address:
