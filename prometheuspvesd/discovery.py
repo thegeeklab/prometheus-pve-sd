@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Prometheus Discovery."""
 
+import ipaddress
 import json
 import re
-import ipaddress
 from collections import defaultdict
 
 import requests
