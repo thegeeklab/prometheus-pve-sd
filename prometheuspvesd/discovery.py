@@ -3,7 +3,7 @@
 
 import json
 import re
-import socket
+import ipaddress
 from collections import defaultdict
 
 import requests
@@ -89,12 +89,9 @@ class Discovery():
 
         def validate_ipv4(address: object) -> object:
             try:
-                # IP address validation
-                if socket.inet_aton(address):
-                    # Ignore localhost
-                    if address != "127.0.0.1":
-                        return address
-            except socket.error:
+                if ipaddress.ip_address(address) not in ipaddress.ip_network("127.0.0.0/8"):
+                    return address
+            except ValueError:
                 return False
 
         address = False
