@@ -87,18 +87,10 @@ class Discovery():
 
     def _get_ip_addresses(self, pve_type, pve_node, vmid):
 
-        def validate_ipv4(address: object) -> object:
+        def validate_ip(address: object) -> object:
             try:
-                if ipaddress.ip_address(address) not in ipaddress.ip_network("127.0.0.0/8"):
-                    return address
-            except ValueError:
-                return False
-
-        def validate_ipv6(address: object) -> object:
-            try:
-                # Make sure to skip loopback addresses and local-link addresses
-                if ipaddress.ip_address(address) not in ipaddress.ip_network("::1/128") \
-                        and ipaddress.ip_address(address) not in ipaddress.ip_network("fe80::/10"):
+                if not ipaddress.ip_address(address).is_loopback \
+                        and not ipaddress.ip_address(address).is_link_local:
                     return address
             except ValueError:
                 return False
@@ -122,9 +114,9 @@ class Discovery():
                     for network in networks:
                         for ip_address in network["ip-addresses"]:
                             if ip_address["ip-address-type"] == "ipv4":
-                                ipv4_address = validate_ipv4(ip_address["ip-address"])
+                                ipv4_address = validate_ip(ip_address["ip-address"])
                             elif ip_address["ip-address-type"] == "ipv6":
-                                ipv6_address = validate_ipv6(ip_address["ip-address"])
+                                ipv6_address = validate_ip(ip_address["ip-address"])
 
         if not ipv4_address:
             try:
