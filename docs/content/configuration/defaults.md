@@ -24,9 +24,6 @@ loop_delay: 300
 # Can be disabled to run disovery only once.
 service: true
 
-# By default ipv4 addresses are preferred
-prefer_ipv6: false
-
 exclude_state: []
 exclude_vmid: []
 
