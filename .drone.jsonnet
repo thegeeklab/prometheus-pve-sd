@@ -8,6 +8,7 @@ local PythonVersion(pyversion='3.7') = {
     'pip install poetry poetry-dynamic-versioning -qq',
     'poetry config experimental.new-installer false',
     'poetry install',
+    'poetry run pytest',
     'poetry version',
     'poetry run prometheus-pve-sd --help',
   ],
@@ -77,6 +78,24 @@ local PipelineTest = {
     PythonVersion(pyversion='3.8'),
     PythonVersion(pyversion='3.9'),
     PythonVersion(pyversion='3.10'),
+    {
+      name: 'codecov',
+      image: 'python:3.10',
+      environment: {
+        PY_COLORS: 1,
+        CODECOV_TOKEN: { from_secret: 'codecov_token' },
+      },
+      commands: [
+        'pip install codecov -qq',
+        'codecov --required -X gcov',
+      ],
+      depends_on: [
+        'python37-pytest',
+        'python38-pytest',
+        'python39-pytest',
+        'python310-pytest',
+      ],
+    },
   ],
   depends_on: [
     'lint',
