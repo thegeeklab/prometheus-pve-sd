@@ -12,8 +12,6 @@ class Host:
         self.vmid = vmid
         self.pve_type = pve_type
         self.labels = {}
-        # kept for backwards compatibility
-        self.labels["__meta_pve_ip"] = ipv4_address
         self.labels["__meta_pve_ipv4"] = ipv4_address
         self.labels["__meta_pve_ipv6"] = ipv6_address
         self.labels["__meta_pve_name"] = hostname
