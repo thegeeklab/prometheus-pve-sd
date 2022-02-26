@@ -142,7 +142,7 @@ class Discovery():
             if obj["status"] in map(str, self.config.config["exclude_state"]):
                 continue
 
-            if obj["vmid"] in map(str, self.config.config["exclude_vmid"]):
+            if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
                 continue
 
             filtered.append(item.copy())
