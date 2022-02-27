@@ -20,7 +20,7 @@ def discovery_fixture(mocker):
 
 
 def test_exclude(discovery_fixture, qemus):
-    discovery_fixture.config.config["exclude_vmid"] = [100, "101"]
+    discovery_fixture.config.config["exclude_vmid"] = ["100", "101"]
 
     expected = []
     filtered = discovery_fixture._exclude(qemus)
