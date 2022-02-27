@@ -109,14 +109,13 @@ class Discovery():
             except Exception:  # noqa  # nosec
                 pass
 
-            if networks:
-                if type(networks) is list:
-                    for network in networks:
-                        for ip_address in network["ip-addresses"]:
-                            if ip_address["ip-address-type"] == "ipv4":
-                                ipv4_address = validate_ip(ip_address["ip-address"])
-                            elif ip_address["ip-address-type"] == "ipv6":
-                                ipv6_address = validate_ip(ip_address["ip-address"])
+            if type(networks) is list:
+                for network in networks:
+                    for ip_address in network["ip-addresses"]:
+                        if ip_address["ip-address-type"] == "ipv4" and not ipv4_address:
+                            ipv4_address = self._validate_ip(ip_address["ip-address"])
+                        elif ip_address["ip-address-type"] == "ipv6" and not ipv6_address:
+                            ipv6_address = self._validate_ip(ip_address["ip-address"])
 
         if not ipv4_address:
             try:
@@ -218,7 +217,7 @@ class Discovery():
                 except ValueError:
                     metadata = {"notes": description}
 
-                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid) or host
+                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid)
 
                 prom_host = Host(vmid, host, ipv4_address, ipv6_address, pve_type)
 
