@@ -86,15 +86,6 @@ class Discovery():
         return variables
 
     def _get_ip_addresses(self, pve_type, pve_node, vmid):
-
-        def validate_ip(address: object) -> object:
-            try:
-                if not ipaddress.ip_address(address).is_loopback \
-                        and not ipaddress.ip_address(address).is_link_local:
-                    return address
-            except ValueError:
-                return False
-
         ipv4_address = False
         ipv6_address = False
         networks = False
@@ -102,9 +93,9 @@ class Discovery():
             # If qemu agent is enabled, try to gather the IP address
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                if self.client.nodes(pve_node).get(pve_type, vmid, "agent", "info") is not None:
-                    networks = self.client.nodes(pve_node).get(
-                        "qemu", vmid, "agent", "network-get-interfaces"
+                if self.client.get("nodes", pve_node, pve_type, vmid, "agent", "info") is not None:
+                    networks = self.client.get(
+                        "nodes", pve_node, "qemu", vmid, "agent", "network-get-interfaces"
                     )["result"]
             except Exception:  # noqa  # nosec
                 pass
@@ -120,7 +111,7 @@ class Discovery():
         if not ipv4_address:
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.nodes(pve_node).get(pve_type, vmid, "config")
+                config = self.client.get("nodes", pve_node, pve_type, vmid, "config")
                 if "ipconfig0" in config.keys():
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
@@ -137,7 +128,7 @@ class Discovery():
         if not ipv6_address:
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.nodes(pve_node).get(pve_type, vmid, "config")
+                config = self.client.get("nodes", pve_node, pve_type, vmid, "config")
                 if "ipconfig0" in config.keys():
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
@@ -169,17 +160,27 @@ class Discovery():
             filtered.append(item.copy())
         return filtered
 
+    def _validate_ip(self, address: object) -> object:
+        try:
+            if (
+                not ipaddress.ip_address(address).is_loopback
+                and not ipaddress.ip_address(address).is_link_local
+            ):
+                return address
+        except ValueError:
+            return False
+
     @PROPAGATION_TIME.time()
     def propagate(self):
         self.host_list.clear()
 
         PVE_REQUEST_COUNT_TOTAL.inc()
-        for node in self._get_names(self.client.nodes.get(), "node"):
+        for node in self._get_names(self.client.get("nodes"), "node"):
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                qemu_list = self._exclude(self.client.nodes(node).qemu.get())
+                qemu_list = self._exclude(self.client.get("nodes", node, "qemu"))
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                container_list = self._exclude(self.client.nodes(node).lxc.get())
+                container_list = self._exclude(self.client.get("nodes", node, "lxc"))
             except Exception as e:  # noqa
                 PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                 raise APIError(str(e))
@@ -200,7 +201,7 @@ class Discovery():
                     pve_type = "qemu"
 
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.nodes(node).get(pve_type, vmid, "config")
+                config = self.client.get("nodes", node, pve_type, vmid, "config")
 
                 try:
                     description = (config["description"])
