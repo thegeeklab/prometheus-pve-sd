@@ -25,6 +25,7 @@ loop_delay: 300
 service: true
 
 exclude_state: []
+# needs to be a list of strings
 exclude_vmid: []
 
 pve:

@@ -16,7 +16,9 @@ run prometheus-pve-sd -vv --loop-delay 900 -o /etc/prometheus/pve.json
 
 The following list of meta labels can be used to relabel your scrape results:
 
-`__meta_pve_ip`
+`__meta_pve_ipv4`
+
+`__meta_pve_ipv6`
 
 `__meta_pve_name`
 

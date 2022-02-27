@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Prometheus Discovery."""
 
+import ipaddress
 import json
 import re
-import socket
 from collections import defaultdict
 
 import requests
@@ -85,19 +85,18 @@ class Discovery():
 
         return variables
 
-    def _get_ip_address(self, pve_type, pve_node, vmid):
+    def _get_ip_addresses(self, pve_type, pve_node, vmid):
 
-        def validate(address):
+        def validate_ip(address: object) -> object:
             try:
-                # IP address validation
-                if socket.inet_aton(address):
-                    # Ignore localhost
-                    if address != "127.0.0.1":
-                        return address
-            except socket.error:
+                if not ipaddress.ip_address(address).is_loopback \
+                        and not ipaddress.ip_address(address).is_link_local:
+                    return address
+            except ValueError:
                 return False
 
-        address = False
+        ipv4_address = False
+        ipv6_address = False
         networks = False
         if pve_type == "qemu":
             # If qemu agent is enabled, try to gather the IP address
@@ -114,23 +113,46 @@ class Discovery():
                 if type(networks) is list:
                     for network in networks:
                         for ip_address in network["ip-addresses"]:
-                            address = validate(ip_address["ip-address"])
+                            if ip_address["ip-address-type"] == "ipv4":
+                                ipv4_address = validate_ip(ip_address["ip-address"])
+                            elif ip_address["ip-address-type"] == "ipv6":
+                                ipv6_address = validate_ip(ip_address["ip-address"])
 
-        if not address:
+        if not ipv4_address:
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
                 config = self.client.nodes(pve_node).get(pve_type, vmid, "config")
-                sources = [config["net0"], config["ipconfig0"]]
+                if "ipconfig0" in config.keys():
+                    sources = [config["net0"], config["ipconfig0"]]
+                else:
+                    sources = [config["net0"]]
 
                 for s in sources:
-                    find = re.search(r"ip=(\d*\.\d*\.\d*\.\d*)", str(sources))
+                    find = re.search(r"ip=(\d*\.\d*\.\d*\.\d*)", str(s))
                     if find and find.group(1):
-                        address = find.group(1)
+                        ipv4_address = find.group(1)
                         break
             except Exception:  # noqa  # nosec
                 pass
 
-        return address
+        if not ipv6_address:
+            try:
+                PVE_REQUEST_COUNT_TOTAL.inc()
+                config = self.client.nodes(pve_node).get(pve_type, vmid, "config")
+                if "ipconfig0" in config.keys():
+                    sources = [config["net0"], config["ipconfig0"]]
+                else:
+                    sources = [config["net0"]]
+
+                for s in sources:
+                    find = re.search(r"ip=(\d*:\d*:\d*:\d*:\d*:\d*)", str(s))
+                    if find and find.group(1):
+                        ipv6_address = find.group(1)
+                        break
+            except Exception:  # noqa  # nosec
+                pass
+
+        return ipv4_address, ipv6_address
 
     def _exclude(self, pve_list):
         filtered = []
@@ -196,9 +218,9 @@ class Discovery():
                 except ValueError:
                     metadata = {"notes": description}
 
-                address = self._get_ip_address(pve_type, node, vmid) or host
+                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid) or host
 
-                prom_host = Host(vmid, host, address, pve_type)
+                prom_host = Host(vmid, host, ipv4_address, ipv6_address, pve_type)
 
                 config_flags = [("cpu", "sockets"), ("cores", "cores"), ("memory", "memory")]
                 meta_flags = [("status", "proxmox_status")]
