@@ -24,13 +24,22 @@ def test_exclude_vmid(discovery_fixture, qemus):
     filtered = discovery_fixture._exclude(qemus)
 
     assert filtered == expected
-
-def test_exclude_status(discovery_fixture, qemus):
     discovery_fixture.config.config["exclude_vmid"] = []
+
+def test_exclude_state(discovery_fixture, qemus):
     discovery_fixture.config.config["exclude_state"] = ["prelaunch"]
     filtered = discovery_fixture._exclude(qemus)
 
     assert len(filtered) == 2
+    discovery_fixture.config.config["exclude_state"] = []
+
+def test_exclude_tags(discovery_fixture, qemus):
+    discovery_fixture.config.config["exclude_tags"] = ["unmonitored"]
+
+    filtered = discovery_fixture._exclude(qemus)
+
+    assert len(filtered) == 2
+    discovery_fixture.config.config["exclude_tags"] = []
 
 def test_validate_ip(discovery_fixture, addresses):
     # IPv4 validation
