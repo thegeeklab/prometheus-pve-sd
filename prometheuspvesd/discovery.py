@@ -157,9 +157,9 @@ class Discovery():
             if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
                 continue
 
-            if isinstance(obj["tags"], str) \
-                    and not set(obj["tags"].split(","))\
-                    .isdisjoint(map(str, self.config.config["exclude_tags"])):
+            if isinstance(obj["tags"], str) and not set(obj["tags"].split(",")).isdisjoint(
+                    self.config.config["exclude_tags"]
+            ):
                 continue
 
             filtered.append(item.copy())
