@@ -34,7 +34,8 @@ def qemus():
             "disk": 0,
             "status": "running",
             "netout": 12159205236,
-            "mem": 496179157
+            "mem": 496179157,
+            "tags": "unmonitored,excluded"
         },
         {
             "diskwrite": 0,
@@ -53,6 +54,25 @@ def qemus():
             "status": "running",
             "netout": 12159205236,
             "mem": 496179157
+        },
+        {
+            "diskwrite": 0,
+            "vmid": "102",
+            "name": "102.example.com",
+            "cpu": 0.0202130478509556,
+            "diskread": 0,
+            "template": "",
+            "uptime": 3101505,
+            "maxdisk": 26843545600,
+            "maxmem": 1073741824,
+            "pid": "1765",
+            "cpus": 1,
+            "netin": 2856071643,
+            "disk": 0,
+            "status": "prelaunch",
+            "netout": 12159205236,
+            "mem": 496179157,
+            "tags": "monitored"
         },
     ]
 

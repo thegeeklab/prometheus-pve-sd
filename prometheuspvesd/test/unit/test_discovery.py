@@ -17,14 +17,20 @@ def get_mock(*args):
     return False
 
 
-def test_exclude(discovery_fixture, qemus):
-    discovery_fixture.config.config["exclude_vmid"] = ["100", "101"]
+def test_exclude_vmid(discovery_fixture, qemus):
+    discovery_fixture.config.config["exclude_vmid"] = ["100", "101", "102"]
 
     expected = []
     filtered = discovery_fixture._exclude(qemus)
 
     assert filtered == expected
 
+def test_exclude_status(discovery_fixture, qemus):
+    discovery_fixture.config.config["exclude_vmid"] = []
+    discovery_fixture.config.config["exclude_state"] = ["prelaunch"]
+    filtered = discovery_fixture._exclude(qemus)
+
+    assert len(filtered) == 2
 
 def test_validate_ip(discovery_fixture, addresses):
     # IPv4 validation
