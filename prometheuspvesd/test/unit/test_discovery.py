@@ -1,8 +1,20 @@
 """Test Autostop class."""
 
+import pytest
+from proxmoxer import ProxmoxAPI
+
+from prometheuspvesd.discovery import Discovery
+
 pytest_plugins = [
     "prometheuspvesd.test.fixtures.fixtures",
 ]
+
+
+@pytest.fixture
+def discovery(mocker):
+    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+
+    return Discovery()
 
 
 def get_mock(*args):
@@ -17,51 +29,45 @@ def get_mock(*args):
     return False
 
 
-def test_exclude_vmid(discovery_fixture, qemus):
-    discovery_fixture.config.config["exclude_vmid"] = ["100", "101", "102"]
+def test_exclude_vmid(discovery, qemus):
+    discovery.config.config["exclude_vmid"] = ["100", "101", "102"]
+    filtered = discovery._exclude(qemus)
 
-    expected = []
-    filtered = discovery_fixture._exclude(qemus)
-
-    assert filtered == expected
-    discovery_fixture.config.config["exclude_vmid"] = []
+    assert len(filtered) == 0
 
 
-def test_exclude_state(discovery_fixture, qemus):
-    discovery_fixture.config.config["exclude_state"] = ["prelaunch"]
-    filtered = discovery_fixture._exclude(qemus)
+def test_exclude_state(discovery, qemus):
+    discovery.config.config["exclude_state"] = ["prelaunch"]
+    filtered = discovery._exclude(qemus)
 
     assert len(filtered) == 2
-    discovery_fixture.config.config["exclude_state"] = []
 
 
-def test_exclude_tags(discovery_fixture, qemus):
-    discovery_fixture.config.config["exclude_tags"] = ["unmonitored"]
-
-    filtered = discovery_fixture._exclude(qemus)
+def test_exclude_tags(discovery, qemus):
+    discovery.config.config["exclude_tags"] = ["unmonitored"]
+    filtered = discovery._exclude(qemus)
 
     assert len(filtered) == 2
-    discovery_fixture.config.config["exclude_tags"] = []
 
 
-def test_validate_ip(discovery_fixture, addresses):
+def test_validate_ip(discovery, addresses):
     # IPv4 validation
     for address in addresses["ipv4_valid"]:
-        assert discovery_fixture._validate_ip(address)
+        assert discovery._validate_ip(address)
     for address in addresses["ipv4_invalid"]:
-        assert not discovery_fixture._validate_ip(address)
+        assert not discovery._validate_ip(address)
 
     # IPv6 validation
     for address in addresses["ipv6_valid"]:
-        assert discovery_fixture._validate_ip(address)
+        assert discovery._validate_ip(address)
     for address in addresses["ipv6_invalid"]:
-        assert not discovery_fixture._validate_ip(address)
+        assert not discovery._validate_ip(address)
 
 
-def test_get_ip_addresses(mocker, discovery_fixture, networks):
-    discovery_fixture.client.get.side_effect = lambda *args: get_mock(networks, *args)
+def test_get_ip_addresses(mocker, discovery, networks):
+    discovery.client.get.side_effect = lambda *args: get_mock(networks, *args)
 
-    assert discovery_fixture._get_ip_addresses("qemu", "dummy", "dummy") == (
+    assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
         networks[1]["ip-addresses"][0]["ip-address"],
         networks[1]["ip-addresses"][2]["ip-address"],
     )
