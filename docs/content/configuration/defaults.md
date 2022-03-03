@@ -28,6 +28,9 @@ exclude_state: []
 # needs to be a list of strings
 exclude_vmid: []
 
+# can be used to exclude vms by tags (proxmox 6+)
+exclude_tags: []
+
 pve:
     server:
     user:

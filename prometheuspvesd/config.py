@@ -94,6 +94,12 @@ class Config():
             "file": True,
             "type": environs.Env().list
         },
+        "exclude_tags": {
+            "default": [],
+            "env": "EXCLUDE_TAGS",
+            "file": True,
+            "type": environs.Env().list
+        },
         "pve.server": {
             "default": "",
             "env": "PVE_SERVER",
