@@ -1,18 +1,6 @@
 """Global pytest fixtures."""
 
 import pytest
-from proxmoxer import ProxmoxAPI
-
-from prometheuspvesd import discovery
-
-
-@pytest.fixture
-def discovery_fixture(mocker):
-    mocker.patch.object(
-        discovery.Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI)
-    )
-
-    return discovery.Discovery()
 
 
 @pytest.fixture
