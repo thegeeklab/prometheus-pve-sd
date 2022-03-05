@@ -1,14 +1,110 @@
 """Global pytest fixtures."""
 
+import environs
 import pytest
 
 
 @pytest.fixture
-def environment():
+def builtins():
     return {
-        "PROMETHEUS_PVE_SD_PVE_USER": "dummyuser",
-        "PROMETHEUS_PVE_SD_PVE_PASSWORD": "dummypass",
-        "PROMETHEUS_PVE_SD_PVE_SERVER": "dummyserver",
+        "metrics.enabled": {
+            "default": True,
+            "env": "METRICS_ENABLED",
+            "type": environs.Env().bool
+        },
+        "metrics.address": {
+            "default": "127.0.0.1",
+            "env": "METRICS_ADDRESS",
+            "type": environs.Env().str
+        },
+        "metrics.port": {
+            "default": 8000,
+            "env": "METRICS_PORT",
+            "type": environs.Env().int
+        },
+        "config_file": {
+            "default": "",
+            "env": "CONFIG_FILE",
+            "type": environs.Env().str
+        },
+        "logging.level": {
+            "default": "WARNING",
+            "env": "LOG_LEVEL",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "logging.format": {
+            "default": "console",
+            "env": "LOG_FORMAT",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "output_file": {
+            "default": "dummy",
+            "env": "OUTPUT_FILE",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "loop_delay": {
+            "default": 300,
+            "env": "LOOP_DELAY",
+            "file": True,
+            "type": environs.Env().int
+        },
+        "service": {
+            "default": False,
+            "env": "SERVICE",
+            "file": True,
+            "type": environs.Env().bool
+        },
+        "exclude_state": {
+            "default": [],
+            "env": "EXCLUDE_STATE",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "exclude_vmid": {
+            "default": [],
+            "env": "EXCLUDE_VMID",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "exclude_tags": {
+            "default": [],
+            "env": "EXCLUDE_TAGS",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "pve.server": {
+            "default": "dummyserver",
+            "env": "PVE_SERVER",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "pve.user": {
+            "default": "dummyuser",
+            "env": "PVE_USER",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "pve.password": {
+            "default": "dummypass",
+            "env": "PVE_PASSWORD",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "pve.auth_timeout": {
+            "default": 5,
+            "env": "PVE_AUTH_TIMEOUT",
+            "file": True,
+            "type": environs.Env().int
+        },
+        "pve.verify_ssl": {
+            "default": True,
+            "env": "PVE_VERIFY_SSL",
+            "file": True,
+            "type": environs.Env().bool
+        }
     }
 
 
@@ -28,7 +124,7 @@ def defaults():
             "enabled": True,
             "port": 8000
         },
-        "output_file": "/home/rknet/rkau2905/.cache/prometheus-pve-sd/pve.json",
+        "output_file": "dummy",
         "pve": {
             "auth_timeout": 5,
             "password": "dummypass",
