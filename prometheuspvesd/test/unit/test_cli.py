@@ -30,23 +30,26 @@ def test_cli_args(mocker, builtins, defaults):
     assert pve.config.config == defaults
 
 
-def test_cli_config_error(mocker, defaults):
+def test_cli_config_error(mocker, capsys):
     mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
+    stdout, stderr = capsys.readouterr()
+    assert "Option 'pve.server' is required but not set" in stderr
     assert e.value.code == 1
 
 
-def test_cli_api_error(mocker, builtins, defaults):
-    mocker.patch.dict(Config.SETTINGS, {"service": {"default": False}})
-
+def test_cli_api_error(mocker, builtins, capsys):
+    mocker.patch.dict(Config.SETTINGS, builtins)
     mocker.patch.object(Discovery, "_auth", side_effect=APIError("Dummy API Exception"))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
+    stdout, stderr = capsys.readouterr()
+    assert "Proxmoxer API error: Dummy API Exception" in stderr
     assert e.value.code == 1
