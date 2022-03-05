@@ -254,7 +254,7 @@ class Config():
         except jsonschema.exceptions.ValidationError as e:
             schema_error = "Failed validating '{validator}' in schema{schema}\n{message}".format(
                 validator=e.validator,
-                schema=format_as_index(list(e.relative_schema_path)[:-1]),
+                schema=format_as_index(list(e.relative_schema_path)[:-1], 0),
                 message=e.message
             )
             raise prometheuspvesd.exception.ConfigError("Configuration error", schema_error)

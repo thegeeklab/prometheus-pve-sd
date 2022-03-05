@@ -4,6 +4,43 @@ import pytest
 
 
 @pytest.fixture
+def environment():
+    return {
+        "PROMETHEUS_PVE_SD_PVE_USER": "dummyuser",
+        "PROMETHEUS_PVE_SD_PVE_PASSWORD": "dummypass",
+        "PROMETHEUS_PVE_SD_PVE_SERVER": "dummyserver",
+    }
+
+
+@pytest.fixture
+def defaults():
+    return {
+        "exclude_state": [],
+        "exclude_tags": [],
+        "exclude_vmid": [],
+        "logging": {
+            "format": "console",
+            "level": "WARNING"
+        },
+        "loop_delay": 300,
+        "metrics": {
+            "address": "127.0.0.1",
+            "enabled": True,
+            "port": 8000
+        },
+        "output_file": "/home/rknet/rkau2905/.cache/prometheus-pve-sd/pve.json",
+        "pve": {
+            "auth_timeout": 5,
+            "password": "dummypass",
+            "server": "dummyserver",
+            "user": "dummyuser",
+            "verify_ssl": True
+        },
+        "service": True,
+    }
+
+
+@pytest.fixture
 def qemus():
     return [
         {
