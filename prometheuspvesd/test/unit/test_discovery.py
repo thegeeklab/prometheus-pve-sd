@@ -1,4 +1,4 @@
-"""Test Autostop class."""
+"""Test Discovery class."""
 
 import pytest
 from proxmoxer import ProxmoxAPI
