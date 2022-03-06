@@ -127,9 +127,9 @@ def defaults():
         "output_file": "dummy",
         "pve": {
             "auth_timeout": 5,
-            "password": "dummypass",
-            "server": "dummyserver",
-            "user": "dummyuser",
+            "password": "",
+            "server": "",
+            "user": "",
             "verify_ssl": True
         },
         "service": True,

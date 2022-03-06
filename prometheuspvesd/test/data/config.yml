@@ -1,0 +1,24 @@
+---
+logging:
+  level: warning
+  format: console
+
+metrics:
+  enabled: true
+  address: "127.0.0.1"
+  port: 8000
+
+output_file: dummy
+loop_delay: 300
+service: true
+
+exclude_state: []
+exclude_vmid: []
+exclude_tags: []
+
+pve:
+  server: proxmox.example.com
+  user: root
+  password: secure
+  auth_timeout: 5
+  verify_ssl: true

@@ -34,7 +34,7 @@ exclude_tags: []
 pve:
     server:
     user:
-    password
+    password:
     auth_timeout: 5
     verify_ssl: true
 
