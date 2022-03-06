@@ -109,34 +109,6 @@ def builtins():
 
 
 @pytest.fixture
-def required():
-    return {
-        "exclude_state": [],
-        "exclude_tags": [],
-        "exclude_vmid": [],
-        "logging": {
-            "format": "console",
-            "level": "WARNING"
-        },
-        "loop_delay": 300,
-        "metrics": {
-            "address": "127.0.0.1",
-            "enabled": True,
-            "port": 8000
-        },
-        "output_file": "dummy",
-        "pve": {
-            "auth_timeout": 5,
-            "password": "dummypass",
-            "server": "dummyserver",
-            "user": "dummyuser",
-            "verify_ssl": True
-        },
-        "service": True,
-    }
-
-
-@pytest.fixture
 def defaults():
     return {
         "exclude_state": [],
