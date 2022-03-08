@@ -6,17 +6,17 @@ class Host:
     """Represents a virtual machine or container in PVE."""
 
     def __init__(self, vmid, hostname, ipv4_address, ipv6_address, pve_type):
-        self.hostname = hostname
-        self.ipv4_address = ipv4_address
-        self.ipv6_address = ipv6_address
-        self.vmid = vmid
-        self.pve_type = pve_type
+        self.hostname = str(hostname)
+        self.ipv4_address = str(ipv4_address)
+        self.ipv6_address = str(ipv6_address)
+        self.vmid = str(vmid)
+        self.pve_type = str(pve_type)
         self.labels = {}
-        self.labels["__meta_pve_ipv4"] = ipv4_address
-        self.labels["__meta_pve_ipv6"] = ipv6_address
-        self.labels["__meta_pve_name"] = hostname
-        self.labels["__meta_pve_type"] = pve_type
-        self.labels["__meta_pve_vmid"] = str(vmid)
+        self.add_label("ipv4", ipv4_address)
+        self.add_label("ipv6", ipv6_address)
+        self.add_label("name", hostname)
+        self.add_label("type", pve_type)
+        self.add_label("vmid", vmid)
 
     def __str__(self):
         return f"{self.hostname}({self.vmid}): {self.pve_type} \
