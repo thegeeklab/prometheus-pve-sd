@@ -1,16 +1,16 @@
 ---
-title: Use with prometheus operator
+title: Use with Prometheus operator
 ---
 
 {{< toc >}}
 
 ## Use in Kubernetes with Prometheus operator
 
-Prometheus also allows service discovery through a http endpoint, and not just through a file.
-In a Kubernetes setup, with the prometheus operator, it makes more sense to use this [HTTP SD](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config)
+Prometheus also allows service discovery through a HTTP endpoint, and not just through a file.
+In a Kubernetes setup, with the Prometheus operator, it makes more sense to use this [HTTP SD](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config)
 instead of trying to mount the output of the prometheus-pve-sd to the container.
 
-Since the prometheus-pve-sd module doesn't have a dedicated http endpoint, you need to use a webserver sidecar, that
+Since the prometheus-pve-sd module doesn't have a dedicated HTTP endpoint, you need to use a web server sidecar, that
 hosts the file as a static file.
 
 The following deployment configuration can serve as a starting point for most setups, and will need some minor adjustments,
@@ -67,7 +67,7 @@ spec:
 status: {}
 ```
 
-Additionally you will need a service, that exposes the http endpoint within Kubernetes so prometheus can scrape it.
+Additionally you will need a service, that exposes the HTTP endpoint within Kubernetes so Prometheus can scrape it.
 
 service configuration
 
@@ -88,7 +88,7 @@ spec:
 ## Prometheus configuration
 
 Prometheus needs to know which endpoint to check for target discovery, this is done similarly to a `file_sd_config`  
-The following example assumes, that the above deployment is in the same namespace as the prometheus instance.
+The following example assumes, that the above deployment is in the same namespace as the Prometheus instance.
 
 ```YAML
 - http_sd_configs:
@@ -106,4 +106,4 @@ The following example assumes, that the above deployment is in the same namespac
     
 ```
 
-See [useage](/usage/) for more details on the relabel configuration
+See [usage](/usage/) for more details on the relabel configuration
