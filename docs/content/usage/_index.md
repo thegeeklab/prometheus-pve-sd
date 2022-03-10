@@ -63,7 +63,9 @@ This example configuration snippet for the Prometheus `scrape_config` Prometheus
 ```
 
 ### IPv4 or IPv6 usage
+
 Set the address from the ipv4 or ipv6 meta label, and not the name
+
 ```YAML
 relabel_configs:
 - replacement: ${1}:9273
@@ -73,7 +75,9 @@ relabel_configs:
 ```
 
 ## Convert tags to custom labels
+
 Eg. Extract `group` and `alert` from a list of tags like this: `__meta_pve_tags="alert:team-1,group:cluster-1,node:node-1"`
+
 ```YAML
 relabel_configs:
 - source_labels:
@@ -89,6 +93,7 @@ relabel_configs:
 ```
 
 Using the `alert` label, you can then for example set an alertmanager route, for this alert
+
 ```YAML
 routes:
 - receiver: "empty"
