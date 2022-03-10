@@ -35,7 +35,7 @@ The following list of meta labels can be used to relabel your scrape results:
 `__meta_pve_status`
 
 `__meta_pve_tags`
-: A comma-separated list of tags, as set on Proxmox. Tags are supported by Proxmox 6+, and the field is missing if not tags are present on a vm.
+: A comma-separated list of tags, as set on Proxmox. Tags are supported by Proxmox 6+, and the field is missing if no tags are present on a VM.
 
 `__meta_pve_groups`
 : Groups will be discovered from the `Notes` field of a host and need to be set as JSON e.g. `{"groups":["group1","group2"]}`
