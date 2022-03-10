@@ -35,7 +35,7 @@ The following list of meta labels can be used to relabel your scrape results:
 `__meta_pve_status`
 
 `__meta_pve_tags`
-: A comma-separated list of tags, as set on proxmox. Tags are supported by Proxmox 6+, and the field is missing if not tags are present on a VM
+: A comma-separated list of tags, as set on Proxmox. Tags are supported by Proxmox 6+, and the field is missing if not tags are present on a vm.
 
 `__meta_pve_groups`
 : Groups will be discovered from the `Notes` field of a host and need to be set as JSON e.g. `{"groups":["group1","group2"]}`
@@ -62,9 +62,9 @@ This example configuration snippet for the Prometheus `scrape_config` Prometheus
     target_label: instance
 ```
 
-### IPv4 or IPv6 usage
+### IPv4 or c usage
 
-Set the address from the ipv4 or ipv6 meta label, and not the name
+Set the address from the IPv4 or IPv4 meta label, and not the name
 
 ```YAML
 relabel_configs:
@@ -76,7 +76,7 @@ relabel_configs:
 
 ## Convert tags to custom labels
 
-Eg. Extract `group` and `alert` from a list of tags like this: `__meta_pve_tags="alert:team-1,group:cluster-1,node:node-1"`
+E.g. Extract `group` and `alert` from a list of tags like this: `__meta_pve_tags="alert:team-1,group:cluster-1,node:node-1"`
 
 ```YAML
 relabel_configs:
@@ -92,7 +92,7 @@ relabel_configs:
   replacement: "${1}"
 ```
 
-Using the `alert` label, you can then for example set an alertmanager route, for this alert
+Using the `alert` label, you can then for example set an Alertmanager route, for this alert
 
 ```YAML
 routes:
