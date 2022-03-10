@@ -229,7 +229,7 @@ class Discovery():
                 prom_host = Host(vmid, host, ipv4_address, ipv6_address, pve_type)
 
                 config_flags = [("cpu", "sockets"), ("cores", "cores"), ("memory", "memory")]
-                meta_flags = [("status", "proxmox_status")]
+                meta_flags = [("status", "proxmox_status"), ("tags", "proxmox_tags")]
 
                 for key, flag in config_flags:
                     if flag in config:
