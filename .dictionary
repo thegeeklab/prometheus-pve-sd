@@ -17,3 +17,5 @@ Alertmanager
 VM
 VMID
 Telegraf
+QEMU
+cloud-init

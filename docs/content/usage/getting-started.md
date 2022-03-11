@@ -17,10 +17,10 @@ prometheus-pve-sd -vv --loop-delay 900 -o /etc/prometheus/pve.json
 The following list of meta labels can be used to relabel your scrape results:
 
 `__meta_pve_ipv4`
-: Discovered IPv4 address or `False` if not found. To discover the IP address either qemu guest agent or a cloud-init config is required.
+: Discovered IPv4 address or `False` if not found. To discover the IP address either QEMU guest agent or a cloud-init configuration is required.
 
 `__meta_pve_ipv6`
-: Discovered IPv6 address or `False` if not found. To discover the IP address either qemu guest agent or a cloud-init config is required.
+: Discovered IPv6 address or `False` if not found. To discover the IP address either QEMU guest agent or a cloud-init configuration is required.
 
 `__meta_pve_name`
 : Name of the node.
