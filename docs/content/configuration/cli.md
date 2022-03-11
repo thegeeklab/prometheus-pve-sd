@@ -4,9 +4,7 @@ title: CLI options
 
 You can get all available CLI options by running `prometheus-pve-sd --help`:
 
-<!-- prettier-ignore-start -->
-<!-- spellchecker-disable -->
-{{< highlight Shell "linenos=table" >}}
+```Shell
 $ prometheus-pve-sd --help
 usage: prometheus-pve-sd [-h] [-c CONFIG_FILE] [-o OUTPUT_FILE] [-d LOOP_DELAY] [--no-service] [-f LOG_FORMAT] [-v] [-q] [--version]
 
@@ -26,6 +24,4 @@ optional arguments:
   -v                    increase log level
   -q                    decrease log level
   --version             show program's version number and exit
-{{< /highlight >}}
-<!-- spellchecker-enable -->
-<!-- prettier-ignore-end -->
+```

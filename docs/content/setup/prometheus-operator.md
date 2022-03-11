@@ -1,5 +1,5 @@
 ---
-title: Use with Prometheus operator
+title: Using Prometheus Operator
 ---
 
 {{< toc >}}
@@ -48,7 +48,7 @@ spec:
         resources: {}
         env:
         - name: PROMETHEUS_PVE_SD_OUTPUT_FILE
-          value: /tmp/pve/pve-sd.json
+          value: /tmp/pve/proxmox.json
         # Add more configurations here, or use a configMap or secret to inject the remaining configs
         volumeMounts:
         - name: pve-sd-output
@@ -77,24 +77,4 @@ spec:
       targetPort: 80
 ```
 
-## Prometheus configuration
-
-Prometheus needs a basic http service discovery configuration to fetch system metrics from the host's discovered from PVE. The following example assumes, that the above deployment was done in the same namespace as the Prometheus instance.
-
-```YAML
-- http_sd_configs:
-    url: pve-sd-service:80/pve-sd.json
-  job_name: pve-service-discovery
-  metrics_path: /metrics
-  relabel_configs:
-  - replacement: ${1}:9273
-    source_labels:
-    - __meta_pve_name
-    target_label: __address__
-  - source_labels:
-    - __meta_pve_name
-    target_label: instance
-
-```
-
-See [usage](/usage/) for more details on the relabel configuration
+After configuring and starting the service, Prometheus need to be [configured](/usage/getting-started/#prometheus-configuration) to use the external service discovery.

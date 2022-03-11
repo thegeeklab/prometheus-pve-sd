@@ -2,9 +2,7 @@
 title: Using docker
 ---
 
-<!-- prettier-ignore-start -->
-<!-- spellchecker-disable -->
-{{< highlight Shell "linenos=table" >}}
+```Shell
 docker run \
     -e PROMETHEUS_PVE_SD_LOG_LEVEL=info \
     -e PROMETHEUS_PVE_SD_LOG_FORMAT=console \
@@ -16,11 +14,11 @@ docker run \
     -e PY_COLORS=1 \
     -v $(pwd):/out \
     thegeeklab/prometheus-pve-sd
-{{< /highlight >}}
-<!-- spellchecker-enable -->
-<!-- prettier-ignore-end -->
+```
 
 {{< hint info >}}
 **Info**\
 Keep in mind, that you have to pass SELinux labels (:Z or :z) to your mount option if you are working on SELinux enabled systems.
 {{< /hint >}}
+
+After configuring and starting the service, Prometheus need to be [configured](/usage/getting-started/#prometheus-configuration) to use the external service discovery.

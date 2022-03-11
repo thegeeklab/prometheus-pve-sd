@@ -2,10 +2,7 @@
 title: Environment Variables
 ---
 
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<!-- spellchecker-disable -->
-{{< highlight Shell "linenos=table" >}}
+```Shell
 PROMETHEUS_PVE_SD_CONFIG_FILE=
 
 # supported log levels: debug|info|warning|error|critical
@@ -32,7 +29,4 @@ PROMETHEUS_PVE_SD_PVE_USER=
 PROMETHEUS_PVE_SD_PVE_PASSWORD=
 PROMETHEUS_PVE_SD_PVE_AUTH_TIMEOUT=5
 PROMETHEUS_PVE_SD_PVE_VERIFY_SSL=true
-{{< /highlight >}}
-<!-- spellchecker-enable -->
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+```

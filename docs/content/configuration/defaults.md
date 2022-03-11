@@ -2,10 +2,7 @@
 title: Default settings
 ---
 
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<!-- spellchecker-disable -->
-{{< highlight YAML "linenos=table" >}}
+```Shell
 ---
 logging:
     # supported log levels: debug|info|warning|error|critical
@@ -45,7 +42,4 @@ pve:
 #     password: secure
 #     auth_timeout: 5
 #     verify_ssl: true
-{{< /highlight >}}
-<!-- spellchecker-enable -->
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+```
