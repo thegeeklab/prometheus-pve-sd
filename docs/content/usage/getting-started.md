@@ -65,7 +65,7 @@ Prometheus needs a basic file service discovery configuration to fetch system me
 
 ### HTTP service discovery
 
-If the static file is served by a web server, e.g. while using the [Prometheus Operator](/setup/prometheus-operator) setup, a HTTP service discovery configuration is required:
+If the static file is served by a web server, e.g. while using the [Prometheus Operator](/setup/prometheus-operator/) setup, a HTTP service discovery configuration is required:
 
 ```YAML
 - http_sd_configs:
