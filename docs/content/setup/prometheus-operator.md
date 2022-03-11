@@ -4,17 +4,9 @@ title: Use with Prometheus operator
 
 {{< toc >}}
 
-## Use in Kubernetes with Prometheus operator
+As an alternative to local files service discovery Prometheus also support discoveries form HTTP endpoints. In a Kubernetes setup, with the Prometheus operator, it makes more sense to use this [HTTP SD](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config) instead of mounting the output file of the `prometheus-pve-sd` to the container.
 
-Prometheus also allows service discovery through a HTTP endpoint, and not just through a file.
-In a Kubernetes setup, with the Prometheus operator, it makes more sense to use this [HTTP SD](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config)
-instead of trying to mount the output of the prometheus-pve-sd to the container.
-
-Since the prometheus-pve-sd module doesn't have a dedicated HTTP endpoint, you need to use a web server sidecar, that
-hosts the file as a static file.
-
-The following deployment configuration can serve as a starting point for most setups, and will need some minor adjustments,
-depending on your Kubernetes setup.
+The `prometheus-pve-sd` module doesn't have a dedicated HTTP endpoint, therefore you need to use a web server sidecar, that hosts the static file. The following deployment configuration can serve as a starting point for most setups, and just requires some minor adjustments, depending on your Kubernetes setup.
 
 ## Kubernetes configuration
 
@@ -69,7 +61,7 @@ status: {}
 
 Additionally you will need a service, that exposes the HTTP endpoint within Kubernetes so Prometheus can scrape it.
 
-service configuration
+Service configuration:
 
 ```YAML
 apiVersion: v1
@@ -87,8 +79,7 @@ spec:
 
 ## Prometheus configuration
 
-Prometheus needs to know which endpoint to check for target discovery, this is done similarly to a `file_sd_config`  
-The following example assumes, that the above deployment is in the same namespace as the Prometheus instance.
+Prometheus needs a basic http service discovery configuration to fetch system metrics from the host's discovered from PVE. The following example assumes, that the above deployment was done in the same namespace as the Prometheus instance.
 
 ```YAML
 - http_sd_configs:
@@ -103,7 +94,7 @@ The following example assumes, that the above deployment is in the same namespac
   - source_labels:
     - __meta_pve_name
     target_label: instance
-    
+
 ```
 
 See [usage](/usage/) for more details on the relabel configuration
