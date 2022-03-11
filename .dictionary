@@ -15,3 +15,5 @@ IPv4
 IPv6
 Alertmanager
 VM
+VMID
+Telegraf

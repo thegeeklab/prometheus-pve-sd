@@ -16,4 +16,6 @@ main:
       - name: Environment variables
         ref: "/configuration/env"
   - name: Usage
-    ref: "/usage"
+    sub:
+      - name: Getting Started
+        ref: "/usage/getting-started"
