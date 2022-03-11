@@ -19,3 +19,6 @@ VMID
 Telegraf
 QEMU
 cloud-init
+Prometheus
+Kubernetes
+namespace

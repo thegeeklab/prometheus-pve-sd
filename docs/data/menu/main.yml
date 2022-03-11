@@ -2,10 +2,12 @@
 main:
   - name: Setup
     sub:
-      - name: Using pip
+      - name: Using PIP
         ref: "/setup/pip"
-      - name: Using docker
+      - name: Using Docker
         ref: "/setup/docker"
+      - name: Using  Prometheus Operator
+        ref: "/setup/prometheus-operator"
   - name: Configuration
     ref: "/configuration"
     sub:
@@ -19,3 +21,5 @@ main:
     sub:
       - name: Getting Started
         ref: "/usage/getting-started"
+      - name: Advanced
+        ref: "/usage/advanced"

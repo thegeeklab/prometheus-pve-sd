@@ -3,7 +3,7 @@
 
 
 class PrometheusSDError(Exception):
-    """Generic exception class for promtheus-pve-sd."""
+    """Generic exception class for Prometheus-pve-sd."""
 
     def __init__(self, msg, original_exception=""):
         super(PrometheusSDError,
