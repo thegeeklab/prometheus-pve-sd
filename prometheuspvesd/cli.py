@@ -3,6 +3,7 @@
 
 import argparse
 import json
+from os import chmod
 import shutil
 import signal
 import tempfile
@@ -170,6 +171,7 @@ class PrometheusSD:
             json.dump(output, tf, indent=4)
 
         shutil.move(temp_file.name, self.config.config["output_file"])
+        chmod(self.config.config["output_file"], 0o640)
 
     def _terminate(self, signal, frame):
         self.log.sysexit_with_message("Terminating", code=0)
