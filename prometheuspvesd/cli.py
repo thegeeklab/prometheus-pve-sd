@@ -3,10 +3,10 @@
 
 import argparse
 import json
-from os import chmod
 import shutil
 import signal
 import tempfile
+from os import chmod
 from time import sleep
 
 from prometheus_client import start_http_server
