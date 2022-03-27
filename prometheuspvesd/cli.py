@@ -67,6 +67,9 @@ class PrometheusSD:
             "-o", "--output", dest="output_file", action="store", help="output file"
         )
         parser.add_argument(
+            "-m", "--mode", dest="output_file_mode", action="store", help="output file mode"
+        )
+        parser.add_argument(
             "-d",
             "--loop-delay",
             dest="loop_delay",
@@ -171,7 +174,7 @@ class PrometheusSD:
             json.dump(output, tf, indent=4)
 
         shutil.move(temp_file.name, self.config.config["output_file"])
-        chmod(self.config.config["output_file"], 0o640)
+        chmod(self.config.config["output_file"], self.config.config["output_file_mode"])
 
     def _terminate(self, signal, frame):
         self.log.sysexit_with_message("Terminating", code=0)

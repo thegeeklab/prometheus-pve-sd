@@ -9,6 +9,7 @@ metrics:
   port: 8000
 
 output_file: dummy
+output_file_mode: "0640"
 loop_delay: 300
 service: true
 
