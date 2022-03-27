@@ -71,7 +71,7 @@ class Config():
             "type": environs.Env().str
         },
         "output_file_mode": {
-            "default": "0644",
+            "default": "0640",
             "env": "OUTPUT_FILE_MODE",
             "file": True,
             "type": environs.Env().str
