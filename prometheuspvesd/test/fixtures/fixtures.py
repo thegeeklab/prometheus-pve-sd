@@ -45,6 +45,12 @@ def builtins():
             "file": True,
             "type": environs.Env().str
         },
+        "output_file_mode": {
+            "default": "0640",
+            "env": "OUTPUT_FILE_MODE",
+            "file": True,
+            "type": environs.Env().str
+        },
         "loop_delay": {
             "default": 300,
             "env": "LOOP_DELAY",
@@ -125,6 +131,7 @@ def defaults():
             "port": 8000
         },
         "output_file": "dummy",
+        "output_file_mode": "0640",
         "pve": {
             "auth_timeout": 5,
             "password": "",

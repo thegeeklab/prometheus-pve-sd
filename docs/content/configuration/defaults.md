@@ -16,6 +16,8 @@ metrics:
     port: 8000
 
 output_file:
+output_file_mode: "0640"
+
 loop_delay: 300
 # Run pve sd in a loop and discover hosts every n seconds (as defined in loop_delay).
 # Can be disabled to run disovery only once.

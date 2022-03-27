@@ -70,6 +70,12 @@ class Config():
             "file": True,
             "type": environs.Env().str
         },
+        "output_file_mode": {
+            "default": "0644",
+            "env": "OUTPUT_FILE_MODE",
+            "file": True,
+            "type": environs.Env().str
+        },
         "loop_delay": {
             "default": 300,
             "env": "LOOP_DELAY",
