@@ -144,10 +144,25 @@ class Discovery():
 
         return ipv4_address, ipv6_address
 
-    def _exclude(self, pve_list):
+    def _filter(self, pve_list):
         filtered = []
         for item in pve_list:
             obj = defaultdict(dict, item)
+            if (
+                len(self.config.config["include_vmid"]) > 0
+                and str(obj["vmid"]) not in self.config.config["include_vmid"]
+            ):
+                continue
+
+            if (
+                len(self.config.config["include_tags"]) > 0
+                and (
+                    isinstance(obj["tags"], dict)
+                    or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
+                )
+            ):
+                continue
+
             if obj["template"] == 1:
                 continue
 

@@ -106,6 +106,18 @@ class Config():
             "file": True,
             "type": environs.Env().list
         },
+        "include_vmid": {
+            "default": [],
+            "env": "INCLUDE_VMID",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "include_tags": {
+            "default": [],
+            "env": "INCLUDE_TAGS",
+            "file": True,
+            "type": environs.Env().list
+        },
         "pve.server": {
             "default": "",
             "env": "PVE_SERVER",
