@@ -81,5 +81,6 @@ def test_cli_write(mocker, tmp_path, builtins, inventory, labels):
     mocker.patch.object(Discovery, "propagate", return_value=inventory)
     mocker.patch("tempfile.NamedTemporaryFile", return_value=temp.open("w"))
 
-    PrometheusSD()
+    psd = PrometheusSD()
     assert json.loads(out.read_text()) == labels
+    assert oct(out.stat().st_mode & 0o777) == oct(int(psd.config.config["output_file_mode"], 8))
