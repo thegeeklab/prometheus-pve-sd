@@ -26,9 +26,11 @@ service: true
 exclude_state: []
 # needs to be a list of strings
 exclude_vmid: []
+include_vmid: []
 
 # can be used to exclude vms by tags (proxmox 6+)
 exclude_tags: []
+include_tags: []
 
 pve:
     server:
@@ -45,3 +47,7 @@ pve:
 #     auth_timeout: 5
 #     verify_ssl: true
 ```
+
+If `include_tags` and `exclude_tags` are set at the same time, the `exclude_tags` option takes presedence.
+
+If `include_tags` is set, and you VM don't have any tags set, they will not show up!
