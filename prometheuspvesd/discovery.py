@@ -155,8 +155,7 @@ class Discovery():
                 continue
 
             if (
-                len(self.config.config["include_tags"]) > 0
-                and (
+                len(self.config.config["include_tags"]) > 0 and (
                     isinstance(obj["tags"], dict)
                     or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
                 )
