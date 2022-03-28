@@ -174,7 +174,7 @@ class PrometheusSD:
             json.dump(output, tf, indent=4)
 
         shutil.move(temp_file.name, self.config.config["output_file"])
-        chmod(self.config.config["output_file"], self.config.config["output_file_mode"])
+        chmod(self.config.config["output_file"], int(self.config.config["output_file_mode"], 8))
 
     def _terminate(self, signal, frame):
         self.log.sysexit_with_message("Terminating", code=0)

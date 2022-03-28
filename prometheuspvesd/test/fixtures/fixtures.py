@@ -3,6 +3,9 @@
 import environs
 import pytest
 
+from prometheuspvesd.model import Host
+from prometheuspvesd.model import HostList
+
 
 @pytest.fixture
 def builtins():
@@ -293,3 +296,35 @@ def networks():
             }
         },
     ]
+
+
+@pytest.fixture
+def inventory():
+    hostlist = HostList()
+    hostlist.add_host(Host("101", "host1", "129.168.0.1", False, "qemu"))
+    hostlist.add_host(Host("202", "host2", "129.168.0.2", False, "qemu"))
+
+    return hostlist
+
+
+@pytest.fixture
+def labels():
+    return [{
+        "targets": ["host1"],
+        "labels": {
+            "__meta_pve_ipv4": "129.168.0.1",
+            "__meta_pve_ipv6": "False",
+            "__meta_pve_name": "host1",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "101"
+        }
+    }, {
+        "targets": ["host2"],
+        "labels": {
+            "__meta_pve_ipv4": "129.168.0.2",
+            "__meta_pve_ipv6": "False",
+            "__meta_pve_name": "host2",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "202"
+        }
+    }]
