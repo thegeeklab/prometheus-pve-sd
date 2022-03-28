@@ -156,7 +156,7 @@ class Discovery():
 
             if (
                 len(self.config.config["include_tags"]) > 0 and (
-                    isinstance(obj["tags"], dict)
+                    bool(obj["tags"]) is False # continue if tags is not set
                     or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
                 )
             ):
