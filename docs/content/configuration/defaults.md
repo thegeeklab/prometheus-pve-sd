@@ -48,6 +48,6 @@ pve:
 #     verify_ssl: true
 ```
 
-If `include_tags` and `exclude_tags` are set at the same time, the `exclude_tags` option takes presedence.
+If `include_tags` and `exclude_tags` are set at the same time, the `exclude_tags` option takes precedence.
 
-If `include_tags` is set, and you VM don't have any tags set, they will not show up!
+If `include_tags` is set, and your VM don't have any tags set, they will not show up!
