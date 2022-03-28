@@ -1,4 +1,6 @@
 """Test CLI class."""
+import json
+
 import pytest
 from proxmoxer import ProxmoxAPI
 
@@ -66,3 +68,18 @@ def test_cli_api_error(mocker, builtins, capsys):
     stdout, stderr = capsys.readouterr()
     assert "Proxmoxer API error: Dummy API Exception" in stderr
     assert e.value.code == 1
+
+
+def test_cli_write(mocker, tmp_path, builtins, inventory, labels):
+    temp = tmp_path / "temp.txt"
+    out = tmp_path / "out.txt"
+
+    builtins["output_file"]["default"] = out.as_posix()
+
+    mocker.patch.dict(Config.SETTINGS, builtins)
+    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(Discovery, "propagate", return_value=inventory)
+    mocker.patch("tempfile.NamedTemporaryFile", return_value=temp.open("w"))
+
+    PrometheusSD()
+    assert json.loads(out.read_text()) == labels
