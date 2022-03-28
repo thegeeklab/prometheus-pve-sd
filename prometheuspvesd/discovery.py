@@ -199,9 +199,9 @@ class Discovery():
         for node in self._get_names(self.client.get("nodes"), "node"):
             try:
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                qemu_list = self._exclude(self.client.get("nodes", node, "qemu"))
+                qemu_list = self._filter(self.client.get("nodes", node, "qemu"))
                 PVE_REQUEST_COUNT_TOTAL.inc()
-                container_list = self._exclude(self.client.get("nodes", node, "lxc"))
+                container_list = self._filter(self.client.get("nodes", node, "lxc"))
             except Exception as e:  # noqa
                 PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                 raise APIError(str(e))
