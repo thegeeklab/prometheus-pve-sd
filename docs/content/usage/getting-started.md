@@ -69,7 +69,7 @@ If the static file is served by a web server, e.g. while using the [Prometheus O
 
 ```YAML
 - http_sd_configs:
-    url: pve-sd-service:80/proxmox.json
+    - url: http://pve-sd-service:80/proxmox.json
   job_name: telegraf-pve
   metrics_path: /metrics
   relabel_configs:
