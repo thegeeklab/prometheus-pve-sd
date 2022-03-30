@@ -6,6 +6,7 @@ from proxmoxer import ProxmoxAPI
 
 import prometheuspvesd.exception
 from prometheuspvesd.cli import PrometheusSD
+from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.config import Config
 from prometheuspvesd.discovery import Discovery
 from prometheuspvesd.exception import APIError
@@ -17,7 +18,7 @@ pytest_plugins = [
 
 
 def test_cli_required_error(mocker, capsys):
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
@@ -33,7 +34,7 @@ def test_cli_config_error(mocker, capsys):
         "prometheuspvesd.config.SingleConfig.__init__",
         side_effect=prometheuspvesd.exception.ConfigError("Dummy Config Exception")
     )
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
@@ -45,8 +46,8 @@ def test_cli_config_error(mocker, capsys):
 
 
 def test_cli_log_error(mocker, capsys):
-    mocker.patch.object(Log, "update_logger", side_effect=ValueError("Dummy Logleve Exception"))
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(Log, "update_logger", side_effect=ValueError("Dummy Loglevel Exception"))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
@@ -59,7 +60,7 @@ def test_cli_log_error(mocker, capsys):
 
 def test_cli_api_error(mocker, builtins, capsys):
     mocker.patch.dict(Config.SETTINGS, builtins)
-    mocker.patch.object(Discovery, "_auth", side_effect=APIError("Dummy API Exception"))
+    mocker.patch.object(ProxmoxClient, "_auth", side_effect=APIError("Dummy API Exception"))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
     with pytest.raises(SystemExit) as e:
@@ -77,7 +78,7 @@ def test_cli_write(mocker, tmp_path, builtins, inventory, labels):
     builtins["output_file"]["default"] = out.as_posix()
 
     mocker.patch.dict(Config.SETTINGS, builtins)
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(Discovery, "propagate", return_value=inventory)
     mocker.patch("tempfile.NamedTemporaryFile", return_value=temp.open("w"))
 

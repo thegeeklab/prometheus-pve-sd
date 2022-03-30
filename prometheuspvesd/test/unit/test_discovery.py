@@ -1,8 +1,10 @@
 """Test Discovery class."""
+from unittest.mock import MagicMock
 
 import pytest
 from proxmoxer import ProxmoxAPI
 
+from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.discovery import Discovery
 
 pytest_plugins = [
@@ -12,21 +14,9 @@ pytest_plugins = [
 
 @pytest.fixture
 def discovery(mocker):
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
 
     return Discovery()
-
-
-def get_mock(*args):
-    networks = args[0]
-    args = args[1:]
-
-    if "info" in args:
-        return True
-    if "network-get-interfaces" in args:
-        return {"result": networks}
-
-    return False
 
 
 def test_exclude_vmid(discovery, qemus):
@@ -97,8 +87,8 @@ def test_validate_ip(discovery, addresses):
         assert not discovery._validate_ip(address)
 
 
-def test_get_ip_addresses(mocker, discovery, networks):
-    discovery.client.get.side_effect = lambda *args: get_mock(networks, *args)
+def test_get_ip_addresses(discovery, networks):
+    discovery.client.get_network_interfaces = MagicMock(return_value=networks)
 
     assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
         networks[1]["ip-addresses"][0]["ip-address"],
