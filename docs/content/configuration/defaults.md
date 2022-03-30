@@ -5,9 +5,9 @@ title: Default settings
 ```Shell
 ---
 logging:
-    # supported log levels: debug|info|warning|error|critical
+    # Supported log levels: debug|info|warning|error|critical
     level: warning
-    # supported log formats: console|json|simple
+    # Supported log formats: console|json|simple
     format: console
 
 metrics:
@@ -24,11 +24,14 @@ loop_delay: 300
 service: true
 
 exclude_state: []
-# needs to be a list of strings
+
+# Needs to be a list of strings.
 exclude_vmid: []
 include_vmid: []
 
-# can be used to exclude vms by tags (proxmox 6+)
+# Can be used to exclude vms by tags (proxmox 6+) - needs to be a list of strings.
+# If `include_tags` and `exclude_tags` are set at the same time, the `exclude_tags` option takes precedence.
+# If `include_tags` is set, and your VM don't have any tags set, they will not show up!
 exclude_tags: []
 include_tags: []
 
@@ -47,7 +50,3 @@ pve:
 #     auth_timeout: 5
 #     verify_ssl: true
 ```
-
-If `include_tags` and `exclude_tags` are set at the same time, the `exclude_tags` option takes precedence.
-
-If `include_tags` is set, and your VM don't have any tags set, they will not show up!

@@ -100,15 +100,15 @@ class Config():
             "file": True,
             "type": environs.Env().list
         },
-        "exclude_tags": {
-            "default": [],
-            "env": "EXCLUDE_TAGS",
-            "file": True,
-            "type": environs.Env().list
-        },
         "include_vmid": {
             "default": [],
             "env": "INCLUDE_VMID",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "exclude_tags": {
+            "default": [],
+            "env": "EXCLUDE_TAGS",
             "file": True,
             "type": environs.Env().list
         },
