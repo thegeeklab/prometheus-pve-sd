@@ -1,0 +1,66 @@
+[
+    {
+        "targets": [
+            "fhnw-syspr01"
+        ],
+        "labels": {
+            "__meta_pve_ipv4": "10.112.153.88",
+            "__meta_pve_ipv6": null,
+            "__meta_pve_name": "fhnw-syspr01",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "103",
+            "__meta_pve_cpu": "1",
+            "__meta_pve_cores": "2",
+            "__meta_pve_memory": "2048",
+            "__meta_pve_status": "running"
+        }
+    },
+    {
+        "targets": [
+            "admin03"
+        ],
+        "labels": {
+            "__meta_pve_ipv4": "10.112.153.83",
+            "__meta_pve_ipv6": null,
+            "__meta_pve_name": "admin03",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "102",
+            "__meta_pve_cpu": "1",
+            "__meta_pve_cores": "1",
+            "__meta_pve_memory": "1024",
+            "__meta_pve_status": "running"
+        }
+    },
+    {
+        "targets": [
+            "psql02"
+        ],
+        "labels": {
+            "__meta_pve_ipv4": "10.112.153.91",
+            "__meta_pve_ipv6": null,
+            "__meta_pve_name": "psql02",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "100",
+            "__meta_pve_cpu": "1",
+            "__meta_pve_cores": "4",
+            "__meta_pve_memory": "4096",
+            "__meta_pve_status": "running"
+        }
+    },
+    {
+        "targets": [
+            "fhnw-gitlab01"
+        ],
+        "labels": {
+            "__meta_pve_ipv4": "10.112.153.92",
+            "__meta_pve_ipv6": null,
+            "__meta_pve_name": "fhnw-gitlab01",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "104",
+            "__meta_pve_cpu": "1",
+            "__meta_pve_cores": "2",
+            "__meta_pve_memory": "2048",
+            "__meta_pve_status": "running"
+        }
+    }
+]

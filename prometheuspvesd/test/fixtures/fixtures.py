@@ -84,6 +84,18 @@ def builtins():
             "file": True,
             "type": environs.Env().list
         },
+        "include_vmid": {
+            "default": [],
+            "env": "INCLUDE_VMID",
+            "file": True,
+            "type": environs.Env().list
+        },
+        "include_tags": {
+            "default": [],
+            "env": "INCLUDE_TAGS",
+            "file": True,
+            "type": environs.Env().list
+        },
         "pve.server": {
             "default": "dummyserver",
             "env": "PVE_SERVER",
@@ -123,6 +135,8 @@ def defaults():
         "exclude_state": [],
         "exclude_tags": [],
         "exclude_vmid": [],
+        "include_tags": [],
+        "include_vmid": [],
         "logging": {
             "format": "console",
             "level": "WARNING"
@@ -166,7 +180,7 @@ def qemus():
             "status": "running",
             "netout": 12159205236,
             "mem": 496179157,
-            "tags": "unmonitored,excluded"
+            "tags": "unmonitored,excluded,postgres"
         },
         {
             "diskwrite": 0,

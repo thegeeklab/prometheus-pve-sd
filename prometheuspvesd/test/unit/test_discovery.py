@@ -31,23 +31,66 @@ def get_mock(*args):
 
 def test_exclude_vmid(discovery, qemus):
     discovery.config.config["exclude_vmid"] = ["100", "101", "102"]
-    filtered = discovery._exclude(qemus)
+    filtered = discovery._filter(qemus)
 
     assert len(filtered) == 0
 
 
 def test_exclude_state(discovery, qemus):
     discovery.config.config["exclude_state"] = ["prelaunch"]
-    filtered = discovery._exclude(qemus)
+    filtered = discovery._filter(qemus)
 
     assert len(filtered) == 2
 
 
 def test_exclude_tags(discovery, qemus):
     discovery.config.config["exclude_tags"] = ["unmonitored"]
-    filtered = discovery._exclude(qemus)
+    filtered = discovery._filter(qemus)
 
     assert len(filtered) == 2
+
+
+def test_include_tags(discovery, qemus):
+    discovery.config.config["include_tags"] = ["monitored"]
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 1
+
+
+def test_include_tags_multiple(discovery, qemus):
+    discovery.config.config["include_tags"] = ["monitored", "postgres"]
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 2
+
+
+def test_include_tags_empty(discovery, qemus):
+    discovery.config.config["include_tags"] = []
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 3
+
+
+def test_include_vmid(discovery, qemus):
+    discovery.config.config["include_vmid"] = ["101", "100"]
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 2
+
+
+def test_include_vmid_empty(discovery, qemus):
+    discovery.config.config["include_vmid"] = []
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 3
+
+
+def test_include_and_exclude_tags(discovery, qemus):
+    discovery.config.config["include_tags"] = ["postgres"]
+    discovery.config.config["exclude_tags"] = ["unmonitored"]
+    filtered = discovery._filter(qemus)
+
+    assert len(filtered) == 0
 
 
 def test_validate_ip(discovery, addresses):
