@@ -1,5 +1,4 @@
 """Test Discovery class."""
-from unittest.mock import MagicMock
 
 import pytest
 from proxmoxer import ProxmoxAPI
