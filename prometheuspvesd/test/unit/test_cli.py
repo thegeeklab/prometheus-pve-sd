@@ -54,7 +54,7 @@ def test_cli_log_error(mocker, capsys):
         PrometheusSD()
 
     stdout, stderr = capsys.readouterr()
-    assert "Dummy Logleve Exception" in stderr
+    assert "Dummy Loglevel Exception" in stderr
     assert e.value.code == 1
 
 

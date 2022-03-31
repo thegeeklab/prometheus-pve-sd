@@ -87,8 +87,8 @@ def test_validate_ip(discovery, addresses):
         assert not discovery._validate_ip(address)
 
 
-def test_get_ip_addresses(discovery, networks):
-    discovery.client.get_network_interfaces = MagicMock(return_value=networks)
+def test_get_ip_addresses(mocker, discovery, networks):
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
     assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
         networks[1]["ip-addresses"][0]["ip-address"],
