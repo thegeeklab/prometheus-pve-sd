@@ -282,17 +282,17 @@ def networks():
             "hardware-address": "92:0b:bd:c1:f8:39",
             "ip-addresses": [
                 {
-                    "ip-address": "10.168.0.1",
+                    "ip-address": "192.0.2.1",
                     "ip-address-type": "ipv4",
                     "prefix": 32
                 },
                 {
-                    "ip-address": "10.168.0.2",
+                    "ip-address": "192.0.2.4",
                     "ip-address-type": "ipv4",
                     "prefix": 32
                 },
                 {
-                    "ip-address": "2001:cdba:3333:4444:5555:6666:7777:8888",
+                    "ip-address": "2001:db8:3333:4444:5555:6666:7777:8888",
                     "ip-address-type": "ipv6",
                     "prefix": 64
                 },
@@ -315,8 +315,9 @@ def networks():
 @pytest.fixture
 def inventory():
     hostlist = HostList()
-    hostlist.add_host(Host("101", "host1", "129.168.0.1", False, "qemu"))
-    hostlist.add_host(Host("202", "host2", "129.168.0.2", False, "qemu"))
+    hostlist.add_host(Host("100", "100.example.com", "192.0.2.1", False, "qemu"))
+    hostlist.add_host(Host("101", "101.example.com", "192.0.2.2", False, "qemu"))
+    hostlist.add_host(Host("102", "102.example.com", "192.0.2.3", False, "qemu"))
 
     return hostlist
 
@@ -324,21 +325,30 @@ def inventory():
 @pytest.fixture
 def labels():
     return [{
-        "targets": ["host1"],
+        "targets": ["100.example.com"],
         "labels": {
-            "__meta_pve_ipv4": "129.168.0.1",
+            "__meta_pve_ipv4": "192.0.2.1",
             "__meta_pve_ipv6": "False",
-            "__meta_pve_name": "host1",
+            "__meta_pve_name": "100.example.com",
+            "__meta_pve_type": "qemu",
+            "__meta_pve_vmid": "100"
+        }
+    }, {
+        "targets": ["101.example.com"],
+        "labels": {
+            "__meta_pve_ipv4": "192.0.2.2",
+            "__meta_pve_ipv6": "False",
+            "__meta_pve_name": "101.example.com",
             "__meta_pve_type": "qemu",
             "__meta_pve_vmid": "101"
         }
     }, {
-        "targets": ["host2"],
+        "targets": ["102.example.com"],
         "labels": {
-            "__meta_pve_ipv4": "129.168.0.2",
+            "__meta_pve_ipv4": "192.0.2.3",
             "__meta_pve_ipv6": "False",
-            "__meta_pve_name": "host2",
+            "__meta_pve_name": "102.example.com",
             "__meta_pve_type": "qemu",
-            "__meta_pve_vmid": "202"
+            "__meta_pve_vmid": "102"
         }
     }]
