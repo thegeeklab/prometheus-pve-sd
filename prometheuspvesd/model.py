@@ -36,6 +36,20 @@ class HostList:
     def __init__(self):
         self.hosts = []
 
+    def __eq__(self, other):
+        if not isinstance(other, HostList):
+            return False
+
+        if len(other.hosts) != len(self.hosts):
+            return False
+
+        for host in self.hosts:
+            if other.host_exists(host):
+                continue
+            return False
+
+        return True
+
     def clear(self):
         self.hosts = []
 
