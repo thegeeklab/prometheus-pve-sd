@@ -245,7 +245,7 @@ def instance_config():
     return {
         "name": "102.example.com",
         "description": "{\"groups\": \"test-group\"}",
-        "net0": "virtio=D8-85-75-47-2E-8D,bridge=vmbr122",
+        "net0": "virtio=D8-85-75-47-2E-8D,bridge=vmbr122,ip=192.0.2.25,ip=2001:db8:3333:4444:5555:6666:7777:8888",
         "cpu": 2,
         "cores": 2
     }
@@ -267,8 +267,8 @@ def agent_info():
 def addresses():
     return {
         "ipv4_valid": [
-            "192.168.0.1",
-            "10.0.0.1",
+            "192.0.2.1",
+            "198.51.100.1",
         ],
         "ipv4_invalid": [
             "127.0.0.1",
