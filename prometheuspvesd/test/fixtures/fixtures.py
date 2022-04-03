@@ -161,6 +161,24 @@ def defaults():
 
 
 @pytest.fixture
+def nodes():
+    return [{
+        "level": "",
+        "id": "node/example-node",
+        "disk": 4783488,
+        "cpu": 0.0935113631167406,
+        "maxcpu": 24,
+        "maxmem": 142073272990,
+        "mem": 135884478304,
+        "node": "example-node",
+        "type": "node",
+        "status": "online",
+        "maxdisk": 504209920,
+        "uptime": 200
+    }]
+
+
+@pytest.fixture
 def qemus():
     return [
         {
@@ -220,6 +238,29 @@ def qemus():
             "tags": "monitored"
         },
     ]
+
+
+@pytest.fixture
+def instance_config():
+    return {
+        "name": "102.example.com",
+        "description": "{\"groups\": \"test-group\"}",
+        "net0": "virtio=D8-85-75-47-2E-8D,bridge=vmbr122",
+        "cpu": 2,
+        "cores": 2
+    }
+
+
+@pytest.fixture
+def agent_info():
+    return {
+        "supported_commands": [{
+            "name": "guest-network-get-interfaces",
+            "enabled": True,
+            "success-response": True
+        }],
+        "version": "5.2.0"
+    }
 
 
 @pytest.fixture
