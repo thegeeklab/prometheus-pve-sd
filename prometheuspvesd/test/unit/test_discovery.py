@@ -95,6 +95,16 @@ def test_get_ip_addresses(mocker, discovery, networks):
     )
 
 
+def test_get_ip_addresses_from_instance_config(mocker, discovery, instance_config):
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+
+    assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
+        "192.0.2.25",
+        "2001:db8:3333:4444:5555:6666:7777:8888",
+    )
+
+
 def test_propagate(
     mocker, discovery, nodes, qemus, instance_config, agent_info, networks, inventory
 ):
