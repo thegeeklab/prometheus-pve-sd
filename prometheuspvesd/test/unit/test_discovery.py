@@ -101,7 +101,7 @@ def test_get_ip_addresses_from_instance_config(mocker, discovery, instance_confi
 
     assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
         "192.0.2.25",
-        "2001:db8:3333:4444:5555:6666:7777:8888",
+        "2001:db8::6666:7777:8888",
     )
 
 
