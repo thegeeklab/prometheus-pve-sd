@@ -93,3 +93,15 @@ def test_get_ip_addresses(mocker, discovery, networks):
         networks[1]["ip-addresses"][0]["ip-address"],
         networks[1]["ip-addresses"][2]["ip-address"],
     )
+
+
+def test_propagate(
+    mocker, discovery, nodes, qemus, instance_config, agent_info, networks, inventory
+):
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    assert discovery.propagate() == inventory
