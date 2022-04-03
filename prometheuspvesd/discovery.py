@@ -98,7 +98,7 @@ class Discovery():
                     sources = [config["net0"]]
 
                 for s in sources:
-                    find = re.search(r"ip=(\d*:\d*:\d*:\d*:\d*:\d*)", str(s))
+                    find = re.search(r"ip=(([a-fA-F0-9]{0,4}:{0,2}){0,7}:[0-9a-fA-F]{1,4})", str(s))
                     if find and find.group(1):
                         ipv6_address = find.group(1)
                         break
