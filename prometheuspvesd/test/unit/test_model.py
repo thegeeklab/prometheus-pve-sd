@@ -38,7 +38,7 @@ pytest_plugins = [
         }),
     ]
 )
-def test_host(mocker, testinput, expected):
+def test_host(testinput, expected):
     host = Host(
         testinput["vmid"],
         testinput["hostname"],

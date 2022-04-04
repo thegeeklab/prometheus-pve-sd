@@ -6,62 +6,31 @@ import json
 import re
 from collections import defaultdict
 
-import requests
-from prometheus_client import Counter
 from prometheus_client import Gauge
 from prometheus_client import Summary
 
+from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.exception import APIError
 from prometheuspvesd.logger import SingleLog
 from prometheuspvesd.model import Host
 from prometheuspvesd.model import HostList
-from prometheuspvesd.utils import to_bool
-
-try:
-    from proxmoxer import ProxmoxAPI
-    HAS_PROXMOXER = True
-except ImportError:
-    HAS_PROXMOXER = False
 
 PROPAGATION_TIME = Summary(
     "pve_sd_propagate_seconds", "Time spent propagating the inventory from PVE"
 )
 HOST_GAUGE = Gauge("pve_sd_hosts", "Number of hosts discovered by PVE SD")
-PVE_REQUEST_COUNT_TOTAL = Counter("pve_sd_requests_total", "Total count of requests to PVE API")
-PVE_REQUEST_COUNT_ERROR_TOTAL = Counter(
-    "pve_sd_requests_error_total", "Total count of failed requests to PVE API"
-)
 
 
 class Discovery():
     """Prometheus PVE Service Discovery."""
 
     def __init__(self):
-        if not HAS_PROXMOXER:
-            self.log.sysexit_with_message(
-                "The Proxmox VE Prometheus SD requires proxmoxer: "
-                "https://pypi.org/project/proxmoxer/"
-            )
-
         self.config = SingleConfig()
         self.log = SingleLog()
         self.logger = SingleLog().logger
-        self.client = self._auth()
+        self.client = ProxmoxClient()
         self.host_list = HostList()
-
-    def _auth(self):
-        try:
-            return ProxmoxAPI(
-                self.config.config["pve"]["server"],
-                user=self.config.config["pve"]["user"],
-                password=self.config.config["pve"]["password"],
-                verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
-                timeout=self.config.config["pve"]["auth_timeout"]
-            )
-        except requests.RequestException as e:
-            PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
-            raise APIError(str(e))
 
     def _get_names(self, pve_list, pve_type):
         names = []
@@ -92,11 +61,8 @@ class Discovery():
         if pve_type == "qemu":
             # If qemu agent is enabled, try to gather the IP address
             try:
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                if self.client.get("nodes", pve_node, pve_type, vmid, "agent", "info") is not None:
-                    networks = self.client.get(
-                        "nodes", pve_node, "qemu", vmid, "agent", "network-get-interfaces"
-                    )["result"]
+                if self.client.get_agent_info(pve_node, pve_type, vmid) is not None:
+                    networks = self.client.get_network_interfaces(pve_node, vmid)
             except Exception:  # noqa  # nosec
                 pass
 
@@ -108,10 +74,9 @@ class Discovery():
                         elif ip_address["ip-address-type"] == "ipv6" and not ipv6_address:
                             ipv6_address = self._validate_ip(ip_address["ip-address"])
 
-        if not ipv4_address:
+        config = self.client.get_instance_config(pve_node, pve_type, vmid)
+        if config and not ipv4_address:
             try:
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.get("nodes", pve_node, pve_type, vmid, "config")
                 if "ipconfig0" in config.keys():
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
@@ -125,17 +90,17 @@ class Discovery():
             except Exception:  # noqa  # nosec
                 pass
 
-        if not ipv6_address:
+        if config and not ipv6_address:
             try:
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.get("nodes", pve_node, pve_type, vmid, "config")
                 if "ipconfig0" in config.keys():
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
                     sources = [config["net0"]]
 
                 for s in sources:
-                    find = re.search(r"ip=(\d*:\d*:\d*:\d*:\d*:\d*)", str(s))
+                    find = re.search(
+                        r"ip=(([a-fA-F0-9]{0,4}:{0,2}){0,7}:[0-9a-fA-F]{1,4})", str(s)
+                    )
                     if find and find.group(1):
                         ipv6_address = find.group(1)
                         break
@@ -194,15 +159,11 @@ class Discovery():
     def propagate(self):
         self.host_list.clear()
 
-        PVE_REQUEST_COUNT_TOTAL.inc()
-        for node in self._get_names(self.client.get("nodes"), "node"):
+        for node in self._get_names(self.client.get_nodes(), "node"):
             try:
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                qemu_list = self._filter(self.client.get("nodes", node, "qemu"))
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                container_list = self._filter(self.client.get("nodes", node, "lxc"))
+                qemu_list = self._filter(self.client.get_all_vms(node))
+                container_list = self._filter(self.client.get_all_containers(node))
             except Exception as e:  # noqa
-                PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                 raise APIError(str(e))
 
             # Merge QEMU and Containers lists from this node
@@ -220,15 +181,13 @@ class Discovery():
                 except KeyError:
                     pve_type = "qemu"
 
-                PVE_REQUEST_COUNT_TOTAL.inc()
-                config = self.client.get("nodes", node, pve_type, vmid, "config")
+                config = self.client.get_instance_config(node, pve_type, vmid)
 
                 try:
                     description = (config["description"])
                 except KeyError:
                     description = None
                 except Exception as e:  # noqa
-                    PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
                     raise APIError(str(e))
 
                 try:

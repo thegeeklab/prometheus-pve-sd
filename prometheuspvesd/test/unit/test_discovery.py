@@ -3,6 +3,7 @@
 import pytest
 from proxmoxer import ProxmoxAPI
 
+from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.discovery import Discovery
 
 pytest_plugins = [
@@ -12,21 +13,9 @@ pytest_plugins = [
 
 @pytest.fixture
 def discovery(mocker):
-    mocker.patch.object(Discovery, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
 
     return Discovery()
-
-
-def get_mock(*args):
-    networks = args[0]
-    args = args[1:]
-
-    if "info" in args:
-        return True
-    if "network-get-interfaces" in args:
-        return {"result": networks}
-
-    return False
 
 
 def test_exclude_vmid(discovery, qemus):
@@ -98,9 +87,31 @@ def test_validate_ip(discovery, addresses):
 
 
 def test_get_ip_addresses(mocker, discovery, networks):
-    discovery.client.get.side_effect = lambda *args: get_mock(networks, *args)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
     assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
         networks[1]["ip-addresses"][0]["ip-address"],
         networks[1]["ip-addresses"][2]["ip-address"],
     )
+
+
+def test_get_ip_addresses_from_instance_config(mocker, discovery, instance_config):
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+
+    assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
+        "192.0.2.25",
+        "2001:db8::666:77:8888",
+    )
+
+
+def test_propagate(
+    mocker, discovery, nodes, qemus, instance_config, agent_info, networks, inventory
+):
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    assert discovery.propagate() == inventory
