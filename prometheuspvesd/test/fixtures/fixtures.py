@@ -243,16 +243,11 @@ def qemus():
 @pytest.fixture
 def instance_config():
     return {
-        "name":
-            "102.example.com",
-        "description":
-            '{"groups": "test-group"}',
-        "net0":
-            "virtio=D8-85-75-47-2E-8D,bridge=vmbr122,ip=192.0.2.25,ip=2001:db8::6666:7777:8888",
-        "cpu":
-            2,
-        "cores":
-            2
+        "name": "102.example.com",
+        "description": '{"groups": "test-group"}',
+        "net0": "virtio=D8-85-75-47-2E-8D,bridge=vmbr122,ip=192.0.2.25,ip=2001:db8::666:77:8888",
+        "cpu": 2,
+        "cores": 2
     }
 
 
