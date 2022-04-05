@@ -68,7 +68,7 @@ class Discovery():
 
             if type(networks) is list:
                 for network in networks:
-                    for ip_address in network["ip-addresses"]:
+                    for ip_address in network.get("ip-addresses", []):
                         if ip_address["ip-address-type"] == "ipv4" and not ipv4_address:
                             ipv4_address = self._validate_ip(ip_address["ip-address"])
                         elif ip_address["ip-address-type"] == "ipv6" and not ipv6_address:
