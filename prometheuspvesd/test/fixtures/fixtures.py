@@ -350,6 +350,10 @@ def networks():
                 "tx-packets": 14423878
             }
         },
+        {
+            "hardware-address": "ba:97:85:bd:9a:a5",
+            "name": "eth1"
+        },
     ]
 
 
