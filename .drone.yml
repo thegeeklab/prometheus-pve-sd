@@ -55,7 +55,7 @@ steps:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry config experimental.new-installer false
       - poetry install
-      - poetry run pytest
+      - poetry run pytest --cov-append
       - poetry version
       - poetry run prometheus-pve-sd --help
     environment:
@@ -69,7 +69,7 @@ steps:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry config experimental.new-installer false
       - poetry install
-      - poetry run pytest
+      - poetry run pytest --cov-append
       - poetry version
       - poetry run prometheus-pve-sd --help
     environment:
@@ -83,7 +83,7 @@ steps:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry config experimental.new-installer false
       - poetry install
-      - poetry run pytest
+      - poetry run pytest --cov-append
       - poetry version
       - poetry run prometheus-pve-sd --help
     environment:
@@ -97,7 +97,7 @@ steps:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry config experimental.new-installer false
       - poetry install
-      - poetry run pytest
+      - poetry run pytest --cov-append
       - poetry version
       - poetry run prometheus-pve-sd --help
     environment:
@@ -499,7 +499,7 @@ steps:
       NPM_CONFIG_LOGLEVEL: error
 
   - name: testbuild
-    image: thegeeklab/hugo:0.93.2
+    image: thegeeklab/hugo:0.97.3
     commands:
       - hugo --panicOnWarning -s docs/ -b http://localhost/
 
@@ -511,7 +511,7 @@ steps:
       LINK_VALIDATOR_BASE_DIR: docs/public
 
   - name: build
-    image: thegeeklab/hugo:0.93.2
+    image: thegeeklab/hugo:0.97.3
     commands:
       - hugo --panicOnWarning -s docs/
 
@@ -649,6 +649,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 459bbb4557cfb9989c2ff97fbe1f072804d5539b8f4778d514595b0690b76b64
+hmac: bdcf6316a232376f879e282922dd5f0749f005a896d77495049bfdc0eb36fdbf
 
 ...
