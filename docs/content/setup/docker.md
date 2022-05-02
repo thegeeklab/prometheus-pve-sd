@@ -16,8 +16,7 @@ docker run \
     thegeeklab/prometheus-pve-sd
 ```
 
-{{< hint info >}}
-**Info**\
+{{< hint type=note >}}
 Keep in mind, that you have to pass SELinux labels (:Z or :z) to your mount option if you are working on SELinux enabled systems.
 {{< /hint >}}
 
