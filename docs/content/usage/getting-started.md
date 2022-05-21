@@ -45,7 +45,7 @@ The following list of meta labels can be used to relabel your scrape results:
 
 ### File service discovery
 
-Prometheus needs a basic file service discovery configuration to fetch system metrics from the host's discovered from PVE. Depending on the used metrics exporter the configuration need to be adjusted, using [Telegraf](https://github.com/influxdata/telegraf/#telegraf) a starter configuration might look like this:
+Prometheus needs a basic file service discovery configuration to fetch system metrics from the host's discovered from PVE. Depending on the used metrics exporter the configuration need to be adjusted, using [Telegraf](https://github.com/influxdata/telegraf/) a starter configuration might look like this:
 
 ```YAML
 - file_sd_configs:
