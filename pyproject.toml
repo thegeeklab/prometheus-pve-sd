@@ -31,7 +31,7 @@ version = "0.0.0"
 [tool.poetry.dependencies]
 anyconfig = "0.13.0"
 appdirs = "1.4.4"
-colorama = "0.4.4"
+colorama = "0.4.5"
 environs = "9.5.0"
 jsonschema = "4.6.0"
 nested-lookup = "0.2.23"
