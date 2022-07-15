@@ -19,7 +19,7 @@ You can find the full documentation at [https://prometheus-pve-sd.geekdocs.de](h
 
 ## Contributors
 
-Special thanks goes to all [contributors](https://github.com/thegeeklab/prometheus-pve-sd/graphs/contributors). If you would like to contribute,
+Special thanks to all [contributors](https://github.com/thegeeklab/prometheus-pve-sd/graphs/contributors). If you would like to contribute,
 please see the [instructions](https://github.com/thegeeklab/prometheus-pve-sd/blob/main/CONTRIBUTING.md).
 
 ## License
