@@ -70,11 +70,11 @@ class MultilineJsonFormatter(jsonlogger.JsonFormatter):
 class Log:
     """Handle logging."""
 
-    def __init__(self, level=logging.WARN, name="prometheuspvesd", log_format="console"):
+    def __init__(self, level=logging.WARNING, name="prometheuspvesd", log_format="console"):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
         self.logger.addHandler(self._get_error_handler(log_format))
-        self.logger.addHandler(self._get_warn_handler(log_format))
+        self.logger.addHandler(self._get_warning_handler(log_format))
         self.logger.addHandler(self._get_info_handler(log_format))
         self.logger.addHandler(self._get_critical_handler(log_format))
         self.logger.addHandler(self._get_debug_handler(log_format))
@@ -102,10 +102,10 @@ class Log:
 
         return handler
 
-    def _get_warn_handler(self, log_format):
+    def _get_warning_handler(self, log_format):
         handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(logging.WARN)
-        handler.addFilter(LogFilter(logging.WARN))
+        handler.setLevel(logging.WARNING)
+        handler.addFilter(LogFilter(logging.WARNING))
 
         if log_format == "json":
             handler.setFormatter(MultilineJsonFormatter(JSON_FORMAT))
@@ -114,7 +114,7 @@ class Log:
         else:
             handler.setFormatter(
                 MultilineFormatter(
-                    self.warn(
+                    self.warning(
                         CONSOLE_FORMAT.format(
                             colorama.Fore.YELLOW, colorama.Style.BRIGHT, colorama.Style.RESET_ALL
                         )
@@ -196,7 +196,7 @@ class Log:
 
         self.logger.setLevel(level)
         self.logger.addHandler(self._get_error_handler(log_level))
-        self.logger.addHandler(self._get_warn_handler(log_level))
+        self.logger.addHandler(self._get_warning_handler(log_level))
         self.logger.addHandler(self._get_info_handler(log_level))
         self.logger.addHandler(self._get_critical_handler(log_level))
         self.logger.addHandler(self._get_debug_handler(log_level))
@@ -213,8 +213,8 @@ class Log:
         """Format error messages and return string."""
         return msg
 
-    def warn(self, msg):
-        """Format warn messages and return string."""
+    def warning(self, msg):
+        """Format warning messages and return string."""
         return msg
 
     def info(self, msg):
