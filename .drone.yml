@@ -105,6 +105,20 @@ steps:
     depends_on:
       - fetch
 
+  - name: python311-pytest
+    image: python:3.11
+    commands:
+      - pip install poetry poetry-dynamic-versioning -qq
+      - poetry config experimental.new-installer false
+      - poetry install
+      - poetry run pytest --cov-append
+      - poetry version
+      - poetry run prometheus-pve-sd --help
+    environment:
+      PY_COLORS: 1
+    depends_on:
+      - fetch
+
   - name: codecov
     image: python:3.10
     commands:
@@ -647,6 +661,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: fb17f8e878e4a97dc5654eb0a32d3b23b5154a5b7d1d499997d7dd4f1d827880
+hmac: 4f8dde7e823ea957355a10b2251c5cb5ad35c05a026fa11c8e236b4ff3d0c8d4
 
 ...
