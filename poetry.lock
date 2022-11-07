@@ -159,11 +159,11 @@ python-versions = "*"
 
 [[package]]
 name = "flake8-builtins"
-version = "2.0.0"
+version = "2.0.1"
 description = "Check for python builtins being used as variables or parameters."
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.dependencies]
 flake8 = "*"
@@ -748,7 +748,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.0"
-content-hash = "ea60497cd713131c7f2c1157721900339bbe86bb3d7e88208eaeb4882e0d8a8f"
+content-hash = "731fcefffde234b511ec169a2836116342415f7c790abe7651af551cda3ef8e2"
 
 [metadata.files]
 anyconfig = [
@@ -851,8 +851,8 @@ flake8-blind-except = [
     {file = "flake8-blind-except-0.2.1.tar.gz", hash = "sha256:f25a575a9dcb3eeb3c760bf9c22db60b8b5a23120224ed1faa9a43f75dd7dd16"},
 ]
 flake8-builtins = [
-    {file = "flake8-builtins-2.0.0.tar.gz", hash = "sha256:98833fa16139a75cd4913003492a9bd9a61c6f8ac146c3db12a2ebaf420dade3"},
-    {file = "flake8_builtins-2.0.0-py3-none-any.whl", hash = "sha256:39bfa3badb5e8d22f92baf4e0ea1b816707245233846932d6b13e81fc6f673e8"},
+    {file = "flake8-builtins-2.0.1.tar.gz", hash = "sha256:5aeb420130efe8acbdaf8708a582492413293a3ca25653518f687937879650a5"},
+    {file = "flake8_builtins-2.0.1-py3-none-any.whl", hash = "sha256:a5b9ca9cbc921c4455ea02e2e9963c990ac66d028c15b654625e012a1e3bbb4d"},
 ]
 flake8-docstrings = [
     {file = "flake8-docstrings-1.6.0.tar.gz", hash = "sha256:9fe7c6a306064af8e62a055c2f61e9eb1da55f84bb39caef2b84ce53708ac34b"},
