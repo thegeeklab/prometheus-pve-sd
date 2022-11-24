@@ -8,7 +8,7 @@ platform:
 
 steps:
   - name: yapf
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -19,7 +19,7 @@ steps:
       PY_COLORS: 1
 
   - name: flake8
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -45,7 +45,7 @@ platform:
 
 steps:
   - name: fetch
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
 
@@ -120,7 +120,7 @@ steps:
       - fetch
 
   - name: codecov
-    image: python:3.10
+    image: python:3.11
     commands:
       - pip install codecov -qq
       - codecov --required -X gcov
@@ -133,6 +133,7 @@ steps:
       - python38-pytest
       - python39-pytest
       - python310-pytest
+      - python311-pytest
 
 trigger:
   ref:
@@ -153,7 +154,7 @@ platform:
 
 steps:
   - name: bandit
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -182,7 +183,7 @@ platform:
 
 steps:
   - name: build
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -221,7 +222,7 @@ steps:
         - refs/tags/**
 
   - name: publish-pypi
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -254,7 +255,7 @@ platform:
 
 steps:
   - name: build
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -332,7 +333,7 @@ platform:
 
 steps:
   - name: build
-    image: python:3.10
+    image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
@@ -662,6 +663,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 6c6fc8aa56ccd2a01ab2ed56ffbdffba0327a31d3deb2543cfebee16475c93c0
+hmac: e1b66fb1dd7073fc2237b6eb1b1571ba0b6dcde8cb19d914fec125302b503e0f
 
 ...
