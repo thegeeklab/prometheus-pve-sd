@@ -661,14 +661,14 @@ twisted = ["twisted"]
 
 [[package]]
 name = "proxmoxer"
-version = "2.0.0"
+version = "2.0.1"
 description = "Python Wrapper for the Proxmox 2.x API (HTTP and SSH)"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "proxmoxer-2.0.0-py3-none-any.whl", hash = "sha256:e3ba2ff5306ea3fc61f7ce9a03a6e3b261971b60cb40f953967f1449676d2d70"},
-    {file = "proxmoxer-2.0.0.tar.gz", hash = "sha256:f592426c16ec9a00f141379da1dd72d2a6fcf46f9ee181484906668ad2f31357"},
+    {file = "proxmoxer-2.0.1-py3-none-any.whl", hash = "sha256:badb3095507e486b76dfda75177545dd85da608a3aef8590d362901253f10576"},
+    {file = "proxmoxer-2.0.1.tar.gz", hash = "sha256:088923f1a81ee27631e88314c609bfe22b33d8a41271b5f02e86f996f837fe31"},
 ]
 
 [[package]]
@@ -1122,4 +1122,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7.0"
-content-hash = "45781c3bfac72296a4a5a06b48693853a939d5fbdf72a0e15ef042d534f64bee"
+content-hash = "7f314bf72aa181cd038de4183e240a176c480d83ccb69ea2c48226c45080956f"
