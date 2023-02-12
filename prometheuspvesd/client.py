@@ -53,7 +53,7 @@ class ProxmoxClient:
             )
         except requests.RequestException as e:
             PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
-            raise APIError(str(e))
+            raise APIError(str(e)) from e
 
     def _do_request(self, *args):
         PVE_REQUEST_COUNT_TOTAL.inc()
@@ -62,29 +62,29 @@ class ProxmoxClient:
             return self.client.get(*("nodes", *args))
         except requests.RequestException as e:
             PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
-            raise APIError(str(e))
+            raise APIError(str(e)) from e
 
     def get_nodes(self):
         self.logger.debug("fetching all nodes")
         return self._do_request()
 
     def get_all_vms(self, pve_node):
-        self.logger.debug("fetching all vms on node {}".format(pve_node))
+        self.logger.debug(f"fetching all vms on node {pve_node}")
         return self._do_request(pve_node, "qemu")
 
     def get_all_containers(self, pve_node):
-        self.logger.debug("fetching all containers on node {}".format(pve_node))
+        self.logger.debug(f"fetching all containers on node {pve_node}")
         return self._do_request(pve_node, "lxc")
 
     def get_instance_config(self, pve_node, pve_type, vmid):
-        self.logger.debug("fetching instance config for {} on {}".format(vmid, pve_node))
+        self.logger.debug(f"fetching instance config for {vmid} on {pve_node}")
         return self._do_request(pve_node, pve_type, vmid, "config")
 
     def get_agent_info(self, pve_node, pve_type, vmid):
-        self.logger.debug("fetching agent info for {} on {}".format(vmid, pve_node))
+        self.logger.debug(f"fetching agent info for {vmid} on {pve_node}")
         return self._do_request(pve_node, pve_type, vmid, "agent", "info")["result"]
 
     def get_network_interfaces(self, pve_node, vmid):
-        self.logger.debug("fetching network interfaces for {} on {}".format(vmid, pve_node))
+        self.logger.debug(f"fetching network interfaces for {vmid} on {pve_node}")
         return self._do_request(pve_node, "qemu", vmid, "agent",
                                 "network-get-interfaces")["result"]

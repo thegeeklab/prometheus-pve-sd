@@ -7,7 +7,7 @@ platform:
   arch: amd64
 
 steps:
-  - name: yapf
+  - name: check-format
     image: python:3.11
     commands:
       - git fetch -tq
@@ -18,14 +18,14 @@ steps:
     environment:
       PY_COLORS: 1
 
-  - name: flake8
+  - name: check-coding
     image: python:3.11
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry config experimental.new-installer false
       - poetry install
-      - poetry run flake8 ./prometheuspvesd
+      - poetry run ruff ./prometheuspvesd
     environment:
       PY_COLORS: 1
 
@@ -146,35 +146,6 @@ depends_on:
 
 ---
 kind: pipeline
-name: security
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: bandit
-    image: python:3.11
-    commands:
-      - git fetch -tq
-      - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
-      - poetry install
-      - poetry run bandit -r ./prometheuspvesd -x ./prometheuspvesd/test
-    environment:
-      PY_COLORS: 1
-
-trigger:
-  ref:
-    - refs/heads/main
-    - refs/tags/**
-    - refs/pull/**
-
-depends_on:
-  - test
-
----
-kind: pipeline
 name: build-package
 
 platform:
@@ -243,7 +214,7 @@ trigger:
     - refs/pull/**
 
 depends_on:
-  - security
+  - test
 
 ---
 kind: pipeline
@@ -327,7 +298,7 @@ trigger:
     - refs/pull/**
 
 depends_on:
-  - security
+  - test
 
 ---
 kind: pipeline
@@ -478,6 +449,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 11ed6780977e0327b1deac81c0689d2bfe3bb56bc4b570d71b1fe182a395b1e2
+hmac: 90ec9fda47481ade8b36802ec1c9ff733ae7e77ec7b0b7b7d916de7aa1b7578f
 
 ...

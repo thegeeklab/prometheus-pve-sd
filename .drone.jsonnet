@@ -26,7 +26,7 @@ local PipelineLint = {
   },
   steps: [
     {
-      name: 'yapf',
+      name: 'check-format',
       image: 'python:3.11',
       environment: {
         PY_COLORS: 1,
@@ -40,7 +40,7 @@ local PipelineLint = {
       ],
     },
     {
-      name: 'flake8',
+      name: 'check-coding',
       image: 'python:3.11',
       environment: {
         PY_COLORS: 1,
@@ -50,7 +50,7 @@ local PipelineLint = {
         'pip install poetry poetry-dynamic-versioning -qq',
         'poetry config experimental.new-installer false',
         'poetry install',
-        'poetry run flake8 ./prometheuspvesd',
+        'poetry run ruff ./prometheuspvesd',
       ],
     },
   ],
@@ -101,37 +101,6 @@ local PipelineTest = {
   ],
   depends_on: [
     'lint',
-  ],
-  trigger: {
-    ref: ['refs/heads/main', 'refs/tags/**', 'refs/pull/**'],
-  },
-};
-
-local PipelineSecurity = {
-  kind: 'pipeline',
-  name: 'security',
-  platform: {
-    os: 'linux',
-    arch: 'amd64',
-  },
-  steps: [
-    {
-      name: 'bandit',
-      image: 'python:3.11',
-      environment: {
-        PY_COLORS: 1,
-      },
-      commands: [
-        'git fetch -tq',
-        'pip install poetry poetry-dynamic-versioning -qq',
-        'poetry config experimental.new-installer false',
-        'poetry install',
-        'poetry run bandit -r ./prometheuspvesd -x ./prometheuspvesd/test',
-      ],
-    },
-  ],
-  depends_on: [
-    'test',
   ],
   trigger: {
     ref: ['refs/heads/main', 'refs/tags/**', 'refs/pull/**'],
@@ -210,7 +179,7 @@ local PipelineBuildPackage = {
     },
   ],
   depends_on: [
-    'security',
+    'test',
   ],
   trigger: {
     ref: ['refs/heads/main', 'refs/tags/**', 'refs/pull/**'],
@@ -295,7 +264,7 @@ local PipelineBuildContainer = {
     },
   ],
   depends_on: [
-    'security',
+    'test',
   ],
   trigger: {
     ref: ['refs/heads/main', 'refs/tags/**', 'refs/pull/**'],
@@ -469,7 +438,6 @@ local PipelineNotifications = {
 [
   PipelineLint,
   PipelineTest,
-  PipelineSecurity,
   PipelineBuildPackage,
   PipelineBuildContainer,
   PipelineDocs,
