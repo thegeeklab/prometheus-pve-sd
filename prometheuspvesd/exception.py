@@ -6,8 +6,7 @@ class PrometheusSDError(Exception):
     """Generic exception class for Prometheus-pve-sd."""
 
     def __init__(self, msg, original_exception=""):
-        super(PrometheusSDError,
-              self).__init__("{msg}\n{org}".format(msg=msg, org=original_exception))
+        super().__init__(f"{msg}\n{original_exception}")
         self.original_exception = original_exception
 
 

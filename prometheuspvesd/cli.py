@@ -37,11 +37,9 @@ class PrometheusSD:
                 self.discovery = Discovery()
             except APIError as e:
                 if not self.config.config["service"]:
-                    self.log.sysexit_with_message(
-                        "Proxmoxer API error: {0}".format(str(e).strip())
-                    )
+                    self.log.sysexit_with_message(f"Proxmoxer API error: {str(e).strip()}")
 
-                self.logger.error("Proxmoxer API error: {0}".format(str(e).strip()))
+                self.logger.error(f"Proxmoxer API error: {str(e).strip()}")
                 sleep(60)
                 continue
             else:
@@ -98,9 +96,7 @@ class PrometheusSD:
         parser.add_argument(
             "-q", dest="logging.level", action="append_const", const=1, help="decrease log level"
         )
-        parser.add_argument(
-            "--version", action="version", version="%(prog)s {}".format(__version__)
-        )
+        parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
         return parser.parse_args().__dict__
 
@@ -115,16 +111,16 @@ class PrometheusSD:
                 config.config["logging"]["level"], config.config["logging"]["format"]
             )
         except ValueError as e:
-            self.log.sysexit_with_message("Can not set log level.\n{}".format(str(e)))
+            self.log.sysexit_with_message(f"Can not set log level.\n{str(e)}")
 
         required = [("pve.server", config.config["pve"]["server"]),
                     ("pve.user", config.config["pve"]["user"]),
                     ("pve.password", config.config["pve"]["password"])]
         for name, value in required:
             if not value:
-                self.log.sysexit_with_message("Option '{}' is required but not set".format(name))
+                self.log.sysexit_with_message(f"Option '{name}' is required but not set")
 
-        self.logger.info("Using config file {}".format(config.config_file))
+        self.logger.info(f"Using config file {config.config_file}")
 
         return config
 
@@ -147,9 +143,9 @@ class PrometheusSD:
             try:
                 inventory = self.discovery.propagate()
             except APIError as e:
-                self.logger.error("Proxmoxer API error: {0}".format(str(e).strip()))
+                self.logger.error(f"Proxmoxer API error: {str(e).strip()}")
             except Exception as e:  # noqa
-                self.logger.error("Unknown error: {0}".format(str(e).strip()))
+                self.logger.error(f"Unknown error: {str(e).strip()}")
             else:
                 self._write(inventory)
 
@@ -176,7 +172,7 @@ class PrometheusSD:
         shutil.move(temp_file.name, self.config.config["output_file"])
         chmod(self.config.config["output_file"], int(self.config.config["output_file_mode"], 8))
 
-    def _terminate(self, signal, frame):
+    def _terminate(self, signal, frame):  # noqa
         self.log.sysexit_with_message("Terminating", code=0)
 
 

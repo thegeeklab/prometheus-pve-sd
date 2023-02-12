@@ -6,15 +6,13 @@ import json
 import re
 from collections import defaultdict
 
-from prometheus_client import Gauge
-from prometheus_client import Summary
+from prometheus_client import Gauge, Summary
 
 from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.exception import APIError
 from prometheuspvesd.logger import SingleLog
-from prometheuspvesd.model import Host
-from prometheuspvesd.model import HostList
+from prometheuspvesd.model import Host, HostList
 
 PROPAGATION_TIME = Summary(
     "pve_sd_propagate_seconds", "Time spent propagating the inventory from PVE"
@@ -40,7 +38,7 @@ class Discovery():
         elif pve_type == "pool":
             names = [pool["poolid"] for pool in pve_list]
 
-        return names
+        return names  # noqa
 
     def _get_variables(self, pve_list, pve_type):
         variables = {}
@@ -64,7 +62,7 @@ class Discovery():
                 if self.client.get_agent_info(pve_node, pve_type, vmid) is not None:
                     networks = self.client.get_network_interfaces(pve_node, vmid)
             except Exception:  # noqa  # nosec
-                pass
+                pass  # noqa
 
             if type(networks) is list:
                 for network in networks:
@@ -77,7 +75,7 @@ class Discovery():
         config = self.client.get_instance_config(pve_node, pve_type, vmid)
         if config and not ipv4_address:
             try:
-                if "ipconfig0" in config.keys():
+                if "ipconfig0" in config:
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
                     sources = [config["net0"]]
@@ -88,11 +86,11 @@ class Discovery():
                         ipv4_address = find.group(1)
                         break
             except Exception:  # noqa  # nosec
-                pass
+                pass  # noqa
 
         if config and not ipv6_address:
             try:
-                if "ipconfig0" in config.keys():
+                if "ipconfig0" in config:
                     sources = [config["net0"], config["ipconfig0"]]
                 else:
                     sources = [config["net0"]]
@@ -105,7 +103,7 @@ class Discovery():
                         ipv6_address = find.group(1)
                         break
             except Exception:  # noqa  # nosec
-                pass
+                pass  # noqa
 
         return ipv4_address, ipv6_address
 
@@ -164,14 +162,14 @@ class Discovery():
                 qemu_list = self._filter(self.client.get_all_vms(node))
                 container_list = self._filter(self.client.get_all_containers(node))
             except Exception as e:  # noqa
-                raise APIError(str(e))
+                raise APIError(str(e)) from e
 
             # Merge QEMU and Containers lists from this node
             instances = self._get_variables(qemu_list, "qemu").copy()
             instances.update(self._get_variables(container_list, "container"))
 
             HOST_GAUGE.set(len(instances))
-            self.logger.info("Found {} targets".format(len(instances)))
+            self.logger.info(f"Found {len(instances)} targets")
             for host in instances:
                 host_meta = instances[host]
                 vmid = host_meta["proxmox_vmid"]
@@ -188,7 +186,7 @@ class Discovery():
                 except KeyError:
                     description = None
                 except Exception as e:  # noqa
-                    raise APIError(str(e))
+                    raise APIError(str(e)) from e
 
                 try:
                     metadata = json.loads(description)
@@ -216,6 +214,6 @@ class Discovery():
                     prom_host.add_label("groups", ",".join(metadata["groups"]))
 
                 self.host_list.add_host(prom_host)
-                self.logger.debug("Discovered {}".format(prom_host))
+                self.logger.debug(f"Discovered {prom_host}")
 
         return self.host_list
