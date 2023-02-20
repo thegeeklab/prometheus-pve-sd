@@ -207,7 +207,7 @@ class Config():
                     else:
                         raise prometheuspvesd.exception.ConfigError(
                             "Unable to read environment variable", str(e)
-                        )
+                        ) from e
 
         return normalized
 

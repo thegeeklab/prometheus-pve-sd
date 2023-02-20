@@ -61,8 +61,8 @@ class Discovery():
             try:
                 if self.client.get_agent_info(pve_node, pve_type, vmid) is not None:
                     networks = self.client.get_network_interfaces(pve_node, vmid)
-            except Exception:  # noqa  # nosec
-                pass  # noqa
+            except Exception:  # noqa
+                pass
 
             if type(networks) is list:
                 for network in networks:
@@ -85,8 +85,8 @@ class Discovery():
                     if find and find.group(1):
                         ipv4_address = find.group(1)
                         break
-            except Exception:  # noqa  # nosec
-                pass  # noqa
+            except Exception:  # noqa
+                pass
 
         if config and not ipv6_address:
             try:
@@ -102,8 +102,8 @@ class Discovery():
                     if find and find.group(1):
                         ipv6_address = find.group(1)
                         break
-            except Exception:  # noqa  # nosec
-                pass  # noqa
+            except Exception:  # noqa
+                pass
 
         return ipv4_address, ipv6_address
 
