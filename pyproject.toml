@@ -47,7 +47,7 @@ requests = "2.28.2"
 prometheus-pve-sd = "prometheuspvesd.cli:main"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.0.247"
+ruff = "0.0.252"
 pytest = "7.2.1"
 pytest-mock = "3.10.0"
 pytest-cov = "4.0.0"
