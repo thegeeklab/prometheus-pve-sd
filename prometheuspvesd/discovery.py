@@ -38,7 +38,7 @@ class Discovery():
         elif pve_type == "pool":
             names = [pool["poolid"] for pool in pve_list]
 
-        return names  # noqa
+        return names
 
     def _get_variables(self, pve_list, pve_type):
         variables = {}
