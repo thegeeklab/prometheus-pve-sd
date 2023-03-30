@@ -156,8 +156,9 @@ class Discovery():
     @PROPAGATION_TIME.time()
     def propagate(self):
         self.host_list.clear()
-
-        for node in self._get_names(self.client.get_nodes(), "node"):
+        nodelist = self._get_names(self.client.get_nodes(), "node")
+        self.logger.info(f"discovered proxmox hypervisors: {','.join(nodelist)}")
+        for node in nodelist:
             try:
                 qemu_list = self._filter(self.client.get_all_vms(node))
                 container_list = self._filter(self.client.get_all_containers(node))
@@ -169,7 +170,7 @@ class Discovery():
             instances.update(self._get_variables(container_list, "container"))
 
             HOST_GAUGE.set(len(instances))
-            self.logger.info(f"Found {len(instances)} targets")
+            self.logger.info(f"{node}: Found {len(instances)} targets")
             for host in instances:
                 host_meta = instances[host]
                 vmid = host_meta["proxmox_vmid"]
