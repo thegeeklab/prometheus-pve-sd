@@ -86,7 +86,7 @@ local PipelineTest = {
         CODECOV_TOKEN: { from_secret: 'codecov_token' },
       },
       commands: [
-        'codecov --nonZero --gcov',
+        'codecov --nonZero',
       ],
       depends_on: [
         'python37-pytest',

@@ -122,7 +122,7 @@ steps:
   - name: codecov
     image: thegeeklab/codecov
     commands:
-      - codecov --nonZero --gcov
+      - codecov --nonZero
     environment:
       CODECOV_TOKEN:
         from_secret: codecov_token
@@ -447,6 +447,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 222d704a7d6c0eb195390a67206c582d5a1423bdfba700cfc5fef714966b8492
+hmac: c738c9bc34f7be21d69926ddc23004af9f55e162b8221423e70008c6441c653c
 
 ...
