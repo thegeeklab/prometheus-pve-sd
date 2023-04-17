@@ -81,14 +81,12 @@ local PipelineTest = {
     PythonVersion(pyversion='3.11'),
     {
       name: 'codecov',
-      image: 'python:3.11',
+      image: 'thegeeklab/codecov',
       environment: {
-        PY_COLORS: 1,
         CODECOV_TOKEN: { from_secret: 'codecov_token' },
       },
       commands: [
-        'pip install codecov -qq',
-        'codecov --required -X gcov',
+        'codecov --nonZero',
       ],
       depends_on: [
         'python37-pytest',
