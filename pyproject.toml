@@ -48,7 +48,7 @@ prometheus-pve-sd = "prometheuspvesd.cli:main"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.0.261"
-pytest = "7.3.0"
+pytest = "7.3.1"
 pytest-mock = "3.10.0"
 pytest-cov = "4.0.0"
 toml = "0.10.2"
