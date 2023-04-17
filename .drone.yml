@@ -120,14 +120,12 @@ steps:
       - fetch
 
   - name: codecov
-    image: python:3.11
+    image: thegeeklab/codecov
     commands:
-      - pip install codecov -qq
-      - codecov --required -X gcov
+      - codecov --nonZero --gcov
     environment:
       CODECOV_TOKEN:
         from_secret: codecov_token
-      PY_COLORS: 1
     depends_on:
       - python37-pytest
       - python38-pytest
@@ -449,6 +447,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 90ec9fda47481ade8b36802ec1c9ff733ae7e77ec7b0b7b7d916de7aa1b7578f
+hmac: 222d704a7d6c0eb195390a67206c582d5a1423bdfba700cfc5fef714966b8492
 
 ...
