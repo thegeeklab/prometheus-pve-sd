@@ -41,7 +41,7 @@ proxmoxer = "2.0.1"
 python = "^3.7.0"
 python-json-logger = "2.0.7"
 requests = "2.29.0"
-"ruamel.yaml" = "0.17.21"
+"ruamel.yaml" = "0.17.26"
 
 [tool.poetry.scripts]
 prometheus-pve-sd = "prometheuspvesd.cli:main"
