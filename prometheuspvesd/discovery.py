@@ -157,7 +157,7 @@ class Discovery():
     def propagate(self):
         self.host_list.clear()
         nodelist = self._get_names(self.client.get_nodes(), "node")
-        self.logger.info(f"discovered proxmox hypervisors: {','.join(nodelist)}")
+        self.logger.info(f"Discovered nodes: {','.join(nodelist)}")
         for node in nodelist:
             try:
                 qemu_list = self._filter(self.client.get_all_vms(node))
