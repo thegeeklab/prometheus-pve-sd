@@ -12,7 +12,6 @@ steps:
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run yapf -dr ./prometheuspvesd
     environment:
@@ -23,7 +22,6 @@ steps:
     commands:
       - git fetch -tq
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run ruff ./prometheuspvesd
     environment:
@@ -53,7 +51,6 @@ steps:
     image: python:3.7
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run pytest --cov-append
       - poetry version
@@ -67,7 +64,6 @@ steps:
     image: python:3.8
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run pytest --cov-append
       - poetry version
@@ -81,7 +77,6 @@ steps:
     image: python:3.9
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run pytest --cov-append
       - poetry version
@@ -95,7 +90,6 @@ steps:
     image: python:3.10
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run pytest --cov-append
       - poetry version
@@ -109,7 +103,6 @@ steps:
     image: python:3.11
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
-      - poetry config experimental.new-installer false
       - poetry install
       - poetry run pytest --cov-append
       - poetry version
@@ -447,6 +440,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: c738c9bc34f7be21d69926ddc23004af9f55e162b8221423e70008c6441c653c
+hmac: 35cc9f921085df0663030525c0e939faee7df6215b530850caba831a41b509dd
 
 ...

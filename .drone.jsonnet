@@ -6,7 +6,6 @@ local PythonVersion(pyversion='3.7') = {
   },
   commands: [
     'pip install poetry poetry-dynamic-versioning -qq',
-    'poetry config experimental.new-installer false',
     'poetry install',
     'poetry run pytest --cov-append',
     'poetry version',
@@ -34,7 +33,6 @@ local PipelineLint = {
       commands: [
         'git fetch -tq',
         'pip install poetry poetry-dynamic-versioning -qq',
-        'poetry config experimental.new-installer false',
         'poetry install',
         'poetry run yapf -dr ./prometheuspvesd',
       ],
@@ -48,7 +46,6 @@ local PipelineLint = {
       commands: [
         'git fetch -tq',
         'pip install poetry poetry-dynamic-versioning -qq',
-        'poetry config experimental.new-installer false',
         'poetry install',
         'poetry run ruff ./prometheuspvesd',
       ],
