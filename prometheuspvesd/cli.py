@@ -111,7 +111,7 @@ class PrometheusSD:
                 config.config["logging"]["level"], config.config["logging"]["format"]
             )
         except ValueError as e:
-            self.log.sysexit_with_message(f"Can not set log level.\n{str(e)}")
+            self.log.sysexit_with_message(f"Can not set log level.\n{e!s}")
 
         required = [("pve.server", config.config["pve"]["server"]),
                     ("pve.user", config.config["pve"]["user"]),
