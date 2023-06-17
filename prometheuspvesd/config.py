@@ -135,6 +135,18 @@ class Config:
             "file": True,
             "type": environs.Env().str
         },
+        "pve.token_name": {
+            "default": "",
+            "env": "PVE_TOKEN_NAME",
+            "file": True,
+            "type": environs.Env().str
+        },
+        "pve.token_value": {
+            "default": "",
+            "env": "PVE_TOKEN_VALUE",
+            "file": True,
+            "type": environs.Env().str
+        },
         "pve.auth_timeout": {
             "default": 5,
             "env": "PVE_AUTH_TIMEOUT",
