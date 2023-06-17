@@ -45,10 +45,7 @@ class ProxmoxClient:
                 )
             )
             
-            if self.config.config["pve"]["token_name"]:
-                if !self.config.config["pve"]["token_value"]:
-                    self.logger.error("Token name require token value to be set ! Fallback to password authentification")                
-                
+            if self.config.config["pve"]["token_name"]:            
                 self.logger.debug("Using token login")
                 return ProxmoxAPI(
                     self.config.config["pve"]["server"],
