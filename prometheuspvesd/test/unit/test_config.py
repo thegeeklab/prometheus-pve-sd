@@ -19,6 +19,8 @@ def test_yaml_config(mocker, defaults):
     defaults["pve"]["user"] = "root"
     defaults["pve"]["password"] = "secure"
     defaults["pve"]["server"] = "proxmox.example.com"
+    defaults["pve"]["token_name"] = "pve_sd"
+    defaults["pve"]["token_value"] = "01234567-89ab-cdef-0123-456789abcdef"
 
     assert config.config == defaults
 
