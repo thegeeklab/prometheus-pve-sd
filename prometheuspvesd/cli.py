@@ -118,12 +118,16 @@ class PrometheusSD:
         for name, value in required:
             if not value:
                 self.log.sysexit_with_message(f"Option '{name}' is required but not set")
-                
+
         if config.config["pve"]["token_name"] and not config.config["pve"]["token_value"]:
-            self.log.sysexit_with_message(f"Option 'pve.token_name' require 'pve.token_value' to be set")
-        
+            self.log.sysexit_with_message(
+                f"Option 'pve.token_name' require 'pve.token_value' to be set"
+            )
+
         if not config.config["pve"]["token_name"] and not config.config["pve"]["password"]:
-            self.log.sysexit_with_message(f"Neither password nor API token have been set for pve authentication")
+            self.log.sysexit_with_message(
+                f"Neither password nor API token have been set for pve authentication"
+            )
 
         self.logger.info(f"Using config file {config.config_file}")
 

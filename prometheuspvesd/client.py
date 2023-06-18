@@ -44,8 +44,8 @@ class ProxmoxClient:
                     self.config.config["pve"]["server"], self.config.config["pve"]["user"]
                 )
             )
-            
-            if self.config.config["pve"]["token_name"]:            
+
+            if self.config.config["pve"]["token_name"]:
                 self.logger.debug("Using token login")
                 return ProxmoxAPI(
                     self.config.config["pve"]["server"],
@@ -55,7 +55,7 @@ class ProxmoxClient:
                     verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
                     timeout=self.config.config["pve"]["auth_timeout"]
                 )
-                
+
             return ProxmoxAPI(
                 self.config.config["pve"]["server"],
                 user=self.config.config["pve"]["user"],
