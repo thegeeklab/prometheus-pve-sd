@@ -20,7 +20,7 @@ cache_dir = AppDirs("prometheus-pve-sd").user_cache_dir
 default_output_file = os.path.join(cache_dir, "pve.json")
 
 
-class Config():
+class Config:
     """
     Create an object with all necessary settings.
 
