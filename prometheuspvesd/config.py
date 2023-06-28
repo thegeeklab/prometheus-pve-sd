@@ -3,6 +3,7 @@
 
 import os
 from pathlib import Path, PurePath
+from typing import ClassVar
 
 import anyconfig
 import environs
@@ -20,7 +21,7 @@ cache_dir = AppDirs("prometheus-pve-sd").user_cache_dir
 default_output_file = os.path.join(cache_dir, "pve.json")
 
 
-class Config():
+class Config:
     """
     Create an object with all necessary settings.
 
@@ -30,7 +31,7 @@ class Config():
     - provides cli parameters
     """
 
-    SETTINGS = {
+    SETTINGS: ClassVar[dict[dict]] = {
         "metrics.enabled": {
             "default": True,
             "env": "METRICS_ENABLED",
