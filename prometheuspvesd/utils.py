@@ -2,7 +2,6 @@
 """Global utility methods and classes."""
 
 from distutils.util import strtobool
-from typing import ClassVar
 
 
 def to_bool(string):
@@ -12,7 +11,7 @@ def to_bool(string):
 class Singleton(type):
     """Meta singleton class."""
 
-    _instances: ClassVar[dict] = {}
+    _instances = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:

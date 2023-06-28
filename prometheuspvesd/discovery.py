@@ -20,7 +20,7 @@ PROPAGATION_TIME = Summary(
 HOST_GAUGE = Gauge("pve_sd_hosts", "Number of hosts discovered by PVE SD")
 
 
-class Discovery:
+class Discovery():
     """Prometheus PVE Service Discovery."""
 
     def __init__(self):
