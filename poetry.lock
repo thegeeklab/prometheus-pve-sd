@@ -327,13 +327,13 @@ files = [
 
 [[package]]
 name = "jsonschema"
-version = "4.18.4"
+version = "4.18.5"
 description = "An implementation of JSON Schema validation for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "jsonschema-4.18.4-py3-none-any.whl", hash = "sha256:971be834317c22daaa9132340a51c01b50910724082c2c1a2ac87eeec153a3fe"},
-    {file = "jsonschema-4.18.4.tar.gz", hash = "sha256:fb3642735399fa958c0d2aad7057901554596c63349f4f6b283c493cf692a25d"},
+    {file = "jsonschema-4.18.5-py3-none-any.whl", hash = "sha256:c6b4c2b83389e504717f2392adbc74bc9ed07341ae0ced18dde132f3a7f70a5b"},
+    {file = "jsonschema-4.18.5.tar.gz", hash = "sha256:4c10200b4b184a348dc92beb554a30280db17ad69b00a2de250d4a842fe3f0b0"},
 ]
 
 [package.dependencies]
@@ -887,4 +887,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.0"
-content-hash = "949c6c46127564a56be41e667b2fc7b0280365f91fb30b0d738fb05af9909610"
+content-hash = "9a145bbfbe94e98a7e15c814d9c11f9dbfec3933596596c52090af65ef2393d7"
