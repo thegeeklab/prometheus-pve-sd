@@ -35,7 +35,7 @@ steps:
       - link-validator --color=always --rate-limit 10
     environment:
       LINK_VALIDATOR_BASE_DIR: docs/public
-      LINK_VALIDATOR_RETRIES: 3
+      LINK_VALIDATOR_RETRIES: "3"
 
   build:
     image: quay.io/thegeeklab/hugo:0.115.2
