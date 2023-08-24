@@ -24,6 +24,6 @@ steps:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry install
       - poetry version
-      - poetry run git-batch --help
+      - poetry run ${CI_REPO_NAME} --help
     environment:
       PY_COLORS: "1"
