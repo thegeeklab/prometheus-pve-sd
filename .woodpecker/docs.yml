@@ -47,7 +47,7 @@ steps:
     commands:
       - html-beautify -r -f 'docs/public/**/*.html'
     environment:
-      FORCE_COLOR: true
+      FORCE_COLOR: "true"
       NPM_CONFIG_LOGLEVEL: error
 
   publish:
