@@ -64,7 +64,7 @@ class Discovery:
             except Exception:  # noqa
                 pass
 
-            if type(networks) is list:
+            if isinstance(networks, list):
                 for network in networks:
                     for ip_address in network.get("ip-addresses", []):
                         if ip_address["ip-address-type"] == "ipv4" and not ipv4_address:
