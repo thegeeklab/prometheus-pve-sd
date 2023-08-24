@@ -23,6 +23,7 @@ steps:
     commands:
       - pip install poetry poetry-dynamic-versioning -qq
       - poetry install
+      - poetry run pytest --cov-append
       - poetry version
       - poetry run ${CI_REPO_NAME} --help
     environment:
