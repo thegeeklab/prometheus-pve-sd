@@ -2,7 +2,7 @@
 title: Documentation
 ---
 
-[![Build Status](https://img.shields.io/drone/build/thegeeklab/prometheus-pve-sd?logo=drone&server=https%3A%2F%2Fdrone.thegeeklab.de)](https://drone.thegeeklab.de/thegeeklab/prometheus-pve-sd)
+[![Build Status](https://ci.thegeeklab.de/api/badges/thegeeklab/prometheus-pve-sd/status.svg)](https://ci.thegeeklab.de/repos/thegeeklab/prometheus-pve-sd)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/thegeeklab/prometheus-pve-sd)
 [![Quay.io](https://img.shields.io/badge/quay-latest-blue.svg?logo=docker&logoColor=white)](https://quay.io/repository/thegeeklab/prometheus-pve-sd)
 [![Python Version](https://img.shields.io/pypi/pyversions/prometheus-pve-sd.svg)](https://pypi.org/project/prometheus-pve-sd/)

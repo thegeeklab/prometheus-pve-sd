@@ -63,7 +63,7 @@ steps:
         from_secret: s3_secret_access_key
       source: docs/public/
       strip_prefix: docs/public/
-      target: /${DRONE_REPO_NAME}
+      target: /${CI_REPO_NAME}
     when:
       - event: [push, manual]
         branch:
