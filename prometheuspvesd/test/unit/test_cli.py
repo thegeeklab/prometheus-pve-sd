@@ -29,6 +29,65 @@ def test_cli_required_error(mocker, capsys):
     assert e.value.code == 1
 
 
+@pytest.mark.parametrize(
+    "testinput", [{
+        "pve.user": "dummy",
+        "pve.password": "",
+        "pve.token_name": "",
+        "pve.token_value": ""
+    }, {
+        "pve.user": "dummy",
+        "pve.password": "",
+        "pve.token_name": "dummy",
+        "pve.token_value": ""
+    }, {
+        "pve.user": "dummy",
+        "pve.password": "",
+        "pve.token_name": "",
+        "pve.token_value": "dummy"
+    }]
+)
+def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
+    for key, value in testinput.items():
+        builtins[key]["default"] = value
+
+    mocker.patch.dict(Config.SETTINGS, builtins)
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
+
+    with pytest.raises(SystemExit) as e:
+        PrometheusSD()
+
+    stdout, stderr = capsys.readouterr()
+    assert "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' are required but not set" in stderr
+    assert e.value.code == 1
+
+
+@pytest.mark.parametrize(
+    "testinput", [{
+        "pve.password": "dummy",
+        "pve.token_name": "",
+        "pve.token_value": ""
+    }, {
+        "pve.password": "",
+        "pve.token_name": "dummy",
+        "pve.token_value": "dummy"
+    }]
+)
+def test_cli_auth_no_error(mocker, capsys, builtins, testinput):
+    for key, value in testinput.items():
+        builtins[key]["default"] = value
+
+    mocker.patch.dict(Config.SETTINGS, builtins)
+    mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
+    mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
+
+    psd = PrometheusSD()
+
+    for key, value in testinput.items():
+        assert psd.config.config["pve"][key.split(".")[1]] == value
+
+
 def test_cli_config_error(mocker, capsys):
     mocker.patch(
         "prometheuspvesd.config.SingleConfig.__init__",

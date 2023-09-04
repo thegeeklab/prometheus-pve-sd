@@ -166,6 +166,8 @@ def defaults():
             "password": "",
             "server": "",
             "user": "",
+            "token_name": "",
+            "token_value": "",
             "verify_ssl": True
         },
         "service": True,
