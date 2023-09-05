@@ -16,7 +16,7 @@ steps:
   fetch:
     image: docker.io/library/python:3.11
     commands:
-      - git fetch -tq
+      - git fetch --unshallow --quiet
 
   pytest:
     image: ${PYTHON_VERSION}
