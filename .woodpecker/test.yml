@@ -12,13 +12,12 @@ matrix:
     - docker.io/library/python:3.10
     - docker.io/library/python:3.11
 
-clone:
-  git:
-    settings:
-      partial: false
-      depth: 0
-
 steps:
+  fetch:
+    image: docker.io/library/python:3.11
+    commands:
+      - git fetch --unshallow
+
   pytest:
     image: ${PYTHON_VERSION}
     commands:
