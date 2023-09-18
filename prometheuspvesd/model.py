@@ -19,8 +19,10 @@ class Host:
         self.add_label("vmid", vmid)
 
     def __str__(self):
-        return f"{self.hostname}({self.vmid}): {self.pve_type} \
-                  {self.ipv4_address} {self.ipv6_address}"
+        return (
+            f"{self.hostname}({self.vmid}): "
+            f"{self.pve_type} {self.ipv4_address} {self.ipv6_address}"
+        )
 
     def add_label(self, key, value):
         key = key.replace("-", "_").replace(" ", "_")
