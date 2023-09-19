@@ -35,18 +35,30 @@ include_vmid: []
 exclude_tags: []
 include_tags: []
 
+# Set either password or token_name and token_value
 pve:
     server:
     user:
     password:
+    token_name:
+    token_value:
     auth_timeout: 5
     verify_ssl: true
 
-# Example
+# Example with password
 # pve:
 #     server: proxmox.example.com
 #     user: root
 #     password: secure
+#     auth_timeout: 5
+#     verify_ssl: true
+
+# Example with API token
+# pve:
+#     server: proxmox.example.com
+#     user: root
+#     token_name: pve_sd
+#     token_value: 01234567-89ab-cdef-0123-456789abcdef
 #     auth_timeout: 5
 #     verify_ssl: true
 ```

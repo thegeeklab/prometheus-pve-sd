@@ -24,5 +24,7 @@ pve:
   server: proxmox.example.com
   user: root
   password: secure
+  token_name: pve_sd
+  token_value: 01234567-89ab-cdef-0123-456789abcdef
   auth_timeout: 5
   verify_ssl: true

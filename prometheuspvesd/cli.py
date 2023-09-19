@@ -114,11 +114,19 @@ class PrometheusSD:
             self.log.sysexit_with_message(f"Can not set log level.\n{e!s}")
 
         required = [("pve.server", config.config["pve"]["server"]),
-                    ("pve.user", config.config["pve"]["user"]),
-                    ("pve.password", config.config["pve"]["password"])]
+                    ("pve.user", config.config["pve"]["user"])]
         for name, value in required:
             if not value:
                 self.log.sysexit_with_message(f"Option '{name}' is required but not set")
+
+        if (
+            not config.config["pve"]["password"]
+            and not (config.config["pve"]["token_name"] and config.config["pve"]["token_value"])
+        ):
+            self.log.sysexit_with_message(
+                "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' "
+                "are required but not set"
+            )
 
         self.logger.info(f"Using config file {config.config_file}")
 

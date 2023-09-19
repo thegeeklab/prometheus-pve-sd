@@ -66,7 +66,7 @@ sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 skip_glob = ["**/.env*", "**/env/*", "**/.venv/*", "**/docs/*"]
 
 [tool.pytest.ini_options]
-addopts = "prometheuspvesd --cov=prometheuspvesd --cov-report=xml:coverage.xml --cov-report=term --no-cov-on-fail"
+addopts = "prometheuspvesd --cov=prometheuspvesd --cov-report=xml:coverage.xml --cov-report=term-missing --no-cov-on-fail --cov-fail-under=80"
 filterwarnings = [
   "ignore::FutureWarning",
   "ignore::DeprecationWarning",
