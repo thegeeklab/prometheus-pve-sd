@@ -8,7 +8,6 @@ title: Documentation
 [![Python Version](https://img.shields.io/pypi/pyversions/prometheus-pve-sd.svg)](https://pypi.org/project/prometheus-pve-sd/)
 [![PyPI Status](https://img.shields.io/pypi/status/prometheus-pve-sd.svg)](https://pypi.org/project/prometheus-pve-sd/)
 [![PyPI Release](https://img.shields.io/pypi/v/prometheus-pve-sd.svg)](https://pypi.org/project/prometheus-pve-sd/)
-[![Codecov](https://img.shields.io/codecov/c/github/thegeeklab/prometheus-pve-sd)](https://codecov.io/gh/thegeeklab/prometheus-pve-sd)
 [![GitHub contributors](https://img.shields.io/github/contributors/thegeeklab/prometheus-pve-sd)](https://github.com/thegeeklab/prometheus-pve-sd/graphs/contributors)
 [![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/thegeeklab/prometheus-pve-sd)
 [![License: MIT](https://img.shields.io/github/license/thegeeklab/prometheus-pve-sd)](https://github.com/thegeeklab/prometheus-pve-sd/blob/main/LICENSE)
