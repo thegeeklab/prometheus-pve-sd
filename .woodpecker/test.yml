@@ -16,7 +16,8 @@ steps:
   fetch:
     image: docker.io/library/python:3.11
     commands:
-      - git fetch --unshallow --quiet
+      - >
+        [ -f "$(git rev-parse --is-shallow-repository)" ] && git fetch --unshallow --quiet || true
 
   pytest:
     image: ${PYTHON_VERSION}
