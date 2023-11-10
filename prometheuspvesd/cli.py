@@ -59,7 +59,7 @@ class PrometheusSD:
             "--config",
             dest="config_file",
             action="store",
-            help="location of configuration file"
+            help="location of configuration file",
         )
         parser.add_argument(
             "-o", "--output", dest="output_file", action="store", help="output file"
@@ -73,14 +73,14 @@ class PrometheusSD:
             dest="loop_delay",
             action="store",
             type=int,
-            help="delay between discovery runs"
+            help="delay between discovery runs",
         )
         parser.add_argument(
             "--no-service",
             dest="service",
             action="store_false",
             default=None,
-            help="run discovery only once"
+            help="run discovery only once",
         )
         parser.add_argument(
             "-f",
@@ -88,7 +88,7 @@ class PrometheusSD:
             dest="logging.format",
             metavar="LOG_FORMAT",
             action="store",
-            help="used log format"
+            help="used log format",
         )
         parser.add_argument(
             "-v", dest="logging.level", action="append_const", const=-1, help="increase log level"
@@ -113,15 +113,16 @@ class PrometheusSD:
         except ValueError as e:
             self.log.sysexit_with_message(f"Can not set log level.\n{e!s}")
 
-        required = [("pve.server", config.config["pve"]["server"]),
-                    ("pve.user", config.config["pve"]["user"])]
+        required = [
+            ("pve.server", config.config["pve"]["server"]),
+            ("pve.user", config.config["pve"]["user"]),
+        ]
         for name, value in required:
             if not value:
                 self.log.sysexit_with_message(f"Option '{name}' is required but not set")
 
-        if (
-            not config.config["pve"]["password"]
-            and not (config.config["pve"]["token_name"] and config.config["pve"]["token_value"])
+        if not config.config["pve"]["password"] and not (
+            config.config["pve"]["token_name"] and config.config["pve"]["token_value"]
         ):
             self.log.sysexit_with_message(
                 "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' "
@@ -144,7 +145,7 @@ class PrometheusSD:
             )
             start_http_server(
                 self.config.config["metrics"]["port"],
-                addr=self.config.config["metrics"]["address"]
+                addr=self.config.config["metrics"]["address"],
             )
 
         while True:
