@@ -34,130 +34,130 @@ class Config:
         "metrics.enabled": {
             "default": True,
             "env": "METRICS_ENABLED",
-            "type": environs.Env().bool
+            "type": environs.Env().bool,
         },
         "metrics.address": {
             "default": "127.0.0.1",
             "env": "METRICS_ADDRESS",
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "metrics.port": {
             "default": 8000,
             "env": "METRICS_PORT",
-            "type": environs.Env().int
+            "type": environs.Env().int,
         },
         "config_file": {
             "default": "",
             "env": "CONFIG_FILE",
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "logging.level": {
             "default": "WARNING",
             "env": "LOG_LEVEL",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "logging.format": {
             "default": "console",
             "env": "LOG_FORMAT",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "output_file": {
             "default": default_output_file,
             "env": "OUTPUT_FILE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "output_file_mode": {
             "default": "0640",
             "env": "OUTPUT_FILE_MODE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "loop_delay": {
             "default": 300,
             "env": "LOOP_DELAY",
             "file": True,
-            "type": environs.Env().int
+            "type": environs.Env().int,
         },
         "service": {
             "default": True,
             "env": "SERVICE",
             "file": True,
-            "type": environs.Env().bool
+            "type": environs.Env().bool,
         },
         "exclude_state": {
             "default": [],
             "env": "EXCLUDE_STATE",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "exclude_vmid": {
             "default": [],
             "env": "EXCLUDE_VMID",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "include_vmid": {
             "default": [],
             "env": "INCLUDE_VMID",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "exclude_tags": {
             "default": [],
             "env": "EXCLUDE_TAGS",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "include_tags": {
             "default": [],
             "env": "INCLUDE_TAGS",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "pve.server": {
             "default": "",
             "env": "PVE_SERVER",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.user": {
             "default": "",
             "env": "PVE_USER",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.password": {
             "default": "",
             "env": "PVE_PASSWORD",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.token_name": {
             "default": "",
             "env": "PVE_TOKEN_NAME",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.token_value": {
             "default": "",
             "env": "PVE_TOKEN_VALUE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.auth_timeout": {
             "default": 5,
             "env": "PVE_AUTH_TIMEOUT",
             "file": True,
-            "type": environs.Env().int
+            "type": environs.Env().int,
         },
         "pve.verify_ssl": {
             "default": True,
             "env": "PVE_VERIFY_SSL",
             "file": True,
-            "type": environs.Env().bool
+            "type": environs.Env().bool,
         },
     }
 
@@ -245,7 +245,8 @@ class Config:
                     try:
                         file_dict = ruamel.yaml.YAML(typ="safe", pure=True).load(s)
                     except (
-                        ruamel.yaml.composer.ComposerError, ruamel.yaml.scanner.ScannerError
+                        ruamel.yaml.composer.ComposerError,
+                        ruamel.yaml.scanner.ScannerError,
                     ) as e:
                         message = f"{e.context} {e.problem}"
                         raise prometheuspvesd.exception.ConfigError(
@@ -287,7 +288,7 @@ class Config:
             schema_error = "Failed validating '{validator}' in schema{schema}\n{message}".format(
                 validator=e.validator,
                 schema=format_as_index(list(e.relative_schema_path)[:-1], 0),
-                message=e.message
+                message=e.message,
             )
             raise prometheuspvesd.exception.ConfigError("Configuration error", schema_error) from e
 
@@ -295,9 +296,11 @@ class Config:
 
     def _add_dict_branch(self, tree, vector, value):
         key = vector[0]
-        tree[key] = value \
-            if len(vector) == 1 \
+        tree[key] = (
+            value
+            if len(vector) == 1
             else self._add_dict_branch(tree[key] if key in tree else {}, vector[1:], value)
+        )
         return tree
 
 

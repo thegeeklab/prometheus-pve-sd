@@ -10,6 +10,7 @@ from prometheuspvesd.utils import to_bool
 
 try:
     from proxmoxer import ProxmoxAPI
+
     HAS_PROXMOXER = True
 except ImportError:
     HAS_PROXMOXER = False
@@ -53,7 +54,7 @@ class ProxmoxClient:
                     token_name=self.config.config["pve"]["token_name"],
                     token_value=self.config.config["pve"]["token_value"],
                     verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
-                    timeout=self.config.config["pve"]["auth_timeout"]
+                    timeout=self.config.config["pve"]["auth_timeout"],
                 )
 
             return ProxmoxAPI(
@@ -61,7 +62,7 @@ class ProxmoxClient:
                 user=self.config.config["pve"]["user"],
                 password=self.config.config["pve"]["password"],
                 verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
-                timeout=self.config.config["pve"]["auth_timeout"]
+                timeout=self.config.config["pve"]["auth_timeout"],
             )
         except requests.RequestException as e:
             PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
@@ -98,5 +99,6 @@ class ProxmoxClient:
 
     def get_network_interfaces(self, pve_node, vmid):
         self.logger.debug(f"fetching network interfaces for {vmid} on {pve_node}")
-        return self._do_request(pve_node, "qemu", vmid, "agent",
-                                "network-get-interfaces")["result"]
+        return self._do_request(pve_node, "qemu", vmid, "agent", "network-get-interfaces")[
+            "result"
+        ]

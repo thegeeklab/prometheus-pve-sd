@@ -52,26 +52,17 @@ pytest = "7.4.3"
 pytest-mock = "3.12.0"
 pytest-cov = "4.1.0"
 toml = "0.10.2"
-yapf = "0.40.2"
 
 [tool.poetry-dynamic-versioning]
 enable = true
 style = "semver"
 vcs = "git"
 
-[tool.isort]
-default_section = "THIRDPARTY"
-force_single_line = true
-line_length = 99
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-skip_glob = ["**/.env*", "**/env/*", "**/.venv/*", "**/docs/*"]
-
 [tool.pytest.ini_options]
 addopts = "prometheuspvesd --cov=prometheuspvesd --cov-report=xml:coverage.xml --cov-report=term-missing --no-cov-on-fail --cov-fail-under=80"
 filterwarnings = [
   "ignore::FutureWarning",
   "ignore::DeprecationWarning",
-  "ignore:.*pep8.*:FutureWarning",
 ]
 
 [tool.coverage.run]
@@ -94,6 +85,10 @@ exclude = [
     ".eggs",
     "env*",
 ]
+
+line-length = 99
+indent-width = 4
+
 # Explanation of errors
 #
 # D102: Missing docstring in public method
@@ -114,7 +109,6 @@ ignore = [
     "UP038",
     "RUF012",
 ]
-line-length = 99
 select = [
     "D",
     "E",
@@ -137,14 +131,7 @@ select = [
     "RUF",
 ]
 
-[tool.ruff.flake8-quotes]
-inline-quotes = "double"
-
-[tool.yapf]
-based_on_style = "google"
-column_limit = 99
-dedent_closing_brackets = true
-coalesce_brackets = true
-split_before_logical_operator = true
-indent_dictionary_value = true
-allow_split_before_dict_value = false
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

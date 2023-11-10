@@ -117,11 +117,9 @@ class Discovery:
             ):
                 continue
 
-            if (
-                len(self.config.config["include_tags"]) > 0 and (
-                    bool(obj["tags"]) is False  # continue if tags is not set
-                    or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
-                )
+            if len(self.config.config["include_tags"]) > 0 and (
+                bool(obj["tags"]) is False  # continue if tags is not set
+                or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
             ):
                 continue
 
@@ -134,9 +132,8 @@ class Discovery:
             if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
                 continue
 
-            if (
-                isinstance(obj["tags"], str)
-                and not set(obj["tags"].split(",")).isdisjoint(self.config.config["exclude_tags"])
+            if isinstance(obj["tags"], str) and not set(obj["tags"].split(",")).isdisjoint(
+                self.config.config["exclude_tags"]
             ):
                 continue
 
@@ -183,7 +180,7 @@ class Discovery:
                 config = self.client.get_instance_config(node, pve_type, vmid)
 
                 try:
-                    description = (config["description"])
+                    description = config["description"]
                 except KeyError:
                     description = None
                 except Exception as e:  # noqa

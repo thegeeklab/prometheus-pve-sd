@@ -17,7 +17,7 @@ def strtobool(value):
         "f": False,
         "false": False,
         "off": False,
-        "0": False
+        "0": False,
     }
 
     try:
