@@ -30,7 +30,7 @@ repository = "https://github.com/thegeeklab/prometheus-pve-sd/"
 version = "0.0.0"
 
 [tool.poetry.dependencies]
-anyconfig = "0.13.0"
+anyconfig = "0.14.0"
 appdirs = "1.4.4"
 colorama = "0.4.6"
 environs = "10.3.0"
