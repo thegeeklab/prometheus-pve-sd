@@ -25,7 +25,7 @@ def test_yaml_config(mocker, defaults):
     assert config.config == defaults
 
 
-def test_yaml_config_error(mocker, capsys):
+def test_yaml_config_error(mocker):
     mocker.patch(
         "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yml"
     )

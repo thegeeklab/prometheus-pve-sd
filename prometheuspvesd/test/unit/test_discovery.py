@@ -1,5 +1,7 @@
 """Test Discovery class."""
 
+import logging
+
 import pytest
 from proxmoxer import ProxmoxAPI
 
@@ -9,6 +11,10 @@ from prometheuspvesd.discovery import Discovery
 pytest_plugins = [
     "prometheuspvesd.test.fixtures.fixtures",
 ]
+
+
+def records_to_messages(records):
+    return [r.getMessage() for r in records]
 
 
 @pytest.fixture
@@ -32,19 +38,27 @@ def test_exclude_state(discovery, qemus):
     assert len(filtered) == 2
 
 
-def test_exclude_tags(discovery, qemus):
+def test_exclude_tags(discovery, qemus, local_caplog):
     discovery.config.config["exclude_tags"] = ["unmonitored"]
-    filtered = discovery._filter(qemus)
 
+    with local_caplog(level=logging.DEBUG) as caplog:
+        filtered = discovery._filter(qemus)
+
+    assert (
+        "vmid 100: discovered tags: ['unmonitored', 'excluded', 'postgres']"
+        in records_to_messages(caplog.records)
+    )
+    assert "vmid 100: excluded by tags: ['unmonitored']"
     assert len(filtered) == 2
 
 
 @pytest.mark.parametrize(
-    "testinput,expected", [
+    "testinput,expected",
+    [
         (["monitored"], 1),
         (["monitored", "postgres"], 2),
         ([], 3),
-    ]
+    ],
 )
 def test_include_tags(discovery, qemus, testinput, expected):
     discovery.config.config["include_tags"] = testinput
@@ -53,10 +67,13 @@ def test_include_tags(discovery, qemus, testinput, expected):
     assert len(filtered) == expected
 
 
-@pytest.mark.parametrize("testinput,expected", [
-    (["101", "100"], 2),
-    ([], 3),
-])
+@pytest.mark.parametrize(
+    "testinput,expected",
+    [
+        (["101", "100"], 2),
+        ([], 3),
+    ],
+)
 def test_include_vmid(discovery, qemus, testinput, expected):
     discovery.config.config["include_vmid"] = testinput
     filtered = discovery._filter(qemus)

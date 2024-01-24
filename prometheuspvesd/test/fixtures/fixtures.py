@@ -3,8 +3,7 @@
 import environs
 import pytest
 
-from prometheuspvesd.model import Host
-from prometheuspvesd.model import HostList
+from prometheuspvesd.model import Host, HostList
 
 
 @pytest.fixture
@@ -13,131 +12,118 @@ def builtins():
         "metrics.enabled": {
             "default": True,
             "env": "METRICS_ENABLED",
-            "type": environs.Env().bool
+            "type": environs.Env().bool,
         },
         "metrics.address": {
             "default": "127.0.0.1",
             "env": "METRICS_ADDRESS",
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
-        "metrics.port": {
-            "default": 8000,
-            "env": "METRICS_PORT",
-            "type": environs.Env().int
-        },
-        "config_file": {
-            "default": "",
-            "env": "CONFIG_FILE",
-            "type": environs.Env().str
-        },
+        "metrics.port": {"default": 8000, "env": "METRICS_PORT", "type": environs.Env().int},
+        "config_file": {"default": "", "env": "CONFIG_FILE", "type": environs.Env().str},
         "logging.level": {
             "default": "WARNING",
             "env": "LOG_LEVEL",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "logging.format": {
             "default": "console",
             "env": "LOG_FORMAT",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "output_file": {
             "default": "dummy",
             "env": "OUTPUT_FILE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "output_file_mode": {
             "default": "0640",
             "env": "OUTPUT_FILE_MODE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "loop_delay": {
             "default": 300,
             "env": "LOOP_DELAY",
             "file": True,
-            "type": environs.Env().int
+            "type": environs.Env().int,
         },
-        "service": {
-            "default": False,
-            "env": "SERVICE",
-            "file": True,
-            "type": environs.Env().bool
-        },
+        "service": {"default": False, "env": "SERVICE", "file": True, "type": environs.Env().bool},
         "exclude_state": {
             "default": [],
             "env": "EXCLUDE_STATE",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "exclude_vmid": {
             "default": [],
             "env": "EXCLUDE_VMID",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "exclude_tags": {
             "default": [],
             "env": "EXCLUDE_TAGS",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "include_vmid": {
             "default": [],
             "env": "INCLUDE_VMID",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "include_tags": {
             "default": [],
             "env": "INCLUDE_TAGS",
             "file": True,
-            "type": environs.Env().list
+            "type": environs.Env().list,
         },
         "pve.server": {
             "default": "dummyserver",
             "env": "PVE_SERVER",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.user": {
             "default": "dummyuser",
             "env": "PVE_USER",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.password": {
             "default": "dummypass",
             "env": "PVE_PASSWORD",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.token_name": {
             "default": "dummyname",
             "env": "PVE_TOKEN_NAME",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.token_value": {
             "default": "dummyvalue",
             "env": "PVE_TOKEN_VALUE",
             "file": True,
-            "type": environs.Env().str
+            "type": environs.Env().str,
         },
         "pve.auth_timeout": {
             "default": 5,
             "env": "PVE_AUTH_TIMEOUT",
             "file": True,
-            "type": environs.Env().int
+            "type": environs.Env().int,
         },
         "pve.verify_ssl": {
             "default": True,
             "env": "PVE_VERIFY_SSL",
             "file": True,
-            "type": environs.Env().bool
-        }
+            "type": environs.Env().bool,
+        },
     }
 
 
@@ -149,16 +135,9 @@ def defaults():
         "exclude_vmid": [],
         "include_tags": [],
         "include_vmid": [],
-        "logging": {
-            "format": "console",
-            "level": "WARNING"
-        },
+        "logging": {"format": "console", "level": "WARNING"},
         "loop_delay": 300,
-        "metrics": {
-            "address": "127.0.0.1",
-            "enabled": True,
-            "port": 8000
-        },
+        "metrics": {"address": "127.0.0.1", "enabled": True, "port": 8000},
         "output_file": "dummy",
         "output_file_mode": "0640",
         "pve": {
@@ -168,7 +147,7 @@ def defaults():
             "user": "",
             "token_name": "",
             "token_value": "",
-            "verify_ssl": True
+            "verify_ssl": True,
         },
         "service": True,
     }
@@ -176,20 +155,22 @@ def defaults():
 
 @pytest.fixture
 def nodes():
-    return [{
-        "level": "",
-        "id": "node/example-node",
-        "disk": 4783488,
-        "cpu": 0.0935113631167406,
-        "maxcpu": 24,
-        "maxmem": 142073272990,
-        "mem": 135884478304,
-        "node": "example-node",
-        "type": "node",
-        "status": "online",
-        "maxdisk": 504209920,
-        "uptime": 200
-    }]
+    return [
+        {
+            "level": "",
+            "id": "node/example-node",
+            "disk": 4783488,
+            "cpu": 0.0935113631167406,
+            "maxcpu": 24,
+            "maxmem": 142073272990,
+            "mem": 135884478304,
+            "node": "example-node",
+            "type": "node",
+            "status": "online",
+            "maxdisk": 504209920,
+            "uptime": 200,
+        }
+    ]
 
 
 @pytest.fixture
@@ -212,7 +193,7 @@ def qemus():
             "status": "running",
             "netout": 12159205236,
             "mem": 496179157,
-            "tags": "unmonitored,excluded,postgres"
+            "tags": "unmonitored;excluded;postgres",
         },
         {
             "diskwrite": 0,
@@ -230,7 +211,7 @@ def qemus():
             "disk": 0,
             "status": "running",
             "netout": 12159205236,
-            "mem": 496179157
+            "mem": 496179157,
         },
         {
             "diskwrite": 0,
@@ -249,7 +230,7 @@ def qemus():
             "status": "prelaunch",
             "netout": 12159205236,
             "mem": 496179157,
-            "tags": "monitored"
+            "tags": "monitored",
         },
     ]
 
@@ -261,19 +242,17 @@ def instance_config():
         "description": '{"groups": "test-group"}',
         "net0": "virtio=D8-85-75-47-2E-8D,bridge=vmbr122,ip=192.0.2.25,ip=2001:db8::666:77:8888",
         "cpu": 2,
-        "cores": 2
+        "cores": 2,
     }
 
 
 @pytest.fixture
 def agent_info():
     return {
-        "supported_commands": [{
-            "name": "guest-network-get-interfaces",
-            "enabled": True,
-            "success-response": True
-        }],
-        "version": "5.2.0"
+        "supported_commands": [
+            {"name": "guest-network-get-interfaces", "enabled": True, "success-response": True}
+        ],
+        "version": "5.2.0",
     }
 
 
@@ -310,16 +289,8 @@ def networks():
         {
             "hardware-address": "00:00:00:00:00:00",
             "ip-addresses": [
-                {
-                    "ip-address": "127.0.0.1",
-                    "ip-address-type": "ipv4",
-                    "prefix": 8
-                },
-                {
-                    "ip-address": "::1",
-                    "ip-address-type": "ipv6",
-                    "prefix": 128
-                },
+                {"ip-address": "127.0.0.1", "ip-address-type": "ipv4", "prefix": 8},
+                {"ip-address": "::1", "ip-address-type": "ipv6", "prefix": 128},
             ],
             "name": "lo",
             "statistics": {
@@ -330,26 +301,18 @@ def networks():
                 "tx-bytes": 9280,
                 "tx-dropped": 0,
                 "tx-errs": 0,
-                "tx-packets": 92
-            }
+                "tx-packets": 92,
+            },
         },
         {
             "hardware-address": "92:0b:bd:c1:f8:39",
             "ip-addresses": [
-                {
-                    "ip-address": "192.0.2.1",
-                    "ip-address-type": "ipv4",
-                    "prefix": 32
-                },
-                {
-                    "ip-address": "192.0.2.4",
-                    "ip-address-type": "ipv4",
-                    "prefix": 32
-                },
+                {"ip-address": "192.0.2.1", "ip-address-type": "ipv4", "prefix": 32},
+                {"ip-address": "192.0.2.4", "ip-address-type": "ipv4", "prefix": 32},
                 {
                     "ip-address": "2001:db8:3333:4444:5555:6666:7777:8888",
                     "ip-address-type": "ipv6",
-                    "prefix": 64
+                    "prefix": 64,
                 },
             ],
             "name": "eth0",
@@ -361,13 +324,10 @@ def networks():
                 "tx-bytes": 12185866619,
                 "tx-dropped": 0,
                 "tx-errs": 0,
-                "tx-packets": 14423878
-            }
+                "tx-packets": 14423878,
+            },
         },
-        {
-            "hardware-address": "ba:97:85:bd:9a:a5",
-            "name": "eth1"
-        },
+        {"hardware-address": "ba:97:85:bd:9a:a5", "name": "eth1"},
     ]
 
 
@@ -383,31 +343,35 @@ def inventory():
 
 @pytest.fixture
 def labels():
-    return [{
-        "targets": ["100.example.com"],
-        "labels": {
-            "__meta_pve_ipv4": "192.0.2.1",
-            "__meta_pve_ipv6": "False",
-            "__meta_pve_name": "100.example.com",
-            "__meta_pve_type": "qemu",
-            "__meta_pve_vmid": "100"
-        }
-    }, {
-        "targets": ["101.example.com"],
-        "labels": {
-            "__meta_pve_ipv4": "192.0.2.2",
-            "__meta_pve_ipv6": "False",
-            "__meta_pve_name": "101.example.com",
-            "__meta_pve_type": "qemu",
-            "__meta_pve_vmid": "101"
-        }
-    }, {
-        "targets": ["102.example.com"],
-        "labels": {
-            "__meta_pve_ipv4": "192.0.2.3",
-            "__meta_pve_ipv6": "False",
-            "__meta_pve_name": "102.example.com",
-            "__meta_pve_type": "qemu",
-            "__meta_pve_vmid": "102"
-        }
-    }]
+    return [
+        {
+            "targets": ["100.example.com"],
+            "labels": {
+                "__meta_pve_ipv4": "192.0.2.1",
+                "__meta_pve_ipv6": "False",
+                "__meta_pve_name": "100.example.com",
+                "__meta_pve_type": "qemu",
+                "__meta_pve_vmid": "100",
+            },
+        },
+        {
+            "targets": ["101.example.com"],
+            "labels": {
+                "__meta_pve_ipv4": "192.0.2.2",
+                "__meta_pve_ipv6": "False",
+                "__meta_pve_name": "101.example.com",
+                "__meta_pve_type": "qemu",
+                "__meta_pve_vmid": "101",
+            },
+        },
+        {
+            "targets": ["102.example.com"],
+            "labels": {
+                "__meta_pve_ipv4": "192.0.2.3",
+                "__meta_pve_ipv6": "False",
+                "__meta_pve_name": "102.example.com",
+                "__meta_pve_type": "qemu",
+                "__meta_pve_vmid": "102",
+            },
+        },
+    ]
