@@ -212,7 +212,7 @@ def qemus():
             "status": "running",
             "netout": 12159205236,
             "mem": 496179157,
-            "tags": "unmonitored,excluded,postgres"
+            "tags": "unmonitored;excluded;postgres"
         },
         {
             "diskwrite": 0,
