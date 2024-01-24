@@ -111,6 +111,13 @@ class Discovery:
         filtered = []
         for item in pve_list:
             obj = defaultdict(dict, item)
+            tags = []
+            excl_tags = self.config.config["exclude_tags"]
+
+            if isinstance(obj["tags"], str):
+                tags = obj["tags"].split(";")
+                self.logger.debug(f"vmid {obj['vmid']}: discovered tags: {tags}")
+
             if (
                 len(self.config.config["include_vmid"]) > 0
                 and str(obj["vmid"]) not in self.config.config["include_vmid"]
@@ -119,7 +126,7 @@ class Discovery:
 
             if len(self.config.config["include_tags"]) > 0 and (
                 bool(obj["tags"]) is False  # continue if tags is not set
-                or set(obj["tags"].split(",")).isdisjoint(self.config.config["include_tags"])
+                or set(tags).isdisjoint(self.config.config["include_tags"])
             ):
                 continue
 
@@ -132,9 +139,11 @@ class Discovery:
             if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
                 continue
 
-            if isinstance(obj["tags"], str) and not set(obj["tags"].split(";")).isdisjoint(
-                self.config.config["exclude_tags"]
-            ):
+            if isinstance(obj["tags"], str) and not set(tags).isdisjoint(excl_tags):
+                self.logger.debug(
+                    f"vmid {obj['vmid']}: "
+                    f"excluded by tags: {list(set(tags).intersection(excl_tags))}"
+                )
                 continue
 
             filtered.append(item.copy())

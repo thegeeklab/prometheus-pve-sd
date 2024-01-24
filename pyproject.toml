@@ -78,7 +78,6 @@ exclude = [
     "__pycache__",
     "build",
     "dist",
-    "test",
     "*.pyc",
     "*.egg-info",
     ".cache",
@@ -130,6 +129,9 @@ select = [
     "ERA",
     "RUF",
 ]
+
+[tool.ruff.per-file-ignores]
+"test_*.py" = ["S"]
 
 [tool.ruff.format]
 quote-style = "double"

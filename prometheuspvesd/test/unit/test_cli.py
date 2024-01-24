@@ -30,22 +30,22 @@ def test_cli_required_error(mocker, capsys):
 
 
 @pytest.mark.parametrize(
-    "testinput", [{
-        "pve.user": "dummy",
-        "pve.password": "",
-        "pve.token_name": "",
-        "pve.token_value": ""
-    }, {
-        "pve.user": "dummy",
-        "pve.password": "",
-        "pve.token_name": "dummy",
-        "pve.token_value": ""
-    }, {
-        "pve.user": "dummy",
-        "pve.password": "",
-        "pve.token_name": "",
-        "pve.token_value": "dummy"
-    }]
+    "testinput",
+    [
+        {"pve.user": "dummy", "pve.password": "", "pve.token_name": "", "pve.token_value": ""},
+        {
+            "pve.user": "dummy",
+            "pve.password": "",
+            "pve.token_name": "dummy",
+            "pve.token_value": "",
+        },
+        {
+            "pve.user": "dummy",
+            "pve.password": "",
+            "pve.token_name": "",
+            "pve.token_value": "dummy",
+        },
+    ],
 )
 def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
     for key, value in testinput.items():
@@ -59,22 +59,21 @@ def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
         PrometheusSD()
 
     stdout, stderr = capsys.readouterr()
-    assert "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' are required but not set" in stderr
+    assert (
+        "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' are required but not set"
+        in stderr
+    )
     assert e.value.code == 1
 
 
 @pytest.mark.parametrize(
-    "testinput", [{
-        "pve.password": "dummy",
-        "pve.token_name": "",
-        "pve.token_value": ""
-    }, {
-        "pve.password": "",
-        "pve.token_name": "dummy",
-        "pve.token_value": "dummy"
-    }]
+    "testinput",
+    [
+        {"pve.password": "dummy", "pve.token_name": "", "pve.token_value": ""},
+        {"pve.password": "", "pve.token_name": "dummy", "pve.token_value": "dummy"},
+    ],
 )
-def test_cli_auth_no_error(mocker, capsys, builtins, testinput):
+def test_cli_auth_no_error(mocker, builtins, testinput):
     for key, value in testinput.items():
         builtins[key]["default"] = value
 
@@ -91,7 +90,7 @@ def test_cli_auth_no_error(mocker, capsys, builtins, testinput):
 def test_cli_config_error(mocker, capsys):
     mocker.patch(
         "prometheuspvesd.config.SingleConfig.__init__",
-        side_effect=prometheuspvesd.exception.ConfigError("Dummy Config Exception")
+        side_effect=prometheuspvesd.exception.ConfigError("Dummy Config Exception"),
     )
     mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
