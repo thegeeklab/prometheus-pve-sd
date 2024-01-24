@@ -112,7 +112,7 @@ class Discovery:
         for item in pve_list:
             obj = defaultdict(dict, item)
             tags = []
-            excl_tags = self.config.config["exclude_tags"]
+            tags_excl = self.config.config["exclude_tags"]
 
             if isinstance(obj["tags"], str):
                 tags = obj["tags"].split(";")
@@ -139,10 +139,10 @@ class Discovery:
             if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
                 continue
 
-            if isinstance(obj["tags"], str) and not set(tags).isdisjoint(excl_tags):
+            if isinstance(obj["tags"], str) and not set(tags).isdisjoint(tags_excl):
                 self.logger.debug(
                     f"vmid {obj['vmid']}: "
-                    f"excluded by tags: {list(set(tags).intersection(excl_tags))}"
+                    f"excluded by tags: {list(set(tags).intersection(tags_excl))}"
                 )
                 continue
 
