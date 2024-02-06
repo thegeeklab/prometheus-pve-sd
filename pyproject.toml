@@ -47,7 +47,7 @@ requests = "2.31.0"
 prometheus-pve-sd = "prometheuspvesd.cli:main"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.1.14"
+ruff = "0.2.1"
 pytest = "8.0.0"
 pytest-mock = "3.12.0"
 pytest-cov = "4.1.0"
@@ -60,10 +60,7 @@ vcs = "git"
 
 [tool.pytest.ini_options]
 addopts = "prometheuspvesd --cov=prometheuspvesd --cov-report=xml:coverage.xml --cov-report=term-missing --no-cov-on-fail --cov-fail-under=80"
-filterwarnings = [
-  "ignore::FutureWarning",
-  "ignore::DeprecationWarning",
-]
+filterwarnings = ["ignore::FutureWarning", "ignore::DeprecationWarning"]
 
 [tool.coverage.run]
 omit = ["**/test/*"]
@@ -74,20 +71,21 @@ requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 
 [tool.ruff]
 exclude = [
-    ".git",
-    "__pycache__",
-    "build",
-    "dist",
-    "*.pyc",
-    "*.egg-info",
-    ".cache",
-    ".eggs",
-    "env*",
+  ".git",
+  "__pycache__",
+  "build",
+  "dist",
+  "*.pyc",
+  "*.egg-info",
+  ".cache",
+  ".eggs",
+  "env*",
 ]
 
 line-length = 99
 indent-width = 4
 
+[tool.ruff.lint]
 # Explanation of errors
 #
 # D102: Missing docstring in public method
@@ -98,39 +96,39 @@ indent-width = 4
 # D203: One blank line required before class docstring
 # D212: Multi-line docstring summary should start at the first line
 ignore = [
-    "D102",
-    "D103",
-    "D105",
-    "D107",
-    "D202",
-    "D203",
-    "D212",
-    "UP038",
-    "RUF012",
+  "D102",
+  "D103",
+  "D105",
+  "D107",
+  "D202",
+  "D203",
+  "D212",
+  "UP038",
+  "RUF012",
 ]
 select = [
-    "D",
-    "E",
-    "F",
-    "Q",
-    "W",
-    "I",
-    "S",
-    "BLE",
-    "N",
-    "UP",
-    "B",
-    "A",
-    "C4",
-    "T20",
-    "SIM",
-    "RET",
-    "ARG",
-    "ERA",
-    "RUF",
+  "D",
+  "E",
+  "F",
+  "Q",
+  "W",
+  "I",
+  "S",
+  "BLE",
+  "N",
+  "UP",
+  "B",
+  "A",
+  "C4",
+  "T20",
+  "SIM",
+  "RET",
+  "ARG",
+  "ERA",
+  "RUF",
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "test_*.py" = ["S"]
 
 [tool.ruff.format]

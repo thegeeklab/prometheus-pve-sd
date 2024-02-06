@@ -299,7 +299,7 @@ class Config:
         tree[key] = (
             value
             if len(vector) == 1
-            else self._add_dict_branch(tree[key] if key in tree else {}, vector[1:], value)
+            else self._add_dict_branch(tree.get(key, {}), vector[1:], value)
         )
         return tree
 
