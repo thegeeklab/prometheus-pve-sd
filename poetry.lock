@@ -237,23 +237,22 @@ toml = ["tomli"]
 
 [[package]]
 name = "environs"
-version = "10.3.0"
+version = "11.0.0"
 description = "simplified environment variable parsing"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "environs-10.3.0-py3-none-any.whl", hash = "sha256:feeaf28f17fd0499f9cd7c0fcf408c6d82c308e69e335eb92d09322fc9ed8138"},
-    {file = "environs-10.3.0.tar.gz", hash = "sha256:cc421ddb143fa30183568164755aa113a160e555cd19e97e664c478662032c24"},
+    {file = "environs-11.0.0-py3-none-any.whl", hash = "sha256:e0bcfd41c718c07a7db422f9109e490746450da38793fe4ee197f397b9343435"},
+    {file = "environs-11.0.0.tar.gz", hash = "sha256:069727a8f73d8ba8d033d3cd95c0da231d44f38f1da773bf076cef168d312ee8"},
 ]
 
 [package.dependencies]
-marshmallow = ">=3.0.0"
+marshmallow = ">=3.13.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["environs[lint,tests]", "tox"]
+dev = ["environs[tests]", "pre-commit (>=3.5,<4.0)", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
-lint = ["flake8 (==7.0.0)", "flake8-bugbear (==23.11.28)", "mypy (==1.8.0)", "pre-commit (>=3.6,<4.0)"]
 tests = ["environs[django]", "pytest"]
 
 [[package]]
@@ -839,4 +838,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.0"
-content-hash = "3f863a8e9cc21d78e2c64a228fcedb840f9c456abb6d536c1a7be254053a092d"
+content-hash = "08226cd9dc13e46b48e33a7145f03af8795ae8df7bc4c5fbc8225afb6d2c6fe4"
