@@ -1,4 +1,5 @@
 """Test CLI class."""
+
 import json
 
 import pytest
