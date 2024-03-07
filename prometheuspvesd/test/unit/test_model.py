@@ -1,4 +1,5 @@
 """Test Host class."""
+
 import pytest
 
 from prometheuspvesd.model import Host

@@ -1,4 +1,5 @@
 """Test Config class."""
+
 import pytest
 import ruamel.yaml
 
