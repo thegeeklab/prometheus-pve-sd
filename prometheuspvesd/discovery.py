@@ -168,7 +168,7 @@ class Discovery:
             try:
                 qemu_list = self._filter(self.client.get_all_vms(node))
                 container_list = self._filter(self.client.get_all_containers(node))
-            except Exception as e:  # noqa
+            except Exception as e:
                 raise APIError(str(e)) from e
 
             # Merge QEMU and Containers lists from this node
@@ -192,7 +192,7 @@ class Discovery:
                     description = config["description"]
                 except KeyError:
                     description = None
-                except Exception as e:  # noqa
+                except Exception as e:
                     raise APIError(str(e)) from e
 
                 try:
