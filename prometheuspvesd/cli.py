@@ -174,11 +174,10 @@ class PrometheusSD:
             output.append(host.to_sd_json())
 
         # Write to tmp file and move after write
-        temp_file = tempfile.NamedTemporaryFile(mode="w", prefix="prometheus-pve-sd", delete=False)
-        with temp_file as tf:
+        with tempfile.NamedTemporaryFile(mode="w", prefix="prometheus-pve-sd", delete=False) as tf:
             json.dump(output, tf, indent=4)
 
-        shutil.move(temp_file.name, self.config.config["output_file"])
+        shutil.move(tf.name, self.config.config["output_file"])
         chmod(self.config.config["output_file"], int(self.config.config["output_file_mode"], 8))
 
     def _terminate(self, signal, frame):  # noqa
