@@ -4,6 +4,22 @@ title: Getting Started
 
 {{< toc >}}
 
+## Prometheus User
+
+To allow prometheus-pve-sd to access the Proxmox API, we recommend creating a dedicated user.
+The minimum set of privileges for the user is as follows:
+
+- `VM.Audit`
+- `VM.Monitor`
+
+Below are the commands to create the new user `prometheus-pve-sd@pve` and assign the necessary privileges:
+
+```Shell
+pveum role add prometheus-pve-sd-role --privs 'VM.Audit,VM.Monitor'
+pveum user add prometheus-pve-sd@pve --password <password>
+pveum aclmod / -user prometheus-pve-sd@pve -role prometheus-pve-sd-role
+```
+
 ## Available Labels
 
 The following list of meta labels can be used to relabel your scrape results:
