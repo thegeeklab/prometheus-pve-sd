@@ -428,13 +428,13 @@ twisted = ["twisted"]
 
 [[package]]
 name = "proxmoxer"
-version = "2.1.0"
+version = "2.2.0"
 description = "Python Wrapper for the Proxmox 2.x API (HTTP and SSH)"
 optional = false
 python-versions = "*"
 files = [
-    {file = "proxmoxer-2.1.0-py3-none-any.whl", hash = "sha256:59d69abc5742c6c1b1737ce2944599136f66cdbbb1d044cd4b7aad30100ddde6"},
-    {file = "proxmoxer-2.1.0.tar.gz", hash = "sha256:d92993782e74ed8a76ff355dc050f58aa039fa697f9349a68e643552bd0fa62e"},
+    {file = "proxmoxer-2.2.0-py3-none-any.whl", hash = "sha256:7e4431fd38e1a9321eedf6d860ddc373fc2b29ce1845fa8b072d7580d99f6b90"},
+    {file = "proxmoxer-2.2.0.tar.gz", hash = "sha256:3ed63a58e5c0822841afdb3801f9d913a4996955c1c54f7319b5842ba2615006"},
 ]
 
 [[package]]
@@ -810,4 +810,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.0"
-content-hash = "2064627332a4c56412d11385e565d9f3ccc088d5c611575596fde20a3308a7d5"
+content-hash = "470cfab4fb07afe95e6dddba4eb3be8477c7312107d5d67bb8a3dde13a5d6ced"
