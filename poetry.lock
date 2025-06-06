@@ -460,13 +460,13 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "prometheus-client"
-version = "0.22.0"
+version = "0.22.1"
 description = "Python client for the Prometheus monitoring system."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "prometheus_client-0.22.0-py3-none-any.whl", hash = "sha256:c8951bbe64e62b96cd8e8f5d917279d1b9b91ab766793f33d4dce6c228558713"},
-    {file = "prometheus_client-0.22.0.tar.gz", hash = "sha256:18da1d2241ac2d10c8d2110f13eedcd5c7c0c8af18c926e8731f04fc10cd575c"},
+    {file = "prometheus_client-0.22.1-py3-none-any.whl", hash = "sha256:cca895342e308174341b2cbf99a56bef291fbc0ef7b9e5412a0f26d653ba7094"},
+    {file = "prometheus_client-0.22.1.tar.gz", hash = "sha256:190f1331e783cf21eb60bca559354e0a4d4378facecf78f5428c39b675d20d28"},
 ]
 
 [package.extras]
@@ -922,4 +922,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.0"
-content-hash = "565896b64db2878804e2fa7b9384217f3cd53756fa457beea5ddca1e51a48ee4"
+content-hash = "ce2e6767279da2a7ee89e80d04779f5cbee5dd17516ed0f9883d6621e51d5e5a"
