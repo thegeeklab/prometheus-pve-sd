@@ -39,7 +39,7 @@ prometheus-client = "0.22.1"
 proxmoxer = "2.2.0"
 python = "^3.10.0"
 python-json-logger = "3.3.0"
-requests = "2.32.3"
+requests = "2.32.4"
 "ruamel.yaml" = "0.18.13"
 
 [tool.poetry.scripts]
