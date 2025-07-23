@@ -16,7 +16,8 @@ try:
 except ImportError:
     HAS_PROXMOXER = False
 
-PVE_REQUEST_COUNT_TOTAL = Counter("pve_sd_requests_total", "Total count of requests to PVE API")
+PVE_REQUEST_COUNT_TOTAL = Counter(
+    "pve_sd_requests_total", "Total count of requests to PVE API")
 PVE_REQUEST_COUNT_ERROR_TOTAL = Counter(
     "pve_sd_requests_error_total", "Total count of failed requests to PVE API"
 )
@@ -47,19 +48,24 @@ class ProxmoxClient:
                 )
             )
 
+            if ((self.config.config["pve"]["port"] == "") or (self.config.config["pve"]["port"] == 0)):
+                port = ""
+            else:
+                port = (":" + str(self.config.config["pve"]["port"]))
             if self.config.config["pve"]["token_name"]:
                 self.logger.debug("Using token login")
                 return ProxmoxAPI(
-                    self.config.config["pve"]["server"],
+                    self.config.config["pve"]["server"]+port,
                     user=self.config.config["pve"]["user"],
                     token_name=self.config.config["pve"]["token_name"],
                     token_value=self.config.config["pve"]["token_value"],
-                    verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
+                    verify_ssl=to_bool(
+                        self.config.config["pve"]["verify_ssl"]),
                     timeout=self.config.config["pve"]["auth_timeout"],
                 )
 
             return ProxmoxAPI(
-                self.config.config["pve"]["server"],
+                self.config.config["pve"]["server"]+port,
                 user=self.config.config["pve"]["user"],
                 password=self.config.config["pve"]["password"],
                 verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
@@ -99,7 +105,8 @@ class ProxmoxClient:
         return self._do_request(pve_node, pve_type, vmid, "agent", "info")["result"]
 
     def get_network_interfaces(self, pve_node, vmid):
-        self.logger.debug(f"fetching network interfaces for {vmid} on {pve_node}")
+        self.logger.debug(
+            f"fetching network interfaces for {vmid} on {pve_node}")
         return self._do_request(pve_node, "qemu", vmid, "agent", "network-get-interfaces")[
             "result"
         ]

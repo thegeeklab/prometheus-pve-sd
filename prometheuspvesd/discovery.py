@@ -48,7 +48,7 @@ class Discovery:
                 nested = {}
                 for key, value in vm.items():
                     nested["proxmox_" + key] = value
-                variables[vm["name"]] = nested
+                variables[vm["name"]+"("+str(vm["vmid"])+")"] = nested
 
         return variables
 
@@ -60,7 +60,8 @@ class Discovery:
             # If qemu agent is enabled, try to gather the IP address
             try:
                 if self.client.get_agent_info(pve_node, pve_type, vmid) is not None:
-                    networks = self.client.get_network_interfaces(pve_node, vmid)
+                    networks = self.client.get_network_interfaces(
+                        pve_node, vmid)
             except Exception:  # noqa
                 pass
 
@@ -68,9 +69,11 @@ class Discovery:
                 for network in networks:
                     for ip_address in network.get("ip-addresses", []):
                         if ip_address["ip-address-type"] == "ipv4" and not ipv4_address:
-                            ipv4_address = self._validate_ip(ip_address["ip-address"])
+                            ipv4_address = self._validate_ip(
+                                ip_address["ip-address"])
                         elif ip_address["ip-address-type"] == "ipv6" and not ipv6_address:
-                            ipv6_address = self._validate_ip(ip_address["ip-address"])
+                            ipv6_address = self._validate_ip(
+                                ip_address["ip-address"])
 
         config = self.client.get_instance_config(pve_node, pve_type, vmid)
         if config and not ipv4_address:
@@ -116,7 +119,8 @@ class Discovery:
 
             if isinstance(obj["tags"], str):
                 tags = obj["tags"].split(";")
-                self.logger.debug(f"vmid {obj['vmid']}: discovered tags: {tags}")
+                self.logger.debug(
+                    f"vmid {obj['vmid']}: discovered tags: {tags}")
 
             if (
                 len(self.config.config["include_vmid"]) > 0
@@ -167,7 +171,8 @@ class Discovery:
         for node in nodelist:
             try:
                 qemu_list = self._filter(self.client.get_all_vms(node))
-                container_list = self._filter(self.client.get_all_containers(node))
+                container_list = self._filter(
+                    self.client.get_all_containers(node))
             except Exception as e:
                 raise APIError(str(e)) from e
 
@@ -202,12 +207,16 @@ class Discovery:
                 except ValueError:
                     metadata = {"notes": description}
 
-                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid)
+                ipv4_address, ipv6_address = self._get_ip_addresses(
+                    pve_type, node, vmid)
 
-                prom_host = Host(vmid, host, ipv4_address, ipv6_address, pve_type)
+                prom_host = Host(vmid, host, ipv4_address,
+                                 ipv6_address, pve_type)
 
-                config_flags = [("cpu", "sockets"), ("cores", "cores"), ("memory", "memory")]
-                meta_flags = [("status", "proxmox_status"), ("tags", "proxmox_tags")]
+                config_flags = [("cpu", "sockets"),
+                                ("cores", "cores"), ("memory", "memory")]
+                meta_flags = [("status", "proxmox_status"),
+                              ("tags", "proxmox_tags")]
 
                 for key, flag in config_flags:
                     if flag in config:

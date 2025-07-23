@@ -159,6 +159,12 @@ class Config:
             "file": True,
             "type": environs.Env().bool,
         },
+        "pve.port": {
+            "default": 0,
+            "env": "PVE_PORT",
+            "file": True,
+            "type": environs.Env().int,
+        },
     }
 
     def __init__(self, args=None):
@@ -184,14 +190,16 @@ class Config:
 
         normalized = {}
         for key, value in cleaned.items():
-            normalized = self._add_dict_branch(normalized, key.split("."), value)
+            normalized = self._add_dict_branch(
+                normalized, key.split("."), value)
 
         # Override correct log level from argparse
         levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         log_level = levels.index(self.SETTINGS["logging.level"]["default"])
         if normalized.get("logging"):
             for adjustment in normalized["logging"]["level"]:
-                log_level = min(len(levels) - 1, max(log_level + adjustment, 0))
+                log_level = min(len(levels) - 1,
+                                max(log_level + adjustment, 0))
             normalized["logging"]["level"] = levels[log_level]
 
         return normalized
@@ -199,7 +207,8 @@ class Config:
     def _get_defaults(self):
         normalized = {}
         for key, item in self.SETTINGS.items():
-            normalized = self._add_dict_branch(normalized, key.split("."), item["default"])
+            normalized = self._add_dict_branch(
+                normalized, key.split("."), item["default"])
 
         self.schema = anyconfig.gen_schema(normalized)
         return normalized
@@ -212,7 +221,8 @@ class Config:
                 envname = prefix + item["env"]
                 try:
                     value = item["type"](envname)
-                    normalized = self._add_dict_branch(normalized, key.split("."), value)
+                    normalized = self._add_dict_branch(
+                        normalized, key.split("."), value)
                 except environs.EnvError as e:
                     if f'"{envname}" not set' in str(e):
                         pass
@@ -243,7 +253,8 @@ class Config:
                 with open(config, encoding="utf8") as stream:
                     s = stream.read()
                     try:
-                        file_dict = ruamel.yaml.YAML(typ="safe", pure=True).load(s)
+                        file_dict = ruamel.yaml.YAML(
+                            typ="safe", pure=True).load(s)
                     except (
                         ruamel.yaml.composer.ComposerError,
                         ruamel.yaml.scanner.ScannerError,
@@ -254,7 +265,8 @@ class Config:
                         ) from e
 
                     if self._validate(file_dict):
-                        anyconfig.merge(defaults, file_dict, ac_merge=anyconfig.MS_DICTS)
+                        anyconfig.merge(defaults, file_dict,
+                                        ac_merge=anyconfig.MS_DICTS)
                         defaults["logging"]["level"] = defaults["logging"]["level"].upper()
 
         if self._validate(envs):
@@ -269,8 +281,10 @@ class Config:
         defaults["logging"]["level"] = defaults["logging"]["level"].upper()
         defaults["logging"]["format"] = defaults["logging"]["format"].strip().lower()
 
-        Path(PurePath(self.config_file).parent).mkdir(parents=True, exist_ok=True)
-        Path(PurePath(defaults["output_file"]).parent).mkdir(parents=True, exist_ok=True)
+        Path(PurePath(self.config_file).parent).mkdir(
+            parents=True, exist_ok=True)
+        Path(PurePath(defaults["output_file"]).parent).mkdir(
+            parents=True, exist_ok=True)
 
         self.config = defaults
 
@@ -287,7 +301,8 @@ class Config:
         except jsonschema.exceptions.ValidationError as e:
             schema = format_as_index(list(e.relative_schema_path)[:-1], 0)
             schema_error = f"Failed validating '{e.validator}' in schema {schema}\n{e.message}"
-            raise prometheuspvesd.exception.ConfigError("Configuration error", schema_error) from e
+            raise prometheuspvesd.exception.ConfigError(
+                "Configuration error", schema_error) from e
 
         return True
 
