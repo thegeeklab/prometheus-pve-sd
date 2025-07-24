@@ -132,3 +132,39 @@ def test_propagate(
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
     assert discovery.propagate() == inventory
+
+
+def test_duplicate_vm_names(mocker, discovery, nodes, qemus, agent_info, networks):
+    """Test that VMs with duplicate names are handled correctly using vmid as key."""
+    # Create duplicate names by modifying the existing qemus fixture
+    duplicate_name_vms = [vm.copy() for vm in qemus]
+    for vm in duplicate_name_vms:
+        vm["name"] = "gitlab-runner"  # Give all VMs the same name
+
+    instance_config = {
+        "name": "gitlab-runner",
+        "description": "{}",
+        "cpu": 2,
+        "cores": 2,
+    }
+
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=duplicate_name_vms)
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    result = discovery.propagate()
+
+    # All VMs should be present in the result (3 from qemus fixture)
+    assert len(result.hosts) == 3
+
+    # All should have the same name but different vmids
+    vmids = [host.vmid for host in result.hosts]
+    hostnames = [host.hostname for host in result.hosts]
+
+    assert "100" in vmids
+    assert "101" in vmids
+    assert "102" in vmids
+    assert hostnames.count("gitlab-runner") == 3

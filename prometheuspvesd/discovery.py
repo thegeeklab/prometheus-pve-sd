@@ -48,7 +48,8 @@ class Discovery:
                 nested = {}
                 for key, value in vm.items():
                     nested["proxmox_" + key] = value
-                variables[vm["name"]] = nested
+                # Use vmid as key to ensure uniqueness, even if VMs have the same name
+                variables[str(vm["vmid"])] = nested
 
         return variables
 
@@ -177,9 +178,10 @@ class Discovery:
 
             HOST_GAUGE.set(len(instances))
             self.logger.info(f"{node}: Found {len(instances)} targets")
-            for host in instances:
-                host_meta = instances[host]
+            for vmid_key in instances:
+                host_meta = instances[vmid_key]
                 vmid = host_meta["proxmox_vmid"]
+                hostname = host_meta["proxmox_name"]
 
                 try:
                     pve_type = host_meta["proxmox_type"]
@@ -204,7 +206,7 @@ class Discovery:
 
                 ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid)
 
-                prom_host = Host(vmid, host, ipv4_address, ipv6_address, pve_type)
+                prom_host = Host(vmid, hostname, ipv4_address, ipv6_address, pve_type)
 
                 config_flags = [("cpu", "sockets"), ("cores", "cores"), ("memory", "memory")]
                 meta_flags = [("status", "proxmox_status"), ("tags", "proxmox_tags")]
