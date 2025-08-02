@@ -340,14 +340,14 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
 name = "environs"
-version = "14.2.0"
+version = "14.3.0"
 description = "simplified environment variable parsing"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "environs-14.2.0-py3-none-any.whl", hash = "sha256:22669a58d53c5b86a25d0231c4a41a6ebeb82d3942b8fbd9cf645890c92a1843"},
-    {file = "environs-14.2.0.tar.gz", hash = "sha256:2b6c78a77dfefb57ca30d43a232270ecc82adabf67ab318e018084b9a3529e9b"},
+    {file = "environs-14.3.0-py3-none-any.whl", hash = "sha256:91e4c4ea964be277855cdd83a588f6375f10fad9fa452660ecb9f503c230f26a"},
+    {file = "environs-14.3.0.tar.gz", hash = "sha256:20672d92db325ce8114872b1989104eb84f083486325b5a44bcddff56472a384"},
 ]
 
 [package.dependencies]
@@ -1038,4 +1038,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10.0"
-content-hash = "304739052f9f57f5e16b519dac4d9fcf3b501737fc6dd80f3aa2fd10394fe79d"
+content-hash = "17336a7e7ba4259ecf6ca853eedf983dae64d7bf58270bae7f923e7330efb854"
