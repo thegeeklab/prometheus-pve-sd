@@ -46,10 +46,10 @@ requests = "2.32.5"
 prometheus-pve-sd = "prometheuspvesd.cli:main"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.12.10"
-pytest = "8.4.1"
-pytest-mock = "3.14.1"
-pytest-cov = "6.2.1"
+ruff = "0.13.0"
+pytest = "8.4.2"
+pytest-mock = "3.15.1"
+pytest-cov = "7.0.0"
 toml = "0.10.2"
 
 [tool.poetry-dynamic-versioning]
@@ -94,17 +94,7 @@ indent-width = 4
 # D202: No blank lines allowed after function docstring
 # D203: One blank line required before class docstring
 # D212: Multi-line docstring summary should start at the first line
-ignore = [
-  "D102",
-  "D103",
-  "D105",
-  "D107",
-  "D202",
-  "D203",
-  "D212",
-  "UP038",
-  "RUF012",
-]
+ignore = ["D102", "D103", "D105", "D107", "D202", "D203", "D212", "RUF012"]
 select = [
   "D",
   "E",

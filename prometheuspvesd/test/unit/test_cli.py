@@ -25,7 +25,7 @@ def test_cli_required_error(mocker, capsys):
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
-    stdout, stderr = capsys.readouterr()
+    _, stderr = capsys.readouterr()
     assert "Option 'pve.server' is required but not set" in stderr
     assert e.value.code == 1
 
@@ -59,7 +59,7 @@ def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
-    stdout, stderr = capsys.readouterr()
+    _, stderr = capsys.readouterr()
     assert (
         "Either 'pve.password' or 'pve.token_name' and 'pve.token_value' are required but not set"
         in stderr
@@ -99,7 +99,7 @@ def test_cli_config_error(mocker, capsys):
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
-    stdout, stderr = capsys.readouterr()
+    _, stderr = capsys.readouterr()
     assert "Dummy Config Exception" in stderr
     assert e.value.code == 1
 
@@ -112,7 +112,7 @@ def test_cli_log_error(mocker, capsys):
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
-    stdout, stderr = capsys.readouterr()
+    _, stderr = capsys.readouterr()
     assert "Dummy Loglevel Exception" in stderr
     assert e.value.code == 1
 
@@ -125,7 +125,7 @@ def test_cli_api_error(mocker, builtins, capsys):
     with pytest.raises(SystemExit) as e:
         PrometheusSD()
 
-    stdout, stderr = capsys.readouterr()
+    _, stderr = capsys.readouterr()
     assert "Proxmoxer API error: Dummy API Exception" in stderr
     assert e.value.code == 1
 
