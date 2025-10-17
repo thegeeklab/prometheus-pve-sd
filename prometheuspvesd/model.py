@@ -30,6 +30,15 @@ class Host:
 
     def to_sd_json(self):
         return {"targets": [self.hostname], "labels": self.labels}
+    
+    def is_same_config(self, other):
+        return (
+            self.hostname == other.hostname and
+            self.ipv4_address == other.ipv4_address and
+            self.ipv6_address == other.ipv6_address and
+            self.pve_type == other.pve_type and
+            self.vmid == other.vmid
+        )
 
 
 class HostList:
@@ -50,14 +59,37 @@ class HostList:
                 continue
             return False
 
+        self_hosts_by_name = {host.hostname: host for host in self.hosts}
+        other_hosts_by_name = {host.hostname: host for host in other.hosts}
+
+        if set(self_hosts_by_name.keys()) != set(other_hosts_by_name.keys()):
+            return False
+
+        for name, host in self_hosts_by_name.items():
+            if not host.is_same_config(other_hosts_by_name[name]):
+                return False
+
         return True
 
     def clear(self):
         self.hosts = []
 
     def add_host(self, host: Host):
-        if not self.host_exists(host):
-            self.hosts.append(host)
+        existing_index = None
+        for i, existing_host in enumerate(self.hosts):
+            if existing_host.pve_type == host.pve_type and existing_host.vmid == host.vmid:
+                existing_index = i
+                break
+        
+        if existing_index is not None:
+            existing_host = self.hosts[existing_index]
+            if not existing_host.is_same_config(host):
+                self.hosts[existing_index] = host
+                return
+            else:
+                return
+        
+        self.hosts.append(host)
 
     def host_exists(self, host: Host):
         """Check if a host is already in the list by id and type."""
