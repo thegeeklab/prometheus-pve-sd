@@ -20,7 +20,7 @@ PROMETHEUS_PVE_SD_OUTPUT_FILE_MODE=0640
 PROMETHEUS_PVE_SD_LOOP_DELAY=300
 
 # Run PVE SD in a loop and discover hosts every n seconds (as defined in PROMETHEUS_PVE_SD_LOOP_DELAY).
-# Can be disabled to run disovery only once.
+# Can be disabled to run discovery only once.
 PROMETHEUS_PVE_SD_SERVICE=true
 
 PROMETHEUS_PVE_SD_EXCLUDE_STATE=

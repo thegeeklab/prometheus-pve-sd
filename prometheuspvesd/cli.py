@@ -51,7 +51,7 @@ class PrometheusSD:
         """
         Use argparse for parsing CLI arguments.
 
-        :return: args objec
+        :return: args object
         """
         parser = argparse.ArgumentParser(description="Prometheus Service Discovery for Proxmox VE")
         parser.add_argument(
