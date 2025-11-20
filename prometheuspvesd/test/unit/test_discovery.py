@@ -53,29 +53,29 @@ def test_exclude_tags(discovery, qemus, local_caplog):
 
 
 @pytest.mark.parametrize(
-    "testinput,expected",
+    "test_input,expected",
     [
         (["monitored"], 1),
         (["monitored", "postgres"], 2),
         ([], 3),
     ],
 )
-def test_include_tags(discovery, qemus, testinput, expected):
-    discovery.config.config["include_tags"] = testinput
+def test_include_tags(discovery, qemus, test_input, expected):
+    discovery.config.config["include_tags"] = test_input
     filtered = discovery._filter(qemus)
 
     assert len(filtered) == expected
 
 
 @pytest.mark.parametrize(
-    "testinput,expected",
+    "test_input,expected",
     [
         (["101", "100"], 2),
         ([], 3),
     ],
 )
-def test_include_vmid(discovery, qemus, testinput, expected):
-    discovery.config.config["include_vmid"] = testinput
+def test_include_vmid(discovery, qemus, test_input, expected):
+    discovery.config.config["include_vmid"] = test_input
     filtered = discovery._filter(qemus)
 
     assert len(filtered) == expected

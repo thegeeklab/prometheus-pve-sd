@@ -20,7 +20,7 @@ output_file_mode: "0640"
 
 loop_delay: 300
 # Run pve sd in a loop and discover hosts every n seconds (as defined in loop_delay).
-# Can be disabled to run disovery only once.
+# Can be disabled to run discovery only once.
 service: true
 
 exclude_state: []

@@ -1,5 +1,6 @@
 ---
 title: Getting Started
+# cspell:ignore Alertmanager
 ---
 
 {{< toc >}}

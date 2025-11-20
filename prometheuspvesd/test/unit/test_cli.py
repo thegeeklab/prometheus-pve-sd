@@ -31,7 +31,7 @@ def test_cli_required_error(mocker, capsys):
 
 
 @pytest.mark.parametrize(
-    "testinput",
+    "test_input",
     [
         {"pve.user": "dummy", "pve.password": "", "pve.token_name": "", "pve.token_value": ""},
         {
@@ -48,8 +48,8 @@ def test_cli_required_error(mocker, capsys):
         },
     ],
 )
-def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
-    for key, value in testinput.items():
+def test_cli_auth_required_error(mocker, capsys, builtins, test_input):
+    for key, value in test_input.items():
         builtins[key]["default"] = value
 
     mocker.patch.dict(Config.SETTINGS, builtins)
@@ -68,14 +68,14 @@ def test_cli_auth_required_error(mocker, capsys, builtins, testinput):
 
 
 @pytest.mark.parametrize(
-    "testinput",
+    "test_input",
     [
         {"pve.password": "dummy", "pve.token_name": "", "pve.token_value": ""},
         {"pve.password": "", "pve.token_name": "dummy", "pve.token_value": "dummy"},
     ],
 )
-def test_cli_auth_no_error(mocker, builtins, testinput):
-    for key, value in testinput.items():
+def test_cli_auth_no_error(mocker, builtins, test_input):
+    for key, value in test_input.items():
         builtins[key]["default"] = value
 
     mocker.patch.dict(Config.SETTINGS, builtins)
@@ -84,7 +84,7 @@ def test_cli_auth_no_error(mocker, builtins, testinput):
 
     psd = PrometheusSD()
 
-    for key, value in testinput.items():
+    for key, value in test_input.items():
         assert psd.config.config["pve"][key.split(".")[1]] == value
 
 

@@ -10,7 +10,7 @@ pytest_plugins = [
 
 
 @pytest.mark.parametrize(
-    "testinput,expected",
+    "test_input,expected",
     [
         (
             {
@@ -46,13 +46,13 @@ pytest_plugins = [
         ),
     ],
 )
-def test_host(testinput, expected):
+def test_host(test_input, expected):
     host = Host(
-        testinput["vmid"],
-        testinput["hostname"],
-        testinput["ipv4_address"],
-        testinput["ipv6_address"],
-        testinput["pve_type"],
+        test_input["vmid"],
+        test_input["hostname"],
+        test_input["ipv4_address"],
+        test_input["ipv6_address"],
+        test_input["pve_type"],
     )
 
     assert host.labels == expected
