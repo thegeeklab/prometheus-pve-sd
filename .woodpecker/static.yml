@@ -1,0 +1,59 @@
+---
+when:
+  - event: [pull_request, tag]
+  - event: [push, manual]
+    branch:
+      - ${CI_REPO_DEFAULT_BRANCH}
+
+steps:
+  - name: markdownlint
+    image: quay.io/thegeeklab/markdownlint-cli
+    depends_on: []
+    commands:
+      - markdownlint 'README.md' 'CONTRIBUTING.md'
+
+  - name: spellcheck
+    image: ghcr.io/streetsidesoftware/cspell
+    commands:
+      - cspell-cli lint . --gitignore --color
+
+  - name: check-format
+    image: docker.io/library/python:3.14
+    depends_on: []
+    commands:
+      - pip install poetry poetry-dynamic-versioning -qq
+      - poetry install -E ansible-core
+      - poetry run ruff format --check --diff ./${CI_REPO_NAME//-/}
+    environment:
+      PY_COLORS: "1"
+
+  - name: check-coding
+    image: docker.io/library/python:3.14
+    depends_on: []
+    commands:
+      - pip install poetry poetry-dynamic-versioning -qq
+      - poetry install -E ansible-core
+      - poetry run ruff check ./${CI_REPO_NAME//-/}
+    environment:
+      PY_COLORS: "1"
+
+  - name: assets
+    image: quay.io/thegeeklab/alpine-tools
+    commands:
+      - make doc
+
+  - name: build
+    image: quay.io/thegeeklab/hugo:0.151
+    depends_on: [assets]
+    commands:
+      - hugo --panicOnWarning -s docs/
+
+  - name: link-validation
+    image: docker.io/lycheeverse/lychee
+    depends_on: [build]
+    commands:
+      - lychee --no-progress --format detailed README.md
+      - lychee --no-progress --format detailed --root-dir "$(pwd)/docs/content" "docs/content/**/*.html"
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token_ro
