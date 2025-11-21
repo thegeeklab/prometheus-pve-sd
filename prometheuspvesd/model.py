@@ -28,14 +28,13 @@ class Host:
         self.add_label("vmid", vmid)
 
     def __str__(self) -> str:
-        return (
-            f"{self.hostname}({self.vmid}): "
-            f"{self.pve_type} {self.ipv4_address} {self.ipv6_address}"
-        )
+        ipv4 = self.ipv4_address if self.ipv4_address is not None else "False"
+        ipv6 = self.ipv6_address if self.ipv6_address is not None else "False"
+        return f"{self.hostname}({self.vmid}): {self.pve_type} {ipv4} {ipv6}"
 
     def add_label(self, key: str, value: Any) -> None:
         key = key.replace("-", "_").replace(" ", "_")
-        self.labels[f"__meta_pve_{key}"] = str(value)
+        self.labels[f"__meta_pve_{key}"] = str(value) if value is not None else "False"
 
     def to_sd_json(self) -> dict[str, Any]:
         return {"targets": [self.hostname], "labels": self.labels}

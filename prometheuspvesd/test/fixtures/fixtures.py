@@ -334,9 +334,9 @@ def networks():
 @pytest.fixture
 def inventory():
     hostlist = HostList()
-    hostlist.add_host(Host("100", "100.example.com", "192.0.2.1", "False", "qemu"))
-    hostlist.add_host(Host("101", "101.example.com", "192.0.2.2", "False", "qemu"))
-    hostlist.add_host(Host("102", "102.example.com", "192.0.2.3", "False", "qemu"))
+    hostlist.add_host(Host("100", "100.example.com", "192.0.2.1", None, "qemu"))
+    hostlist.add_host(Host("101", "101.example.com", "192.0.2.2", None, "qemu"))
+    hostlist.add_host(Host("102", "102.example.com", "192.0.2.3", None, "qemu"))
 
     return hostlist
 
