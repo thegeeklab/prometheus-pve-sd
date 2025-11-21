@@ -5,6 +5,7 @@ import ipaddress
 import json
 import re
 from collections import defaultdict
+from typing import Any
 
 from prometheus_client import Gauge, Summary
 
@@ -23,15 +24,15 @@ HOST_GAUGE = Gauge("pve_sd_hosts", "Number of hosts discovered by PVE SD")
 class Discovery:
     """Prometheus PVE Service Discovery."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.config = SingleConfig()
         self.log = SingleLog()
         self.logger = SingleLog().logger
         self.client = ProxmoxClient()
         self.host_list = HostList()
 
-    def _get_names(self, pve_list, pve_type):
-        names = []
+    def _get_names(self, pve_list: list[dict[str, Any]], pve_type: str) -> list[str]:
+        names: list[str] = []
 
         if pve_type == "node":
             names = [node["node"] for node in pve_list]
@@ -40,12 +41,14 @@ class Discovery:
 
         return names
 
-    def _get_variables(self, pve_list, pve_type):
-        variables = {}
+    def _get_variables(
+        self, pve_list: list[dict[str, Any]], pve_type: str
+    ) -> dict[str, dict[str, Any]]:
+        variables: dict[str, dict[str, Any]] = {}
 
         if pve_type in ["qemu", "container"]:
             for vm in pve_list:
-                nested = {}
+                nested: dict[str, Any] = {}
                 for key, value in vm.items():
                     nested["proxmox_" + key] = value
                 # Use vmid as key to ensure uniqueness, even if VMs have the same name
@@ -53,10 +56,12 @@ class Discovery:
 
         return variables
 
-    def _get_ip_addresses(self, pve_type, pve_node, vmid):
-        ipv4_address = False
-        ipv6_address = False
-        networks = False
+    def _get_ip_addresses(
+        self, pve_type: str, pve_node: str, vmid: str
+    ) -> tuple[str | None, str | None]:
+        ipv4_address: str | None = None
+        ipv6_address: str | None = None
+        networks: list[dict[str, Any]] | None = None
         if pve_type == "qemu":
             # If qemu agent is enabled, try to gather the IP address
             try:
@@ -108,11 +113,11 @@ class Discovery:
 
         return ipv4_address, ipv6_address
 
-    def _filter(self, pve_list):
-        filtered = []
+    def _filter(self, pve_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        filtered: list[dict[str, Any]] = []
         for item in pve_list:
             obj = defaultdict(dict, item)
-            tags = []
+            tags: list[str] = []
             tags_excl = self.config.config["exclude_tags"]
 
             if isinstance(obj["tags"], str):
@@ -150,18 +155,19 @@ class Discovery:
             filtered.append(item.copy())
         return filtered
 
-    def _validate_ip(self, address: object) -> object:
+    def _validate_ip(self, address: str) -> str | None:
         try:
             if (
                 not ipaddress.ip_address(address).is_loopback
                 and not ipaddress.ip_address(address).is_link_local
             ):
                 return address
+            return None
         except ValueError:
-            return False
+            return None
 
     @PROPAGATION_TIME.time()
-    def propagate(self):
+    def propagate(self) -> HostList:
         self.host_list.clear()
         nodelist = self._get_names(self.client.get_nodes(), "node")
         self.logger.info(f"Discovered nodes: {','.join(nodelist)}")

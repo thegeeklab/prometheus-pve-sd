@@ -4,6 +4,7 @@
 import logging
 import os
 import sys
+from typing import Any
 
 import colorama
 from pythonjsonlogger import jsonlogger
@@ -69,7 +70,12 @@ class MultilineJsonFormatter(jsonlogger.JsonFormatter):
 class Log:
     """Handle logging."""
 
-    def __init__(self, level=logging.WARNING, name="prometheuspvesd", log_format="console"):
+    def __init__(
+        self,
+        level: int = logging.WARNING,
+        name: str = "prometheuspvesd",
+        log_format: str = "console",
+    ) -> None:
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
         self.logger.addHandler(self._get_error_handler(log_format))
@@ -79,7 +85,7 @@ class Log:
         self.logger.addHandler(self._get_debug_handler(log_format))
         self.logger.propagate = False
 
-    def _get_error_handler(self, log_format):
+    def _get_error_handler(self, log_format: str) -> logging.Handler:
         handler = logging.StreamHandler(sys.stderr)
         handler.setLevel(logging.ERROR)
         handler.addFilter(LogFilter(logging.ERROR))
@@ -101,7 +107,7 @@ class Log:
 
         return handler
 
-    def _get_warning_handler(self, log_format):
+    def _get_warning_handler(self, log_format: str) -> logging.Handler:
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(logging.WARNING)
         handler.addFilter(LogFilter(logging.WARNING))
@@ -123,7 +129,7 @@ class Log:
 
         return handler
 
-    def _get_info_handler(self, log_format):
+    def _get_info_handler(self, log_format: str) -> logging.Handler:
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(logging.INFO)
         handler.addFilter(LogFilter(logging.INFO))
@@ -145,7 +151,7 @@ class Log:
 
         return handler
 
-    def _get_critical_handler(self, log_format):
+    def _get_critical_handler(self, log_format: str) -> logging.Handler:
         handler = logging.StreamHandler(sys.stderr)
         handler.setLevel(logging.CRITICAL)
         handler.addFilter(LogFilter(logging.CRITICAL))
@@ -167,7 +173,7 @@ class Log:
 
         return handler
 
-    def _get_debug_handler(self, log_format):
+    def _get_debug_handler(self, log_format: str) -> logging.Handler:
         handler = logging.StreamHandler(sys.stderr)
         handler.setLevel(logging.DEBUG)
         handler.addFilter(LogFilter(logging.DEBUG))
@@ -189,7 +195,7 @@ class Log:
 
         return handler
 
-    def update_logger(self, level=None, log_level=None):
+    def update_logger(self, level: int | None = None, log_level: str | None = None) -> None:
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
@@ -200,27 +206,27 @@ class Log:
         self.logger.addHandler(self._get_critical_handler(log_level))
         self.logger.addHandler(self._get_debug_handler(log_level))
 
-    def debug(self, msg):
+    def debug(self, msg: str) -> str:
         """Format info messages and return string."""
         return msg
 
-    def critical(self, msg):
+    def critical(self, msg: str) -> str:
         """Format critical messages and return string."""
         return msg
 
-    def error(self, msg):
+    def error(self, msg: str) -> str:
         """Format error messages and return string."""
         return msg
 
-    def warning(self, msg):
+    def warning(self, msg: str) -> str:
         """Format warning messages and return string."""
         return msg
 
-    def info(self, msg):
+    def info(self, msg: str) -> str:
         """Format info messages and return string."""
         return msg
 
-    def _color_text(self, color, msg):
+    def _color_text(self, color: Any, msg: str) -> str:
         """
         Colorize strings.
 
@@ -231,10 +237,10 @@ class Log:
         """
         return f"{color}{msg}{colorama.Style.RESET_ALL}"
 
-    def sysexit(self, code=1):
+    def sysexit(self, code: int = 1) -> None:
         sys.exit(code)
 
-    def sysexit_with_message(self, msg, code=1):
+    def sysexit_with_message(self, msg: str, code: int = 1) -> None:
         self.logger.critical(str(msg))
         self.sysexit(code)
 
