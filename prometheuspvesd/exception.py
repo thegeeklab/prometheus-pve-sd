@@ -2,7 +2,6 @@
 """Custom exceptions."""
 
 
-
 class PrometheusSDError(Exception):
     """Generic exception class for Prometheus-pve-sd."""
 
