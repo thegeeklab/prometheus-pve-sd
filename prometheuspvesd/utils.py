@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """Global utility methods and classes."""
 
-from typing import Any, TypeVar
-
-T = TypeVar("T", bound="Singleton")
+from typing import Any
 
 
 def strtobool(value: str) -> bool:
