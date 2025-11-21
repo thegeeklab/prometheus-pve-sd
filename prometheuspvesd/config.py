@@ -286,7 +286,7 @@ class Config:
         try:
             anyconfig.validate(config, self.schema, ac_schema_safe=False)
         except jsonschema.exceptions.ValidationError as e:
-            schema = format_as_index(list(e.relative_schema_path)[:-1], 0)
+            schema = format_as_index("config", list(e.relative_schema_path)[1:-1])
             schema_error = f"Failed validating '{e.validator}' in schema {schema}\n{e.message}"
             raise prometheuspvesd.exception.ConfigError("Configuration error", schema_error) from e
 

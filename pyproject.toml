@@ -53,6 +53,9 @@ pytest-cov = "7.0.0"
 toml = "0.10.2"
 mypy = "1.18.2"
 types-requests = "2.32.4.20250913"
+types-colorama = "0.4.15.20250801"
+types-jsonschema = "4.25.1.20251009"
+types-appdirs = "1.4.3.5"
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -128,13 +131,9 @@ indent-style = "space"
 line-ending = "lf"
 
 [tool.mypy]
-explicit_package_bases = true
-no_implicit_optional = false
 strict_optional = false
-allow_redefinition = true
-allow_untyped_globals = true
-local_partial_types = false
-warn_unused_ignores = true
-check_untyped_defs = true
-ignore_missing_imports = true
 files = ["prometheuspvesd/"]
+
+[[tool.mypy.overrides]]
+module = ["proxmoxer.*"]
+follow_untyped_imports = true
