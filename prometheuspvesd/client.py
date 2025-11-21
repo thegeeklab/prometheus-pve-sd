@@ -1,5 +1,7 @@
 """Proxmox Client."""
 
+from typing import Any
+
 import requests
 from prometheus_client import Counter
 
@@ -25,21 +27,22 @@ PVE_REQUEST_COUNT_ERROR_TOTAL = Counter(
 class ProxmoxClient:
     """Proxmox API Client."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         if not HAS_PROXMOXER:
-            self.log.sysexit_with_message(
+            log = SingleLog()
+            log.sysexit_with_message(
                 "The Proxmox VE Prometheus SD requires proxmoxer: "
                 "https://pypi.org/project/proxmoxer/"
             )
 
         self.config = SingleConfig()
         self.log = SingleLog()
-        self.logger = SingleLog().logger
+        self.logger = self.log.logger
         self.client = self._auth()
         self.logger.debug("Successfully authenticated")
         self.host_list = HostList()
 
-    def _auth(self):
+    def _auth(self) -> Any:
         try:
             self.logger.debug(
                 "Trying to authenticate against {} as user {}".format(
@@ -69,7 +72,7 @@ class ProxmoxClient:
             PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
             raise APIError(str(e)) from e
 
-    def _do_request(self, *args):
+    def _do_request(self, *args: str) -> Any:
         PVE_REQUEST_COUNT_TOTAL.inc()
         try:
             # create a new tuple containing nodes and unpack it again for client.get
@@ -78,27 +81,27 @@ class ProxmoxClient:
             PVE_REQUEST_COUNT_ERROR_TOTAL.inc()
             raise APIError(str(e)) from e
 
-    def get_nodes(self):
+    def get_nodes(self) -> list[dict[str, Any]]:
         self.logger.debug("fetching all nodes")
         return self._do_request()
 
-    def get_all_vms(self, pve_node):
+    def get_all_vms(self, pve_node: str) -> list[dict[str, Any]]:
         self.logger.debug(f"fetching all vms on node {pve_node}")
         return self._do_request(pve_node, "qemu")
 
-    def get_all_containers(self, pve_node):
+    def get_all_containers(self, pve_node: str) -> list[dict[str, Any]]:
         self.logger.debug(f"fetching all containers on node {pve_node}")
         return self._do_request(pve_node, "lxc")
 
-    def get_instance_config(self, pve_node, pve_type, vmid):
+    def get_instance_config(self, pve_node: str, pve_type: str, vmid: str) -> dict[str, Any]:
         self.logger.debug(f"fetching instance config for {vmid} on {pve_node}")
         return self._do_request(pve_node, pve_type, vmid, "config")
 
-    def get_agent_info(self, pve_node, pve_type, vmid):
+    def get_agent_info(self, pve_node: str, pve_type: str, vmid: str) -> dict[str, Any] | None:
         self.logger.debug(f"fetching agent info for {vmid} on {pve_node}")
         return self._do_request(pve_node, pve_type, vmid, "agent", "info")["result"]
 
-    def get_network_interfaces(self, pve_node, vmid):
+    def get_network_interfaces(self, pve_node: str, vmid: str) -> list[dict[str, Any]]:
         self.logger.debug(f"fetching network interfaces for {vmid} on {pve_node}")
         return self._do_request(pve_node, "qemu", vmid, "agent", "network-get-interfaces")[
             "result"

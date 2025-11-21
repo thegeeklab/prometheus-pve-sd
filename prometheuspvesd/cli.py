@@ -8,6 +8,7 @@ import signal
 import tempfile
 from os import chmod
 from time import sleep
+from typing import Any, Optional
 
 from prometheus_client import start_http_server
 
@@ -23,10 +24,10 @@ from prometheuspvesd.model import HostList
 class PrometheusSD:
     """Main Prometheus SD object."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.log = SingleLog()
         self.logger = self.log.logger
-        self.args = self._cli_args()
+        self.args: dict[str, Any] = self._cli_args()
         self.config = self._get_config()
 
         signal.signal(signal.SIGINT, self._terminate)
@@ -47,7 +48,7 @@ class PrometheusSD:
 
         self._fetch()
 
-    def _cli_args(self):
+    def _cli_args(self) -> dict[str, Any]:
         """
         Use argparse for parsing CLI arguments.
 
@@ -100,11 +101,11 @@ class PrometheusSD:
 
         return parser.parse_args().__dict__
 
-    def _get_config(self):
+    def _get_config(self) -> SingleConfig:
         try:
             config = SingleConfig(args=self.args)
         except prometheuspvesd.exception.ConfigError as e:
-            self.log.sysexit_with_message(e)
+            self.log.sysexit_with_message(str(e))
 
         try:
             self.log.update_logger(
@@ -113,7 +114,7 @@ class PrometheusSD:
         except ValueError as e:
             self.log.sysexit_with_message(f"Can not set log level.\n{e!s}")
 
-        required = [
+        required: list[tuple[str, str]] = [
             ("pve.server", config.config["pve"]["server"]),
             ("pve.user", config.config["pve"]["user"]),
         ]
@@ -133,7 +134,7 @@ class PrometheusSD:
 
         return config
 
-    def _fetch(self):
+    def _fetch(self) -> None:
         self.logger.info("Writes targets to {}".format(self.config.config["output_file"]))
         self.logger.debug("Propagate from PVE")
 
@@ -168,8 +169,8 @@ class PrometheusSD:
             )
             sleep(self.config.config["loop_delay"])
 
-    def _write(self, host_list: HostList):
-        output = []
+    def _write(self, host_list: HostList) -> None:
+        output: list[dict[str, Any]] = []
         for host in host_list.hosts:
             output.append(host.to_sd_json())
 
@@ -180,7 +181,7 @@ class PrometheusSD:
         shutil.move(tf.name, self.config.config["output_file"])
         chmod(self.config.config["output_file"], int(self.config.config["output_file_mode"], 8))
 
-    def _terminate(self, signal, frame):  # noqa
+    def _terminate(self, signal: int, frame: Optional[Any] = None) -> None:  # noqa
         self.log.sysexit_with_message("Terminating", code=0)
 
 
