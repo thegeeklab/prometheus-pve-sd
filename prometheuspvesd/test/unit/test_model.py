@@ -1,5 +1,7 @@
 """Test Host class."""
 
+from typing import Any
+
 import pytest
 
 from prometheuspvesd.model import Host
@@ -46,7 +48,7 @@ pytest_plugins = [
         ),
     ],
 )
-def test_host(test_input, expected):
+def test_host(test_input: Any, expected: Any) -> None:
     host = Host(
         test_input["vmid"],
         test_input["hostname"],

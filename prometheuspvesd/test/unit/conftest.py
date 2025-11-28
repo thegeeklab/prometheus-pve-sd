@@ -3,31 +3,35 @@
 import logging
 import os
 import sys
+from collections.abc import Generator
 from contextlib import contextmanager
 
 import pytest
 from _pytest.logging import LogCaptureHandler
 
+from prometheuspvesd.test.unit.test_types import LogContextFactory
 from prometheuspvesd.utils import Singleton
 
 
 @pytest.fixture(autouse=True)
-def reset_singletons():
+def reset_singletons() -> None:
     Singleton._instances = {}
 
 
 @pytest.fixture(autouse=True)
-def reset_os_environment():
+def reset_os_environment() -> None:
     os.environ.clear()
 
 
 @pytest.fixture(autouse=True)
-def reset_sys_argv():
+def reset_sys_argv() -> None:
     sys.argv = ["prometheus-pve-sd"]
 
 
 @contextmanager
-def local_caplog_fn(level=logging.INFO, name="prometheuspvesd"):
+def local_caplog_fn(
+    level: int = logging.INFO, name: str = "prometheuspvesd"
+) -> Generator[LogCaptureHandler]:
     """
     Context manager that captures records from non-propagating loggers.
 
@@ -54,7 +58,7 @@ def local_caplog_fn(level=logging.INFO, name="prometheuspvesd"):
 
 
 @pytest.fixture
-def local_caplog():
+def local_caplog() -> Generator[LogContextFactory, None, None]:
     """Fixture that yields a context manager for capturing records from non-propagating loggers."""
 
     yield local_caplog_fn

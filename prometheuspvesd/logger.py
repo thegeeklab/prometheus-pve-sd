@@ -4,10 +4,9 @@
 import logging
 import os
 import sys
-from typing import Any
 
 import colorama
-from pythonjsonlogger import jsonlogger
+from pythonjsonlogger.json import JsonFormatter
 
 from prometheuspvesd.utils import Singleton, to_bool
 
@@ -15,7 +14,7 @@ CONSOLE_FORMAT = "{}{}[%(levelname)s]{} %(message)s"
 JSON_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 
 
-def _should_do_markup():
+def _should_do_markup() -> bool:
     py_colors = os.environ.get("PY_COLORS", None)
     if py_colors is not None:
         return to_bool(py_colors)
@@ -29,7 +28,7 @@ colorama.init(autoreset=True, strip=not _should_do_markup())
 class LogFilter:
     """A custom log filter which excludes log messages above the logged level."""
 
-    def __init__(self, level):
+    def __init__(self, level: int) -> None:
         """
         Initialize a new custom log filter.
 
@@ -39,32 +38,32 @@ class LogFilter:
         """
         self.__level = level
 
-    def filter(self, logRecord):  # noqa
+    def filter(self, record: logging.LogRecord) -> bool:
         # https://docs.python.org/3/library/logging.html#logrecord-attributes
-        return logRecord.levelno <= self.__level
+        return record.levelno <= self.__level
 
 
 class SimpleFormatter(logging.Formatter):
     """Logging Formatter for simple logs."""
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         return logging.Formatter.format(self, record)
 
 
 class MultilineFormatter(logging.Formatter):
     """Logging Formatter to reset color after newline characters."""
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         record.msg = record.msg.replace("\n", f"\n{colorama.Style.RESET_ALL}... ")
         return logging.Formatter.format(self, record)
 
 
-class MultilineJsonFormatter(jsonlogger.JsonFormatter):
+class MultilineJsonFormatter(JsonFormatter):
     """Logging Formatter to remove newline characters."""
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         record.msg = record.msg.replace("\n", " ")
-        return jsonlogger.JsonFormatter.format(self, record)
+        return JsonFormatter.format(self, record)
 
 
 class Log:
@@ -195,7 +194,7 @@ class Log:
 
         return handler
 
-    def update_logger(self, level: int | None = None, log_level: str | None = None) -> None:
+    def update_logger(self, level: int | str, log_level: str) -> None:
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
@@ -226,7 +225,7 @@ class Log:
         """Format info messages and return string."""
         return msg
 
-    def _color_text(self, color: Any, msg: str) -> str:
+    def _color_text(self, color: str, msg: str) -> str:
         """
         Colorize strings.
 

@@ -1,44 +1,55 @@
 """Test Discovery class."""
 
 import logging
+from typing import Any
 
 import pytest
 from proxmoxer import ProxmoxAPI
+from pytest_mock import MockerFixture
 
 from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.discovery import Discovery
+from prometheuspvesd.model import HostList
+from prometheuspvesd.test.unit.test_types import LogContextFactory
 
 pytest_plugins = [
     "prometheuspvesd.test.fixtures.fixtures",
 ]
 
 
-def records_to_messages(records):
+def records_to_messages(records: Any) -> list[Any]:
     return [r.getMessage() for r in records]
 
 
 @pytest.fixture
-def discovery(mocker):
+def discovery(mocker: MockerFixture) -> Discovery:
     mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
 
     return Discovery()
 
 
-def test_exclude_vmid(discovery, qemus):
+def test_exclude_vmid(discovery: Discovery, qemus: list[dict[str, Any]]) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["exclude_vmid"] = ["100", "101", "102"]
     filtered = discovery._filter(qemus)
 
     assert len(filtered) == 0
 
 
-def test_exclude_state(discovery, qemus):
+def test_exclude_state(discovery: Discovery, qemus: list[dict[str, Any]]) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["exclude_state"] = ["prelaunch"]
     filtered = discovery._filter(qemus)
 
     assert len(filtered) == 2
 
 
-def test_exclude_tags(discovery, qemus, local_caplog):
+def test_exclude_tags(
+    discovery: Discovery,
+    qemus: list[dict[str, Any]],
+    local_caplog: LogContextFactory,
+) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["exclude_tags"] = ["unmonitored"]
 
     with local_caplog(level=logging.DEBUG) as caplog:
@@ -60,7 +71,10 @@ def test_exclude_tags(discovery, qemus, local_caplog):
         ([], 3),
     ],
 )
-def test_include_tags(discovery, qemus, test_input, expected):
+def test_include_tags(
+    discovery: Discovery, qemus: list[dict[str, Any]], test_input: str, expected: int
+) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["include_tags"] = test_input
     filtered = discovery._filter(qemus)
 
@@ -74,14 +88,18 @@ def test_include_tags(discovery, qemus, test_input, expected):
         ([], 3),
     ],
 )
-def test_include_vmid(discovery, qemus, test_input, expected):
+def test_include_vmid(
+    discovery: Discovery, qemus: list[dict[str, Any]], test_input: str, expected: int
+) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["include_vmid"] = test_input
     filtered = discovery._filter(qemus)
 
     assert len(filtered) == expected
 
 
-def test_include_and_exclude_tags(discovery, qemus):
+def test_include_and_exclude_tags(discovery: Discovery, qemus: list[dict[str, Any]]) -> None:
+    assert discovery.config.config is not None
     discovery.config.config["include_tags"] = ["postgres"]
     discovery.config.config["exclude_tags"] = ["unmonitored"]
     filtered = discovery._filter(qemus)
@@ -89,7 +107,7 @@ def test_include_and_exclude_tags(discovery, qemus):
     assert len(filtered) == 0
 
 
-def test_validate_ip(discovery, addresses):
+def test_validate_ip(discovery: Discovery, addresses: dict[str, str]) -> None:
     # IPv4 validation
     for address in addresses["ipv4_valid"]:
         assert discovery._validate_ip(address)
@@ -103,7 +121,9 @@ def test_validate_ip(discovery, addresses):
         assert not discovery._validate_ip(address)
 
 
-def test_get_ip_addresses(mocker, discovery, networks):
+def test_get_ip_addresses(
+    mocker: MockerFixture, discovery: Discovery, networks: list[dict[str, Any]]
+) -> None:
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
     assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
@@ -112,7 +132,9 @@ def test_get_ip_addresses(mocker, discovery, networks):
     )
 
 
-def test_get_ip_addresses_from_instance_config(mocker, discovery, instance_config):
+def test_get_ip_addresses_from_instance_config(
+    mocker: MockerFixture, discovery: Discovery, instance_config: str
+) -> None:
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=[])
     mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
 
@@ -123,8 +145,15 @@ def test_get_ip_addresses_from_instance_config(mocker, discovery, instance_confi
 
 
 def test_propagate(
-    mocker, discovery, nodes, qemus, instance_config, agent_info, networks, inventory
-):
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    instance_config: dict[str, Any],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+    inventory: HostList,
+) -> None:
     mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
     mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
     mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
@@ -134,7 +163,14 @@ def test_propagate(
     assert discovery.propagate() == inventory
 
 
-def test_duplicate_vm_names(mocker, discovery, nodes, qemus, agent_info, networks):
+def test_duplicate_vm_names(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+) -> None:
     """Test that VMs with duplicate names are handled correctly using vmid as key."""
     # Create duplicate names by modifying the existing qemus fixture
     duplicate_name_vms = [vm.copy() for vm in qemus]
