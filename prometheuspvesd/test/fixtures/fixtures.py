@@ -1,5 +1,7 @@
 """Global pytest fixtures."""
 
+from typing import Any
+
 import environs
 import pytest
 
@@ -7,7 +9,7 @@ from prometheuspvesd.model import Host, HostList
 
 
 @pytest.fixture
-def builtins():
+def builtins() -> dict[str, Any]:
     return {
         "metrics.enabled": {
             "default": True,
@@ -128,7 +130,7 @@ def builtins():
 
 
 @pytest.fixture
-def defaults():
+def defaults() -> dict[str, Any]:
     return {
         "exclude_state": [],
         "exclude_tags": [],
@@ -154,7 +156,7 @@ def defaults():
 
 
 @pytest.fixture
-def nodes():
+def nodes() -> list[dict[str, Any]]:
     return [
         {
             "level": "",
@@ -174,7 +176,7 @@ def nodes():
 
 
 @pytest.fixture
-def qemus():
+def qemus() -> list[dict[str, Any]]:
     return [
         {
             "diskwrite": 0,
@@ -236,7 +238,7 @@ def qemus():
 
 
 @pytest.fixture
-def instance_config():
+def instance_config() -> dict[str, Any]:
     return {
         "name": "102.example.com",
         "description": '{"groups": "test-group"}',
@@ -247,7 +249,7 @@ def instance_config():
 
 
 @pytest.fixture
-def agent_info():
+def agent_info() -> dict[str, Any]:
     return {
         "supported_commands": [
             {"name": "guest-network-get-interfaces", "enabled": True, "success-response": True}
@@ -257,7 +259,7 @@ def agent_info():
 
 
 @pytest.fixture
-def addresses():
+def addresses() -> dict[str, Any]:
     return {
         "ipv4_valid": [
             "192.0.2.1",
@@ -284,7 +286,7 @@ def addresses():
 
 
 @pytest.fixture
-def networks():
+def networks() -> list[dict[str, Any]]:
     return [
         {
             "hardware-address": "00:00:00:00:00:00",
@@ -332,7 +334,7 @@ def networks():
 
 
 @pytest.fixture
-def inventory():
+def inventory() -> HostList:
     hostlist = HostList()
     hostlist.add_host(Host("100", "100.example.com", "192.0.2.1", None, "qemu"))
     hostlist.add_host(Host("101", "101.example.com", "192.0.2.2", None, "qemu"))
@@ -342,7 +344,7 @@ def inventory():
 
 
 @pytest.fixture
-def labels():
+def labels() -> list[dict[str, Any]]:
     return [
         {
             "targets": ["100.example.com"],

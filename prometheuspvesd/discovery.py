@@ -31,7 +31,7 @@ class Discovery:
         self.client = ProxmoxClient()
         self.host_list = HostList()
 
-    def _get_names(self, pve_list: list[dict[str, Any]], pve_type: str) -> list[str]:
+    def _get_names(self, pve_list: list[dict[str, str]], pve_type: str) -> list[str]:
         names: list[str] = []
 
         if pve_type == "node":
@@ -42,13 +42,13 @@ class Discovery:
         return names
 
     def _get_variables(
-        self, pve_list: list[dict[str, Any]], pve_type: str
-    ) -> dict[str, dict[str, Any]]:
-        variables: dict[str, dict[str, Any]] = {}
+        self, pve_list: list[dict[str, str]], pve_type: str
+    ) -> dict[str, dict[str, str]]:
+        variables: dict[str, dict[str, str]] = {}
 
         if pve_type in ["qemu", "container"]:
             for vm in pve_list:
-                nested: dict[str, Any] = {}
+                nested: dict[str, str] = {}
                 for key, value in vm.items():
                     nested["proxmox_" + key] = value
                 # Use vmid as key to ensure uniqueness, even if VMs have the same name

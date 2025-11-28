@@ -1,7 +1,10 @@
 """Test Config class."""
 
+from typing import Any
+
 import pytest
 import ruamel.yaml
+from pytest_mock import MockerFixture
 
 import prometheuspvesd.exception
 from prometheuspvesd.config import Config
@@ -11,7 +14,7 @@ pytest_plugins = [
 ]
 
 
-def test_yaml_config(mocker, defaults):
+def test_yaml_config(mocker: MockerFixture, defaults: dict[str, Any]) -> None:
     mocker.patch(
         "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yml"
     )
@@ -26,7 +29,7 @@ def test_yaml_config(mocker, defaults):
     assert config.config == defaults
 
 
-def test_yaml_config_error(mocker):
+def test_yaml_config_error(mocker: MockerFixture) -> None:
     mocker.patch(
         "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yml"
     )

@@ -27,7 +27,7 @@ class PrometheusSD:
     def __init__(self) -> None:
         self.log = SingleLog()
         self.logger = self.log.logger
-        self.args: dict[str, Any] = self._cli_args()
+        self.args: dict[str, str] = self._cli_args()
         self.config = self._get_config()
 
         signal.signal(signal.SIGINT, self._terminate)
@@ -48,7 +48,7 @@ class PrometheusSD:
 
         self._fetch()
 
-    def _cli_args(self) -> dict[str, Any]:
+    def _cli_args(self) -> dict[str, str]:
         """
         Use argparse for parsing CLI arguments.
 
@@ -170,7 +170,7 @@ class PrometheusSD:
             sleep(self.config.config["loop_delay"])
 
     def _write(self, host_list: HostList) -> None:
-        output: list[dict[str, Any]] = []
+        output: list[dict[str, str]] = []
         for host in host_list.hosts:
             output.append(host.to_sd_json())
 
@@ -185,5 +185,5 @@ class PrometheusSD:
         self.log.sysexit_with_message("Terminating", code=0)
 
 
-def main():
+def main() -> None:
     PrometheusSD()

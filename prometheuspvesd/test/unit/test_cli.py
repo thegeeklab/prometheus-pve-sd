@@ -1,9 +1,13 @@
 """Test CLI class."""
 
 import json
+import pathlib
+from typing import Any
 
 import pytest
+from _pytest.capture import CaptureFixture
 from proxmoxer import ProxmoxAPI
+from pytest_mock import MockerFixture
 
 import prometheuspvesd.exception
 from prometheuspvesd.cli import PrometheusSD
@@ -12,13 +16,14 @@ from prometheuspvesd.config import Config
 from prometheuspvesd.discovery import Discovery
 from prometheuspvesd.exception import APIError
 from prometheuspvesd.logger import Log
+from prometheuspvesd.model import HostList
 
 pytest_plugins = [
     "prometheuspvesd.test.fixtures.fixtures",
 ]
 
 
-def test_cli_required_error(mocker, capsys):
+def test_cli_required_error(mocker: MockerFixture, capsys: CaptureFixture[str]) -> None:
     mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
 
@@ -48,7 +53,12 @@ def test_cli_required_error(mocker, capsys):
         },
     ],
 )
-def test_cli_auth_required_error(mocker, capsys, builtins, test_input):
+def test_cli_auth_required_error(
+    mocker: MockerFixture,
+    capsys: CaptureFixture[str],
+    builtins: dict[str, Any],
+    test_input: dict[str, str],
+) -> None:
     for key, value in test_input.items():
         builtins[key]["default"] = value
 
@@ -74,7 +84,9 @@ def test_cli_auth_required_error(mocker, capsys, builtins, test_input):
         {"pve.password": "", "pve.token_name": "dummy", "pve.token_value": "dummy"},
     ],
 )
-def test_cli_auth_no_error(mocker, builtins, test_input):
+def test_cli_auth_no_error(
+    mocker: MockerFixture, builtins: dict[str, Any], test_input: dict[str, str]
+) -> None:
     for key, value in test_input.items():
         builtins[key]["default"] = value
 
@@ -85,10 +97,11 @@ def test_cli_auth_no_error(mocker, builtins, test_input):
     psd = PrometheusSD()
 
     for key, value in test_input.items():
+        assert psd.config.config is not None
         assert psd.config.config["pve"][key.split(".")[1]] == value
 
 
-def test_cli_config_error(mocker, capsys):
+def test_cli_config_error(mocker: MockerFixture, capsys: CaptureFixture[str]) -> None:
     mocker.patch(
         "prometheuspvesd.config.SingleConfig.__init__",
         side_effect=prometheuspvesd.exception.ConfigError("Dummy Config Exception"),
@@ -104,7 +117,7 @@ def test_cli_config_error(mocker, capsys):
     assert e.value.code == 1
 
 
-def test_cli_log_error(mocker, capsys):
+def test_cli_log_error(mocker: MockerFixture, capsys: CaptureFixture[str]) -> None:
     mocker.patch.object(Log, "update_logger", side_effect=ValueError("Dummy Loglevel Exception"))
     mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
@@ -117,7 +130,9 @@ def test_cli_log_error(mocker, capsys):
     assert e.value.code == 1
 
 
-def test_cli_api_error(mocker, builtins, capsys):
+def test_cli_api_error(
+    mocker: MockerFixture, builtins: dict[str, Any], capsys: CaptureFixture[str]
+) -> None:
     mocker.patch.dict(Config.SETTINGS, builtins)
     mocker.patch.object(ProxmoxClient, "_auth", side_effect=APIError("Dummy API Exception"))
     mocker.patch.object(PrometheusSD, "_fetch", return_value=True)
@@ -130,7 +145,13 @@ def test_cli_api_error(mocker, builtins, capsys):
     assert e.value.code == 1
 
 
-def test_cli_write(mocker, tmp_path, builtins, inventory, labels):
+def test_cli_write(
+    mocker: MockerFixture,
+    tmp_path: pathlib.Path,
+    builtins: dict[str, Any],
+    inventory: HostList,
+    labels: list[dict[str, Any]],
+) -> None:
     temp = tmp_path / "temp.txt"
     out = tmp_path / "out.txt"
 
@@ -142,5 +163,6 @@ def test_cli_write(mocker, tmp_path, builtins, inventory, labels):
     mocker.patch("tempfile.NamedTemporaryFile", return_value=temp.open("w"))
 
     psd = PrometheusSD()
+    assert psd.config.config is not None
     assert json.loads(out.read_text()) == labels
     assert oct(out.stat().st_mode & 0o777) == oct(int(psd.config.config["output_file_mode"], 8))
