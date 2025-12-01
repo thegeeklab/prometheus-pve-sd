@@ -16,7 +16,7 @@ pytest_plugins = [
 
 def test_yaml_config(mocker: MockerFixture, defaults: dict[str, Any]) -> None:
     mocker.patch(
-        "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yml"
+        "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yaml"
     )
     config = Config()
 
@@ -31,11 +31,11 @@ def test_yaml_config(mocker: MockerFixture, defaults: dict[str, Any]) -> None:
 
 def test_yaml_config_error(mocker: MockerFixture) -> None:
     mocker.patch(
-        "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yml"
+        "prometheuspvesd.config.default_config_file", "./prometheuspvesd/test/data/config.yaml"
     )
     mocker.patch.object(ruamel.yaml.YAML, "load", side_effect=ruamel.yaml.composer.ComposerError)
 
     with pytest.raises(prometheuspvesd.exception.ConfigError) as e:
         Config()
 
-    assert "Unable to read config file ./prometheuspvesd/test/data/config.yml" in str(e.value)
+    assert "Unable to read config file ./prometheuspvesd/test/data/config.yaml" in str(e.value)
