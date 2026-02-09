@@ -46,7 +46,7 @@ requests = "2.32.5"
 prometheus-pve-sd = "prometheuspvesd.cli:main"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.14.14"
+ruff = "0.15.0"
 pytest = "9.0.2"
 pytest-mock = "3.15.1"
 pytest-cov = "7.0.0"
@@ -54,7 +54,7 @@ toml = "0.10.2"
 mypy = "1.19.1"
 types-requests = "2.32.4.20260107"
 types-colorama = "0.4.15.20250801"
-types-jsonschema = "4.26.0.20260109"
+types-jsonschema = "4.26.0.20260202"
 types-appdirs = "1.4.3.5"
 
 [tool.poetry-dynamic-versioning]
