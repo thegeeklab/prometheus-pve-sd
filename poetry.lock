@@ -2,14 +2,14 @@
 
 [[package]]
 name = "anyconfig"
-version = "0.15.0"
+version = "0.15.1"
 description = "Library provides common APIs to load and dump configuration files in various formats"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "anyconfig-0.15.0-py3-none-any.whl", hash = "sha256:59ca0d40308b8dd5d838f0d720e0c7207bd58b61069c30e53f3da1e35e093861"},
-    {file = "anyconfig-0.15.0.tar.gz", hash = "sha256:01555bf2a0cc8a1203accdb87bf7a7d6dd4e77846ca2c51240d6729ea211f3f3"},
+    {file = "anyconfig-0.15.1-py3-none-any.whl", hash = "sha256:c2d528484ad886253330173aee8a80cd578ac0b5043abf4e7fbe6a7054b3d11a"},
+    {file = "anyconfig-0.15.1.tar.gz", hash = "sha256:a84b8c82b43edf9bb7396fa950dc3884a079b2d4b268916844526e65e657cd05"},
 ]
 
 [package.extras]
@@ -1101,4 +1101,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11.0"
-content-hash = "26e0d40eb0567ab7093ff71a09016244ec8992c817003c9342165eea58d90a60"
+content-hash = "00f9d0b8a9a7f8c745344eb76d84228d468bc2088bb62b7289cb35803330b1f1"
