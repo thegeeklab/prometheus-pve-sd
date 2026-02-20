@@ -311,18 +311,18 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
 name = "environs"
-version = "14.5.0"
+version = "14.6.0"
 description = "simplified environment variable parsing"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "environs-14.5.0-py3-none-any.whl", hash = "sha256:1abd3e3a5721fb09797438d6c902bc2f35d4580dfaffe68b8ee588b67b504e13"},
-    {file = "environs-14.5.0.tar.gz", hash = "sha256:f7b8f6fcf3301bc674bc9c03e39b5986d116126ffb96764efd34c339ed9464ee"},
+    {file = "environs-14.6.0-py3-none-any.whl", hash = "sha256:f8fb3d6c6a55872b0c6db077a28f5a8c7b8984b7c32029613d44cef95cfc0812"},
+    {file = "environs-14.6.0.tar.gz", hash = "sha256:ed2767588deb503209ffe4dd9bb2b39311c2e4e7e27ce2c64bf62ca83328d068"},
 ]
 
 [package.dependencies]
-marshmallow = ">=3.18.0"
+marshmallow = ">=3.26.2"
 python-dotenv = "*"
 
 [package.extras]
@@ -1101,4 +1101,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11.0"
-content-hash = "00f9d0b8a9a7f8c745344eb76d84228d468bc2088bb62b7289cb35803330b1f1"
+content-hash = "8bff81991ea1612f5c249d33f4190eba81a21788ec700dd6668fa16c4ad44886"
