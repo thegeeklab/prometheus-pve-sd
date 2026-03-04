@@ -664,14 +664,14 @@ twisted = ["twisted"]
 
 [[package]]
 name = "proxmoxer"
-version = "2.2.0"
+version = "2.3.0"
 description = "Python Wrapper for the Proxmox 2.x API (HTTP and SSH)"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "proxmoxer-2.2.0-py3-none-any.whl", hash = "sha256:7e4431fd38e1a9321eedf6d860ddc373fc2b29ce1845fa8b072d7580d99f6b90"},
-    {file = "proxmoxer-2.2.0.tar.gz", hash = "sha256:3ed63a58e5c0822841afdb3801f9d913a4996955c1c54f7319b5842ba2615006"},
+    {file = "proxmoxer-2.3.0-py3-none-any.whl", hash = "sha256:1c03445e95cf9c53b6e50614dbaf561e0e1eb3ec878cf45ddde4bc4421c56743"},
+    {file = "proxmoxer-2.3.0.tar.gz", hash = "sha256:0b0b2067187af1fc6d4257a46ac68c8fd79cc25d2813637cdae7a9a98fbfd11f"},
 ]
 
 [[package]]
@@ -1101,4 +1101,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11.0"
-content-hash = "feffacccc2bb5f59ed77af527abfbe28c9bb2600f0fe0d5baac56ed9df33a41d"
+content-hash = "72cc23cf273f3c2197c4e055090331dabbe21510c91f3bb394afee57795ce539"
