@@ -204,3 +204,75 @@ def test_duplicate_vm_names(
     assert "101" in vmids
     assert "102" in vmids
     assert hostnames.count("gitlab-runner") == 3
+
+
+def test_ip_change_reflected_in_next_cycle(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    agent_info: dict[str, Any],
+) -> None:
+    """Confirm that a VM IP change is reflected in the next discovery cycle."""
+    vm = {
+        "vmid": "101",
+        "name": "vm101.example.com",
+        "template": "",
+        "status": "running",
+        "cpu": 0.01,
+        "mem": 512,
+        "maxmem": 1024,
+        "disk": 0,
+        "maxdisk": 10,
+        "uptime": 100,
+        "diskread": 0,
+        "diskwrite": 0,
+        "netin": 0,
+        "netout": 0,
+        "pid": "42",
+        "cpus": 1,
+    }
+
+    instance_config = {"name": "vm101.example.com", "description": "{}"}
+
+    # VM has IP 192.0.2.10
+    networks1 = [
+        {
+            "hardware-address": "aa:bb:cc:dd:ee:ff",
+            "name": "eth0",
+            "ip-addresses": [
+                {"ip-address": "192.0.2.10", "ip-address-type": "ipv4", "prefix": 24},
+            ],
+        }
+    ]
+
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=[vm])
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks1)
+
+    result1 = discovery.propagate()
+
+    assert len(result1.hosts) == 1
+    assert result1.hosts[0].ipv4_address == "192.0.2.10"
+
+    # VM IP changed to 10.0.0.99
+    networks2 = [
+        {
+            "hardware-address": "aa:bb:cc:dd:ee:ff",
+            "name": "eth0",
+            "ip-addresses": [
+                {"ip-address": "10.0.0.99", "ip-address-type": "ipv4", "prefix": 24},
+            ],
+        }
+    ]
+
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks2)
+
+    result2 = discovery.propagate()
+
+    assert len(result2.hosts) == 1
+    assert result2.hosts[0].ipv4_address == "10.0.0.99", (
+        "IP change was not reflected in the second discovery cycle. "
+    )
