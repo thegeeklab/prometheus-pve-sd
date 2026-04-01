@@ -327,24 +327,22 @@ toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
 name = "environs"
-version = "14.6.0"
+version = "15.0.0"
 description = "simplified environment variable parsing"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "environs-14.6.0-py3-none-any.whl", hash = "sha256:f8fb3d6c6a55872b0c6db077a28f5a8c7b8984b7c32029613d44cef95cfc0812"},
-    {file = "environs-14.6.0.tar.gz", hash = "sha256:ed2767588deb503209ffe4dd9bb2b39311c2e4e7e27ce2c64bf62ca83328d068"},
+    {file = "environs-15.0.0-py3-none-any.whl", hash = "sha256:972246695a2ddf8f30205ec9b994ffb2ed6b742e18731b8ed5766e7f67bbb085"},
+    {file = "environs-15.0.0.tar.gz", hash = "sha256:fae1b56d88eab5708e5f3944b33375faf719ab8bced3e9dbd6f530dfbbe37dde"},
 ]
 
 [package.dependencies]
-marshmallow = ">=3.26.2"
+marshmallow = ">=4.0.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["environs[tests]", "pre-commit (>=4.0,<5.0)", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
-tests = ["backports.strenum ; python_version < \"3.11\"", "environs[django]", "packaging", "pytest"]
 
 [[package]]
 name = "idna"
@@ -1117,4 +1115,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11.0"
-content-hash = "a6b17e802b51973d9744f00009db83b603a4bc79de0c50e87ec017dd147d8c50"
+content-hash = "cf3fc1eb0181b02b653313dc574eaa22f386fa7cc5defd43cfa7a6b6497d5ad1"
