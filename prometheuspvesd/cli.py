@@ -11,11 +11,10 @@ from typing import Any, Optional
 
 from prometheus_client import start_http_server
 
-import prometheuspvesd.exception
 from prometheuspvesd import __version__
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.discovery import Discovery
-from prometheuspvesd.exception import APIError
+from prometheuspvesd.exception import APIError, ConfigError
 from prometheuspvesd.logger import SingleLog
 from prometheuspvesd.model import HostList
 
@@ -26,7 +25,7 @@ class PrometheusSD:
     def __init__(self) -> None:
         self.log = SingleLog()
         self.logger = self.log.logger
-        self.args: dict[str, str] = self._cli_args()
+        self.args: dict[str, Any] = self._cli_args()
         self.config = self._get_config()
 
         signal.signal(signal.SIGINT, self._terminate)
@@ -47,7 +46,7 @@ class PrometheusSD:
 
         self._fetch()
 
-    def _cli_args(self) -> dict[str, str]:
+    def _cli_args(self) -> dict[str, Any]:
         """
         Use argparse for parsing CLI arguments.
 
@@ -103,7 +102,7 @@ class PrometheusSD:
     def _get_config(self) -> SingleConfig:
         try:
             config = SingleConfig(args=self.args)
-        except prometheuspvesd.exception.ConfigError as e:
+        except ConfigError as e:
             self.log.sysexit_with_message(str(e))
 
         try:
@@ -134,14 +133,12 @@ class PrometheusSD:
         return config
 
     def _fetch(self) -> None:
-        self.logger.info("Writes targets to {}".format(self.config.config["output_file"]))
+        self.logger.info(f"Writes targets to {self.config.config['output_file']}")
         self.logger.debug("Propagate from PVE")
 
         if self.config.config["service"] and self.config.config["metrics"]["enabled"]:
             self.logger.info(
-                "Starting metrics http endpoint on port {}".format(
-                    self.config.config["metrics"]["port"]
-                )
+                f"Starting metrics http endpoint on port {self.config.config['metrics']['port']}"
             )
             start_http_server(
                 self.config.config["metrics"]["port"],
@@ -162,9 +159,7 @@ class PrometheusSD:
                 break
 
             self.logger.info(
-                "Waiting {} seconds for next discovery loop".format(
-                    self.config.config["loop_delay"]
-                )
+                f"Waiting {self.config.config['loop_delay']} seconds for next discovery loop"
             )
             sleep(self.config.config["loop_delay"])
 
