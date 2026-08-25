@@ -39,3 +39,12 @@ def test_yaml_config_error(mocker: MockerFixture) -> None:
         Config()
 
     assert "Unable to read config file ./prometheuspvesd/test/data/config.yaml" in str(e.value)
+
+
+@pytest.mark.parametrize("log_format", ["console", "json", "simple"])
+def test_log_format_without_verbosity_flag(log_format: str) -> None:
+    """Passing --log-format without -v/-q must not crash and keep the default level."""
+    config = Config(args={"logging.format": log_format})
+
+    assert config.config["logging"]["format"] == log_format
+    assert config.config["logging"]["level"] == Config.SETTINGS["logging.level"]["default"]
