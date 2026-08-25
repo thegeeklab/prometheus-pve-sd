@@ -37,6 +37,7 @@ include_tags: []
 
 # Set either password or token_name and token_value
 pve:
+    # May include an optional port (`hostname:port`).
     server:
     user:
     password:
