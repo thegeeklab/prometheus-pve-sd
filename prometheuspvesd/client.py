@@ -30,12 +30,9 @@ class ProxmoxClient:
 
     def _auth(self) -> Any:
         try:
-            self.logger.debug(
-                "Trying to authenticate against {} as user {}".format(
-                    self.config.config["pve"]["server"],
-                    self.config.config["pve"]["user"],
-                )
-            )
+            server = self.config.config["pve"]["server"]
+            user = self.config.config["pve"]["user"]
+            self.logger.debug(f"Trying to authenticate against {server} as user {user}")
 
             if self.config.config["pve"]["token_name"]:
                 self.logger.debug("Using token login")
