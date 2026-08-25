@@ -31,28 +31,14 @@ class Discovery:
         self.client = ProxmoxClient()
         self.host_list = HostList()
 
-    def _get_names(self, pve_list: list[dict[str, str]], pve_type: str) -> list[str]:
-        names: list[str] = []
+    def _get_names(self, pve_list: list[dict[str, str]]) -> list[str]:
+        return [node["node"] for node in pve_list]
 
-        if pve_type == "node":
-            names = [node["node"] for node in pve_list]
-        elif pve_type == "pool":
-            names = [pool["poolid"] for pool in pve_list]
-
-        return names
-
-    def _get_variables(
-        self, pve_list: list[dict[str, str]], pve_type: str
-    ) -> dict[str, dict[str, str]]:
+    def _get_variables(self, pve_list: list[dict[str, str]]) -> dict[str, dict[str, str]]:
         variables: dict[str, dict[str, str]] = {}
-
-        if pve_type in ["qemu", "container"]:
-            for vm in pve_list:
-                nested: dict[str, str] = {}
-                for key, value in vm.items():
-                    nested["proxmox_" + key] = value
-                # Use vmid as key to ensure uniqueness, even if VMs have the same name
-                variables[str(vm["vmid"])] = nested
+        for vm in pve_list:
+            # Use vmid as key to ensure uniqueness, even if VMs have the same name
+            variables[str(vm["vmid"])] = {f"proxmox_{key}": value for key, value in vm.items()}
 
         return variables
 
@@ -113,6 +99,7 @@ class Discovery:
         return ipv4_address, ipv6_address
 
     def _filter(self, pve_list: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        exclude_states = {str(state) for state in self.config.config["exclude_state"]}
         filtered: list[dict[str, Any]] = []
         for item in pve_list:
             obj = defaultdict(dict, item)
@@ -138,7 +125,7 @@ class Discovery:
             if obj["template"] == 1:
                 continue
 
-            if obj["status"] in map(str, self.config.config["exclude_state"]):
+            if obj["status"] in exclude_states:
                 continue
 
             if str(obj["vmid"]) in self.config.config["exclude_vmid"]:
@@ -168,7 +155,8 @@ class Discovery:
     @PROPAGATION_TIME.time()
     def propagate(self) -> HostList:
         self.host_list.clear()
-        nodelist = self._get_names(self.client.get_nodes(), "node")
+        HOST_GAUGE.set(0)
+        nodelist = self._get_names(self.client.get_nodes())
         self.logger.info(f"Discovered nodes: {','.join(nodelist)}")
         for node in nodelist:
             try:
@@ -180,10 +168,10 @@ class Discovery:
                 raise APIError(str(e)) from e
 
             # Merge QEMU and Containers lists from this node
-            instances = self._get_variables(qemu_list, "qemu").copy()
-            instances.update(self._get_variables(container_list, "container"))
+            instances = self._get_variables(qemu_list).copy()
+            instances.update(self._get_variables(container_list))
 
-            HOST_GAUGE.set(len(instances))
+            HOST_GAUGE.inc(len(instances))
             self.logger.info(f"{node}: Found {len(instances)} targets")
             for vmid_key in instances:
                 host_meta = instances[vmid_key]

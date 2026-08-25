@@ -4,19 +4,12 @@ from typing import Any
 
 import requests
 from prometheus_client import Counter
+from proxmoxer import ProxmoxAPI
 
 from prometheuspvesd.config import SingleConfig
 from prometheuspvesd.exception import APIError
 from prometheuspvesd.logger import SingleLog
 from prometheuspvesd.model import HostList
-from prometheuspvesd.utils import to_bool
-
-try:
-    from proxmoxer import ProxmoxAPI
-
-    HAS_PROXMOXER = True
-except ImportError:
-    HAS_PROXMOXER = False
 
 PVE_REQUEST_COUNT_TOTAL = Counter("pve_sd_requests_total", "Total count of requests to PVE API")
 PVE_REQUEST_COUNT_ERROR_TOTAL = Counter(
@@ -28,13 +21,6 @@ class ProxmoxClient:
     """Proxmox API Client."""
 
     def __init__(self) -> None:
-        if not HAS_PROXMOXER:
-            log = SingleLog()
-            log.sysexit_with_message(
-                "The Proxmox VE Prometheus SD requires proxmoxer: "
-                "https://pypi.org/project/proxmoxer/"
-            )
-
         self.config = SingleConfig()
         self.log = SingleLog()
         self.logger = self.log.logger
@@ -58,7 +44,7 @@ class ProxmoxClient:
                     user=self.config.config["pve"]["user"],
                     token_name=self.config.config["pve"]["token_name"],
                     token_value=self.config.config["pve"]["token_value"],
-                    verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
+                    verify_ssl=self.config.config["pve"]["verify_ssl"],
                     timeout=self.config.config["pve"]["auth_timeout"],
                 )
 
@@ -66,7 +52,7 @@ class ProxmoxClient:
                 self.config.config["pve"]["server"],
                 user=self.config.config["pve"]["user"],
                 password=self.config.config["pve"]["password"],
-                verify_ssl=to_bool(self.config.config["pve"]["verify_ssl"]),
+                verify_ssl=self.config.config["pve"]["verify_ssl"],
                 timeout=self.config.config["pve"]["auth_timeout"],
             )
         except requests.RequestException as e:

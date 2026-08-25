@@ -10,7 +10,7 @@ from typing import Any
 import colorama
 from pythonjsonlogger.json import JsonFormatter
 
-from prometheuspvesd.utils import Singleton, to_bool
+from prometheuspvesd.utils import Singleton
 
 JSON_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 
@@ -27,9 +27,9 @@ _STDERR_LEVELS = {logging.DEBUG, logging.ERROR, logging.CRITICAL}
 
 
 def _should_do_markup() -> bool:
-    py_colors = os.environ.get("PY_COLORS", None)
+    py_colors = os.environ.get("PY_COLORS")
     if py_colors is not None:
-        return to_bool(py_colors)
+        return py_colors.strip().lower() in {"1", "true", "yes", "on", "y", "t"}
 
     return sys.stdout.isatty() and os.environ.get("TERM") != "dumb"
 

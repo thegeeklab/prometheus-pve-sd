@@ -4,6 +4,7 @@ import logging
 from typing import Any
 
 import pytest
+from prometheus_client import REGISTRY
 from proxmoxer import ProxmoxAPI
 from pytest_mock import MockerFixture
 
@@ -373,3 +374,26 @@ def test_propagate_handles_missing_instance_config(
     assert sorted(host.vmid for host in result.hosts) == sorted(
         str(qemu["vmid"]) for qemu in qemus
     )
+
+
+def test_propagate_accumulates_host_gauge(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    instance_config: dict[str, Any],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+) -> None:
+    """The host gauge must reflect the total across all nodes, not just the last one."""
+    two_nodes = [nodes[0], {**nodes[0], "node": "node-two"}]
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=two_nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    discovery.propagate()
+
+    assert REGISTRY.get_sample_value("pve_sd_hosts") == 2 * len(qemus)
