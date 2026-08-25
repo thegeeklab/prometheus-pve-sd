@@ -203,6 +203,8 @@ class Discovery:
                     )
                     continue
 
+                config = config or {}
+
                 try:
                     description = config["description"]
                 except KeyError:

@@ -3,10 +3,9 @@
 
 import argparse
 import json
-import shutil
+import os
 import signal
 import tempfile
-from os import chmod
 from time import sleep
 from typing import Any, Optional
 
@@ -174,12 +173,30 @@ class PrometheusSD:
         for host in host_list.hosts:
             output.append(host.to_sd_json())
 
-        # Write to tmp file and move after write
-        with tempfile.NamedTemporaryFile(mode="w", prefix="prometheus-pve-sd", delete=False) as tf:
-            json.dump(output, tf, indent=4)
+        output_file = self.config.config["output_file"]
+        output_file_mode = int(self.config.config["output_file_mode"], 8)
+        output_dir = os.path.dirname(os.path.abspath(output_file))
 
-        shutil.move(tf.name, self.config.config["output_file"])
-        chmod(self.config.config["output_file"], int(self.config.config["output_file_mode"], 8))
+        # Write to a temporary file in the same directory as the target so the
+        # final rename is atomic. Apply the requested mode before the rename and
+        # fsync so the target is never exposed with wrong permissions or data.
+        with tempfile.NamedTemporaryFile(
+            mode="w", prefix="prometheus-pve-sd", dir=output_dir, delete=False
+        ) as tf:
+            try:
+                json.dump(output, tf, indent=4)
+                tf.flush()
+                os.fsync(tf.fileno())
+            except BaseException:
+                os.unlink(tf.name)
+                raise
+
+        try:
+            os.chmod(tf.name, output_file_mode)
+            os.replace(tf.name, output_file)
+        except BaseException:
+            os.unlink(tf.name)
+            raise
 
     def _terminate(self, signal: int, frame: Optional[Any] = None) -> None:  # noqa
         self.log.sysexit_with_message("Terminating", code=0)
