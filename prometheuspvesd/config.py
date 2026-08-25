@@ -189,8 +189,8 @@ class Config:
 
         # Override correct log level from argparse
         levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-        log_level = levels.index(self.SETTINGS["logging.level"]["default"])
-        if normalized.get("logging"):
+        if normalized.get("logging") and normalized["logging"].get("level"):
+            log_level = levels.index(self.SETTINGS["logging.level"]["default"])
             for adjustment in normalized["logging"]["level"]:
                 log_level = min(len(levels) - 1, max(log_level + adjustment, 0))
             normalized["logging"]["level"] = levels[log_level]

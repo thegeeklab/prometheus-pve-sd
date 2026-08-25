@@ -57,7 +57,7 @@ class Discovery:
         return variables
 
     def _get_ip_addresses(
-        self, pve_type: str, pve_node: str, vmid: str
+        self, pve_type: str, pve_node: str, vmid: str, config: dict[str, Any] | None
     ) -> tuple[str | None, str | None]:
         ipv4_address: str | None = None
         ipv6_address: str | None = None
@@ -78,7 +78,6 @@ class Discovery:
                         elif ip_address["ip-address-type"] == "ipv6" and not ipv6_address:
                             ipv6_address = self._validate_ip(ip_address["ip-address"])
 
-        config = self.client.get_instance_config(pve_node, pve_type, vmid)
         if config and not ipv4_address:
             try:
                 if "ipconfig0" in config:
@@ -175,6 +174,8 @@ class Discovery:
             try:
                 qemu_list = self._filter(self.client.get_all_vms(node))
                 container_list = self._filter(self.client.get_all_containers(node))
+            except APIError:
+                raise
             except Exception as e:
                 raise APIError(str(e)) from e
 
@@ -194,14 +195,18 @@ class Discovery:
                 except KeyError:
                     pve_type = "qemu"
 
-                config = self.client.get_instance_config(node, pve_type, vmid)
+                try:
+                    config = self.client.get_instance_config(node, pve_type, vmid)
+                except APIError as e:
+                    self.logger.error(
+                        f"Failed to fetch instance config for {vmid} on {node}: {str(e).strip()}"
+                    )
+                    continue
 
                 try:
                     description = config["description"]
                 except KeyError:
                     description = None
-                except Exception as e:
-                    raise APIError(str(e)) from e
 
                 try:
                     metadata = json.loads(description)
@@ -210,7 +215,7 @@ class Discovery:
                 except ValueError:
                     metadata = {"notes": description}
 
-                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid)
+                ipv4_address, ipv6_address = self._get_ip_addresses(pve_type, node, vmid, config)
 
                 prom_host = Host(vmid, hostname, ipv4_address, ipv6_address, pve_type)
 

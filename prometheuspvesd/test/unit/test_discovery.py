@@ -9,6 +9,7 @@ from pytest_mock import MockerFixture
 
 from prometheuspvesd.client import ProxmoxClient
 from prometheuspvesd.discovery import Discovery
+from prometheuspvesd.exception import APIError
 from prometheuspvesd.model import HostList
 from prometheuspvesd.test.unit.test_types import LogContextFactory
 
@@ -126,19 +127,18 @@ def test_get_ip_addresses(
 ) -> None:
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
-    assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
+    assert discovery._get_ip_addresses("qemu", "dummy", "dummy", {}) == (
         networks[1]["ip-addresses"][0]["ip-address"],
         networks[1]["ip-addresses"][2]["ip-address"],
     )
 
 
 def test_get_ip_addresses_from_instance_config(
-    mocker: MockerFixture, discovery: Discovery, instance_config: str
+    mocker: MockerFixture, discovery: Discovery, instance_config: dict[str, Any]
 ) -> None:
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=[])
-    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=instance_config)
 
-    assert discovery._get_ip_addresses("qemu", "dummy", "dummy") == (
+    assert discovery._get_ip_addresses("qemu", "dummy", "dummy", instance_config) == (
         "192.0.2.25",
         "2001:db8::666:77:8888",
     )
@@ -276,3 +276,77 @@ def test_ip_change_reflected_in_next_cycle(
     assert result2.hosts[0].ipv4_address == "10.0.0.99", (
         "IP change was not reflected in the second discovery cycle. "
     )
+
+
+def test_get_instance_config_fetched_once_per_host(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    instance_config: dict[str, Any],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+) -> None:
+    """Instance config must be fetched exactly once per discovered host."""
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+    mock_config = mocker.patch.object(
+        ProxmoxClient, "get_instance_config", return_value=instance_config
+    )
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    result = discovery.propagate()
+
+    assert mock_config.call_count == len(result.hosts)
+    assert sorted(call.args[2] for call in mock_config.call_args_list) == sorted(
+        str(qemu["vmid"]) for qemu in qemus
+    )
+
+
+def test_propagate_skips_host_with_failed_config_fetch(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    instance_config: dict[str, Any],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+) -> None:
+    """A single failing host must not abort discovery of the remaining hosts."""
+    failing_vmid = str(qemus[1]["vmid"])
+    expected_vmids = [str(qemu["vmid"]) for qemu in qemus if str(qemu["vmid"]) != failing_vmid]
+
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+
+    def config_side_effect(_node: str, _pve_type: str, vmid: str) -> dict[str, Any]:
+        if str(vmid) == failing_vmid:
+            raise APIError("dummy config error")
+        return instance_config
+
+    mocker.patch.object(ProxmoxClient, "get_instance_config", side_effect=config_side_effect)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    result = discovery.propagate()
+
+    assert sorted(host.vmid for host in result.hosts) == sorted(expected_vmids)
+
+
+def test_propagate_passes_through_api_error(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+) -> None:
+    """An APIError from the client must not be re-wrapped into a new APIError."""
+    original = APIError("original api error")
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", side_effect=original)
+
+    with pytest.raises(APIError) as e:
+        discovery.propagate()
+
+    assert e.value is original
