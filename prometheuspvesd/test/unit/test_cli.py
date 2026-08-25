@@ -152,7 +152,6 @@ def test_cli_write(
     inventory: HostList,
     labels: list[dict[str, Any]],
 ) -> None:
-    temp = tmp_path / "temp.txt"
     out = tmp_path / "out.txt"
 
     builtins["output_file"]["default"] = out.as_posix()
@@ -160,7 +159,6 @@ def test_cli_write(
     mocker.patch.dict(Config.SETTINGS, builtins)
     mocker.patch.object(ProxmoxClient, "_auth", return_value=mocker.create_autospec(ProxmoxAPI))
     mocker.patch.object(Discovery, "propagate", return_value=inventory)
-    mocker.patch("tempfile.NamedTemporaryFile", return_value=temp.open("w"))
 
     psd = PrometheusSD()
     assert psd.config.config is not None

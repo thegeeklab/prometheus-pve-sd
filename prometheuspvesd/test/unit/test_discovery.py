@@ -350,3 +350,26 @@ def test_propagate_passes_through_api_error(
         discovery.propagate()
 
     assert e.value is original
+
+
+def test_propagate_handles_missing_instance_config(
+    mocker: MockerFixture,
+    discovery: Discovery,
+    nodes: list[dict[str, Any]],
+    qemus: list[dict[str, Any]],
+    agent_info: dict[str, Any],
+    networks: list[dict[str, Any]],
+) -> None:
+    """A host with no instance config must still be discovered, not crash the run."""
+    mocker.patch.object(ProxmoxClient, "get_nodes", return_value=nodes)
+    mocker.patch.object(ProxmoxClient, "get_all_vms", return_value=qemus)
+    mocker.patch.object(ProxmoxClient, "get_all_containers", return_value=[])
+    mocker.patch.object(ProxmoxClient, "get_instance_config", return_value=None)
+    mocker.patch.object(ProxmoxClient, "get_agent_info", return_value=agent_info)
+    mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
+
+    result = discovery.propagate()
+
+    assert sorted(host.vmid for host in result.hosts) == sorted(
+        str(qemu["vmid"]) for qemu in qemus
+    )
