@@ -1,5 +1,6 @@
 ---
 title: Default settings
+# cspell:ignore CGNAT
 ---
 
 ```Shell
