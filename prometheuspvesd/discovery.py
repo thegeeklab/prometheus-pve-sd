@@ -31,6 +31,15 @@ class Discovery:
         self.client = ProxmoxClient()
         self.host_list = HostList()
 
+    def _get_exclude_networks(self) -> list[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+        networks: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
+        for entry in self.config.config["exclude_networks"]:
+            try:
+                networks.append(ipaddress.ip_network(entry, strict=False))
+            except ValueError:
+                self.logger.warning(f"Ignoring invalid entry in exclude_networks: {entry}")
+        return networks
+
     def _get_names(self, pve_list: list[dict[str, str]]) -> list[str]:
         return [node["node"] for node in pve_list]
 
@@ -74,8 +83,9 @@ class Discovery:
                 for s in sources:
                     find = re.search(r"ip=(\d*\.\d*\.\d*\.\d*)", str(s))
                     if find and find.group(1):
-                        ipv4_address = find.group(1)
-                        break
+                        ipv4_address = self._validate_ip(find.group(1))
+                        if ipv4_address:
+                            break
             except Exception:  # noqa
                 pass
 
@@ -91,8 +101,9 @@ class Discovery:
                         r"ip=(([a-fA-F0-9]{0,4}:{0,2}){0,7}:[0-9a-fA-F]{1,4})", str(s)
                     )
                     if find and find.group(1):
-                        ipv6_address = find.group(1)
-                        break
+                        ipv6_address = self._validate_ip(find.group(1))
+                        if ipv6_address:
+                            break
             except Exception:  # noqa
                 pass
 
@@ -143,14 +154,17 @@ class Discovery:
 
     def _validate_ip(self, address: str) -> str | None:
         try:
-            if (
-                not ipaddress.ip_address(address).is_loopback
-                and not ipaddress.ip_address(address).is_link_local
-            ):
-                return address
-            return None
+            parsed = ipaddress.ip_address(address)
         except ValueError:
             return None
+
+        if parsed.is_loopback or parsed.is_link_local:
+            return None
+
+        if any(parsed in network for network in self._get_exclude_networks()):
+            return None
+
+        return address
 
     @PROPAGATION_TIME.time()
     def propagate(self) -> HostList:

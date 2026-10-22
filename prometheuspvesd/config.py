@@ -118,6 +118,12 @@ class Config:
             "file": True,
             "type": environs.Env().list,
         },
+        "exclude_networks": {
+            "default": [],
+            "env": "EXCLUDE_NETWORKS",
+            "file": True,
+            "type": environs.Env().list,
+        },
         "pve.server": {
             "default": "",
             "env": "PVE_SERVER",
