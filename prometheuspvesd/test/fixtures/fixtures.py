@@ -132,6 +132,7 @@ def builtins() -> dict[str, Any]:
 @pytest.fixture
 def defaults() -> dict[str, Any]:
     return {
+        "exclude_networks": [],
         "exclude_state": [],
         "exclude_tags": [],
         "exclude_vmid": [],

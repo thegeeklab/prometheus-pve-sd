@@ -1,5 +1,6 @@
 ---
 title: Default settings
+# cspell:ignore CGNAT
 ---
 
 ```Shell
@@ -34,6 +35,18 @@ include_vmid: []
 # If `include_tags` is set, and your VM don't have any tags set, they will not show up!
 exclude_tags: []
 include_tags: []
+
+# Can be used to exclude discovered IP addresses that fall within the given networks
+# (CIDR notation) - needs to be a list of strings. Loopback and link-local addresses are
+# always excluded regardless of this setting. Useful for ignoring IPs handed out by
+# Tailscale, Docker bridges or other virtual interfaces that Prometheus should not scrape.
+# If an IP is excluded, discovery falls back to the next address found on the instance.
+#
+# Example:
+# exclude_networks:
+#     - 100.64.0.0/10   # Tailscale CGNAT range
+#     - 172.17.0.0/16   # Default docker0 bridge
+exclude_networks: []
 
 # Set either password or token_name and token_value
 pve:
