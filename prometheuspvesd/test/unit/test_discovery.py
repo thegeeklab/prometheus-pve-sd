@@ -126,6 +126,7 @@ def test_validate_ip(discovery: Discovery, addresses: dict[str, str]) -> None:
 def test_validate_ip_excludes_configured_networks(discovery: Discovery) -> None:
     assert discovery.config.config is not None
     discovery.config.config["exclude_networks"] = ["100.64.0.0/10", "172.17.0.0/16"]
+    discovery.exclude_networks = discovery._parse_exclude_networks()
 
     assert discovery._validate_ip("100.100.1.1") is None
     assert discovery._validate_ip("172.17.0.2") is None
@@ -139,6 +140,7 @@ def test_validate_ip_ignores_invalid_exclude_network(
     discovery.config.config["exclude_networks"] = ["not-a-network"]
 
     with local_caplog(level=logging.WARNING) as caplog:
+        discovery.exclude_networks = discovery._parse_exclude_networks()
         assert discovery._validate_ip("192.0.2.1") == "192.0.2.1"
 
     assert "Ignoring invalid entry in exclude_networks: not-a-network" in records_to_messages(
@@ -152,6 +154,7 @@ def test_get_ip_addresses_skips_excluded_network(
     """When the first interface's IP falls in an excluded network, fall through to the next."""
     assert discovery.config.config is not None
     discovery.config.config["exclude_networks"] = ["192.0.2.0/24"]
+    discovery.exclude_networks = discovery._parse_exclude_networks()
     mocker.patch.object(ProxmoxClient, "get_network_interfaces", return_value=networks)
 
     ipv4_address, ipv6_address = discovery._get_ip_addresses("qemu", "dummy", "dummy", {})

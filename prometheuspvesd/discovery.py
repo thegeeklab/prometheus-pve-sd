@@ -30,8 +30,9 @@ class Discovery:
         self.logger = SingleLog().logger
         self.client = ProxmoxClient()
         self.host_list = HostList()
+        self.exclude_networks = self._parse_exclude_networks()
 
-    def _get_exclude_networks(self) -> list[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+    def _parse_exclude_networks(self) -> list[ipaddress.IPv4Network | ipaddress.IPv6Network]:
         networks: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
         for entry in self.config.config["exclude_networks"]:
             try:
@@ -161,7 +162,7 @@ class Discovery:
         if parsed.is_loopback or parsed.is_link_local:
             return None
 
-        if any(parsed in network for network in self._get_exclude_networks()):
+        if any(parsed in network for network in self.exclude_networks):
             return None
 
         return address
